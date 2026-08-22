@@ -1,0 +1,127 @@
+{
+  "common": {
+    "title": "EGGU - Bánh Mì Trứng Hàn Quốc",
+    "description": "Bánh mì kẹp trứng và bánh mì nướng Hàn Quốc cao cấp",
+    "language": "Ngôn ngữ",
+    "vietnamese": "Tiếng Việt",
+    "english": "English",
+    "orderNow": "Đặt Hàng Ngay",
+    "exploreMenu": "Khám Phá Thực Đơn",
+    "currency": "VND"
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "menu": "Thực đơn",
+    "about": "Giới thiệu",
+    "store": "Cửa hàng",
+    "faq": "Hỏi đáp",
+    "news": "Tin tức",
+    "contact": "Liên hệ",
+    "cart": "Giỏ hàng"
+  },
+  "home": {
+    "hero": {
+      "subtitle": "Bánh Mì Trứng Hàn Quốc",
+      "title": "Chế biến tươi ngon. Trải nghiệm tuyệt vời.",
+      "description": "Thưởng thức hương vị cao cấp của bánh mì kẹp trứng Hàn Quốc, bánh mì nướng và đồ uống được chuẩn bị mới mỗi ngày."
+    }
+  },
+  "menu": {
+    "title": "Thực Đơn Của Chúng Tôi",
+    "subtitle": "Bánh mì kẹp trứng chế biến thủ công, bánh mì nướng hảo hạng và đồ uống mát lạnh.",
+    "all": "Tất Cả",
+    "customize": "Tùy Chỉnh",
+    "addToCart": "Thêm Vào Giỏ",
+    "newBadge": "MỚI",
+    "bestSellerBadge": "Bán Chạy",
+    "emptyState": "Không tìm thấy món ăn nào trong danh mục này."
+  },
+  "product": {
+    "ingredients": "Thành Phần",
+    "nutrition": "Giá Trị Dinh Dưỡng",
+    "allergy": "Thông Tin Dị Ứng",
+    "options": "Tùy Chọn Thêm Topping",
+    "note": "Yêu Cầu Đặc Biệt / Ghi Chú",
+    "notePlaceholder": "Ví dụ: Không hành, sốt ngọt để riêng...",
+    "quantity": "Số Lượng",
+    "addedToCart": "Đã thêm vào giỏ hàng!",
+    "totalPrice": "Tổng Giá Tiền"
+  },
+  "about": {
+    "title": "Câu Chuyện Thương Hiệu",
+    "subtitle": "Công thức tạo nên lớp trứng khuấy vàng óng bơ sữa mềm mịn.",
+    "philosophy": "Triết Lý Của Chúng Tôi",
+    "philosophyDesc": "Tại EGGU, chúng tôi tin rằng ẩm thực là một hành trình mang lại sự ấm áp. Mỗi chiếc bánh là một lời cam kết về chất lượng phục vụ.",
+    "quality": "Chất Lượng Vượt Trội",
+    "qualityDesc": "Chúng tôi chỉ chọn trứng tươi sạch đã thanh trùng, bơ lạt Pháp hảo hạng và bánh mì brioche mềm xốp nướng bơ tỏi."
+  },
+  "store": {
+    "title": "Hệ Thống Cửa Hàng",
+    "subtitle": "Tìm chi nhánh EGGU gần bạn nhất.",
+    "hours": "Giờ Mở Cửa",
+    "phone": "Điện Thoại",
+    "address": "Địa Chỉ",
+    "directions": "Chỉ Đường (Google Maps)"
+  },
+  "faq": {
+    "title": "Câu Hỏi Thường Gặp",
+    "subtitle": "Tất cả những thông tin bạn cần biết về đặt hàng, thanh toán COD và giao nhận."
+  },
+  "news": {
+    "title": "Tin Tức & Sự Kiện",
+    "subtitle": "Cập nhật các chương trình khuyến mãi, khai trương chi nhánh mới và món mới từ EGGU.",
+    "readMore": "Đọc Chi Tiết",
+    "backToNews": "Quay Lại Tin Tức"
+  },
+  "contact": {
+    "title": "Liên Hệ Với EGGU",
+    "subtitle": "Gửi phản hồi hoặc kết nối trực tiếp với đội ngũ quản lý của chúng tôi.",
+    "formTitle": "Gửi Tin Nhắn Cho Chúng Tôi",
+    "name": "Họ và Tên",
+    "email": "Địa Chỉ Email",
+    "phone": "Số Điện Thoại",
+    "message": "Nội Dung Tin Nhắn",
+    "submit": "Gửi Tin Nhắn",
+    "success": "Tin nhắn của bạn đã được gửi thành công! Chúng tôi sẽ phản hồi lại sớm nhất có thể."
+  },
+  "cart": {
+    "title": "Giỏ Hàng Của Bạn",
+    "empty": "Giỏ hàng của bạn đang trống.",
+    "subtotal": "Tạm tính",
+    "deliveryFee": "Phí vận chuyển",
+    "total": "Tổng thanh toán",
+    "checkout": "Tiến Hành Thanh Toán",
+    "continue": "Tiếp Tục Mua Sắm",
+    "remove": "Xóa",
+    "note": "Ghi chú"
+  },
+  "checkout": {
+    "title": "Thông Tin Giao Hàng",
+    "subtitle": "Vui lòng nhập đầy đủ địa chỉ giao nhận. Phương thức duy nhất là Thanh toán khi nhận hàng (COD).",
+    "fullName": "Họ và Tên người nhận",
+    "phone": "Số Điện Thoại liên hệ",
+    "email": "Địa Chỉ Email (Không bắt buộc)",
+    "address": "Địa Chỉ Giao Hàng chi tiết",
+    "note": "Ghi chú giao hàng / Lời nhắn cho tài xế",
+    "placeOrder": "Đặt Hàng Ngay (COD)",
+    "processing": "Đang xử lý đơn hàng...",
+    "errors": {
+      "nameRequired": "Vui lòng nhập họ và tên",
+      "phoneRequired": "Vui lòng nhập số điện thoại",
+      "phoneInvalid": "Số điện thoại không hợp lệ",
+      "emailInvalid": "Email không đúng định dạng",
+      "addressRequired": "Vui lòng nhập địa chỉ giao hàng chi tiết",
+      "cartEmpty": "Không thể thanh toán với giỏ hàng trống"
+    }
+  },
+  "success": {
+    "title": "Đặt Hàng Thành Công!",
+    "subtitle": "Cảm ơn bạn đã lựa chọn EGGU. Bánh của bạn đang được chuẩn bị nóng hổi.",
+    "orderNumber": "Mã Đơn Hàng",
+    "paymentMethod": "Hình Thức Thanh Toán",
+    "total": "Tổng Thanh Toán (COD)",
+    "confirmCall": "Chúng tôi sẽ gọi điện thoại cho bạn trong vài phút tới để xác nhận đơn hàng.",
+    "backHome": "Quay Lại Trang Chủ",
+    "continueShopping": "Tiếp Tục Mua Sắm"
+  }
+}
