@@ -217,6 +217,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               alt={isVi ? product.name_vi : product.name_en}
               fill
               priority
+              sizes="(max-width: 1024px) 100vw, 520px"
               className="object-cover"
             />
           </div>

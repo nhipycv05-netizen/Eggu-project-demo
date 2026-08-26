@@ -33,6 +33,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
             alt="EGGU Story Bread and Eggs"
             fill
             priority
+            sizes="(max-width: 768px) 100vw, 900px"
             className="object-cover"
           />
         </div>

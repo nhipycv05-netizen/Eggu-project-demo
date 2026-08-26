@@ -123,6 +123,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 alt="EGGU Sandwich"
                 fill
                 priority
+                sizes="(max-width: 1024px) 100vw, 1040px"
                 className="object-cover"
               />
             </div>
@@ -165,6 +166,7 @@ export default async function HomePage({ params }: HomePageProps) {
                     src={product.image_url || '/images/hero-sandwich.jpg'}
                     alt={isVi ? product.name_vi : product.name_en}
                     fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   {product.is_best_seller && (
@@ -247,6 +249,7 @@ export default async function HomePage({ params }: HomePageProps) {
               src="/images/hero-sandwich.jpg"
               alt="EGGU Story"
               fill
+              sizes="(max-width: 1024px) 100vw, 500px"
               className="object-cover"
             />
           </div>

@@ -92,6 +92,7 @@ export default function CartManager({ locale }: CartManagerProps) {
                     src={item.image || '/images/hero-sandwich.jpg'}
                     alt={isVi ? item.name_vi : item.name_en}
                     fill
+                    sizes="96px"
                     className="object-cover"
                   />
                 </div>
