@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
+import SafeImage from '@/components/ui/SafeImage';
 import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
@@ -83,11 +83,12 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
 
         {/* Hero image banner */}
         <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-[#E5E0D8] shadow-lg">
-          <Image
+          <SafeImage
             src={article.thumbnail_url || '/images/hero-sandwich.jpg'}
             alt={isVi ? article.title_vi : article.title_en}
             fill
             priority
+            sizes="(max-width: 768px) 100vw, 900px"
             className="object-cover"
           />
         </div>

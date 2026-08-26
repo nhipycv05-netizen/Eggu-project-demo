@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
+import SafeImage from '@/components/ui/SafeImage';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Calendar } from 'lucide-react';
@@ -74,10 +74,11 @@ export default async function NewsPage({ params }: NewsPageProps) {
               >
                 {/* Thumbnail */}
                 <div className="relative aspect-video overflow-hidden bg-neutral-100">
-                  <Image
+                  <SafeImage
                     src={article.thumbnail_url || '/images/hero-sandwich.jpg'}
                     alt={isVi ? article.title_vi : article.title_en}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 380px"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>

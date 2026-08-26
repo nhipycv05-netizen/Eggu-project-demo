@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
+import SafeImage from '@/components/ui/SafeImage';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 
@@ -229,10 +229,11 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
               >
                 {/* Product Thumbnail */}
                 <div className="relative aspect-square overflow-hidden bg-neutral-100">
-                  <Image
+                  <SafeImage
                     src={product.image_url || '/images/hero-sandwich.jpg'}
                     alt={isVi ? product.name_vi : product.name_en}
                     fill
+                    sizes="(max-width: 768px) 50vw, (max-width: 1280px) 25vw, 280px"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   {/* Badges overlay */}
