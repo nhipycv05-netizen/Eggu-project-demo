@@ -11,23 +11,23 @@ export default async function AboutPage({ params }: AboutPageProps) {
   const isVi = locale === 'vi';
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 pb-20">
-      <div className="max-w-4xl mx-auto px-6 space-y-16">
+    <div className="site-frame min-h-screen bg-[#fff9f7] px-7 pb-16 pt-20">
+      <div className="mx-auto max-w-[900px] space-y-10">
         {/* Header Block */}
-        <div className="text-center space-y-4">
+        <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
           <span className="text-[#EAAA08] text-xs font-bold uppercase tracking-widest block">
             {isVi ? 'Về Chúng Tôi' : 'Who We Are'}
           </span>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-[#1E1B18]">
+          <h1 className="text-3xl font-bold leading-tight text-[#6b5549] md:text-4xl">
             {t('title')}
           </h1>
-          <p className="text-[#706860] font-medium text-lg leading-relaxed max-w-xl mx-auto">
+          <p className="max-w-xl text-sm leading-relaxed text-[#756b67]">
             {t('subtitle')}
           </p>
         </div>
 
         {/* Big Editorial Image */}
-        <div className="relative aspect-video w-full rounded-3xl overflow-hidden shadow-xl border border-[#E5E0D8]">
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-[#eadfdb] shadow-sm">
           <Image
             src="/images/hero-sandwich.jpg"
             alt="EGGU Story Bread and Eggs"
@@ -38,7 +38,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
         </div>
 
         {/* Philosophy Block */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start pt-6">
+        <div className="grid grid-cols-1 items-start gap-10 border-t border-[#eadfdb] pt-6 md:grid-cols-2">
           <div className="space-y-4">
             <h2 className="text-2xl font-black text-[#1E1B18]">{t('philosophy')}</h2>
             <p className="text-sm text-[#706860] leading-relaxed font-medium">
