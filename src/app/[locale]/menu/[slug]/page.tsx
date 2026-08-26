@@ -195,8 +195,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     : product.nutrition;
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 pb-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="site-frame min-h-screen bg-[#fff9f7] px-7 pb-16 pt-20">
+      <div className="mx-auto max-w-[1040px]">
         {/* Back Link */}
         <div className="mb-8">
           <Link
@@ -209,9 +209,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </div>
 
         {/* Product Page Detail Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Left Column: Image Card */}
-          <div className="lg:col-span-6 relative aspect-square w-full max-w-[500px] mx-auto lg:max-w-none rounded-3xl overflow-hidden border border-[#E5E0D8] bg-neutral-100 shadow-lg">
+          <div className="relative mx-auto aspect-square w-full max-w-[520px] overflow-hidden rounded-xl border border-[#eadfdb] bg-neutral-100 shadow-sm">
             <Image
               src={product.image_url || '/images/hero-sandwich.jpg'}
               alt={isVi ? product.name_vi : product.name_en}
@@ -222,7 +222,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </div>
 
           {/* Right Column: Customizer Details */}
-          <div className="lg:col-span-6 space-y-8 bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm">
+          <div className="space-y-6 pt-1">
             <div className="space-y-4">
               <h1 className="text-3xl lg:text-4xl font-black text-[#1E1B18] leading-tight">
                 {isVi ? product.name_vi : product.name_en}

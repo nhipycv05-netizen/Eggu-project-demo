@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { ArrowRight, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, Clock, MapPin, Plus, ShoppingBag, Coffee, Croissant, IceCreamBowl, Salad } from 'lucide-react';
 
 // Fallback mock products for visual demonstration when DB is not seeded yet
 const MOCK_FEATURED = [
@@ -50,7 +50,6 @@ interface HomePageProps {
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
-  const t = await getTranslations('home.hero');
   const tc = await getTranslations('common');
 
   // Fetch featured products from Supabase with a fallback to mock data
@@ -74,123 +73,83 @@ export default async function HomePage({ params }: HomePageProps) {
   const isVi = locale === 'vi';
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAF8F5]">
+    <div className="site-frame flex min-h-screen flex-col">
       {/* 1. Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <section className="relative px-7 pb-8 pt-20">
+        <div className="relative mx-auto h-[230px] max-w-[1040px] overflow-hidden rounded-xl bg-[#f3dfb1] shadow-sm">
+          <Image src="/images/hero-sandwich.jpg" alt="EGGU sandwich" fill priority className="object-cover opacity-75" />
           {/* Hero Content */}
-          <div className="lg:col-span-6 space-y-6 z-10">
-            <span className="inline-block px-3 py-1 rounded-full bg-[#EAAA08]/15 text-[#EAAA08] font-bold text-xs uppercase tracking-wider">
-              {t('subtitle')}
-            </span>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-[#1E1B18] leading-none">
-              {isVi ? (
-                <>
-                  Chế biến <span className="text-[#EAAA08]">tươi</span>.<br />
-                  Ăn <span className="text-[#5C4B3E]">ngon</span> hơn.
-                </>
-              ) : (
-                <>
-                  Made <span className="text-[#EAAA08]">fresh</span>.<br />
-                  Made <span className="text-[#5C4B3E]">better</span>.
-                </>
-              )}
-            </h1>
-            <p className="text-[#706860] text-lg font-medium leading-relaxed max-w-lg">
-              {t('description')}
-            </p>
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Link
-                href="/menu"
-                className="px-8 py-4 bg-[#EAAA08] text-[#1E1B18] font-extrabold uppercase tracking-wider rounded-xl shadow-lg hover:shadow-xl hover:bg-[#EAAA08]/90 transition duration-200"
-              >
-                {tc('orderNow')}
-              </Link>
-              <Link
-                href="/about"
-                className="px-8 py-4 bg-white border border-[#E5E0D8] text-[#1E1B18] font-extrabold uppercase tracking-wider rounded-xl hover:bg-[#EFECE6] transition duration-200"
-              >
-                {tc('exploreMenu')}
-              </Link>
+          <div className="absolute inset-0 flex items-center justify-center text-center">
+            <div className="w-[62%] rounded-xl bg-[#fff9f7]/90 px-5 py-4 shadow-sm">
+              <h1 className="text-xl font-bold leading-tight text-[#261d1b] md:text-2xl">Eggu - Sandwich Hàn Quốc<br />Chuẩn Vị</h1>
+              <p className="mx-auto mt-2 max-w-md text-[10px] leading-relaxed text-[#756b67]">Thưởng thức hương vị tươi mới, mềm mại trong từng lớp bánh. Năng lượng tràn đầy cho một ngày tuyệt vời.</p>
+              <Link href="/menu" className="mt-3 inline-block rounded-md bg-[#f8c400] px-8 py-2 text-[9px] font-bold text-[#261d1b]">ĐẶT HÀNG NGAY</Link>
             </div>
-          </div>
-
-          {/* Hero Image */}
-          <div className="lg:col-span-6 relative flex justify-center z-10">
-            <div className="relative w-full max-w-[480px] aspect-square rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition duration-500">
-              <Image
-                src="/images/hero-sandwich.jpg"
-                alt="EGGU Sandwich"
-                fill
-                priority
-                className="object-cover"
-              />
-            </div>
-            {/* Background design elements */}
-            <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-[#EAAA08]/10 blur-2xl z-0" />
-            <div className="absolute -bottom-10 -right-10 w-52 h-52 rounded-full bg-[#5C4B3E]/10 blur-3xl z-0" />
           </div>
         </div>
       </section>
 
-      {/* 2. Featured Products Section */}
-      <section className="py-20 bg-white border-y border-[#E5E0D8]">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-            <div>
-              <span className="text-[#EAAA08] text-xs font-bold uppercase tracking-widest block mb-2">
-                {isVi ? 'Món Nổi Bật' : 'Signature Picks'}
-              </span>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-[#1E1B18]">
-                {isVi ? 'Bán Chạy Nhất Tại EGGU' : 'Our Best Sellers'}
-              </h2>
+      <section className="px-7 pb-10">
+        <div className="mx-auto flex max-w-[760px] justify-between text-center">
+          {[['Sandwich', ShoppingBag], ['Topping', Salad], ['Fried food', Croissant], ['Coffee & drinks', Coffee], ['Fresh juice', IceCreamBowl]].map(([label, Icon], index) => (
+            <div key={String(label)} className="flex w-20 flex-col items-center gap-2 text-[9px] text-[#6b5549]">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-full ${index === 0 ? 'bg-[#f8c400]' : 'bg-[#fae6e2]'}`}><Icon className="h-4 w-4" /></div>
+              <span>{label as string}</span>
             </div>
-            <Link
-              href="/menu"
-              className="group flex items-center space-x-2 text-sm font-extrabold uppercase tracking-wider text-[#EAAA08] hover:text-[#5C4B3E] transition duration-200 mt-4 md:mt-0"
-            >
-              <span>{isVi ? 'Xem thực đơn đầy đủ' : 'View Full Menu'}</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* 2. Featured Products Section */}
+      <section className="border-y border-[#eadfdb] bg-[#fff9f7] px-7 py-5">
+        <div className="mx-auto max-w-[1040px]">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <span className="text-lg font-bold text-[#261d1b]">
+                {isVi ? 'BEST SELLER' : 'BEST SELLER'}
+              </span>
+            </div>
+            <Link href="/menu" className="text-[10px] font-bold text-[#756b67]">Xem tất cả →</Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="bg-[#FAF8F5] rounded-2xl overflow-hidden border border-[#E5E0D8] group hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group flex flex-col justify-between overflow-hidden rounded-lg border border-[#eadfdb] bg-white"
               >
-                <div className="relative aspect-video overflow-hidden">
+                <div className="relative aspect-square overflow-hidden bg-[#f1f1ee]">
                   <Image
                     src={product.image_url || '/images/hero-sandwich.jpg'}
                     alt={isVi ? product.name_vi : product.name_en}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {product.is_best_seller && (
-                    <span className="absolute top-3 left-3 bg-[#EAAA08] text-[#1E1B18] font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
+                    <span className="absolute left-2 top-2 rounded bg-[#f8c400] px-1.5 py-1 text-[8px] font-bold text-[#261d1b]">
                       Best Seller
                     </span>
                   )}
                 </div>
-                <div className="p-6 flex-grow flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-[#1E1B18] group-hover:text-[#EAAA08] transition duration-200">
+                <div className="flex flex-grow flex-col justify-between p-2">
+                  <div className="space-y-1">
+                    <h3 className="text-[10px] font-bold text-[#261d1b]">
                       {isVi ? product.name_vi : product.name_en}
                     </h3>
-                    <p className="text-sm text-[#706860] line-clamp-2 leading-relaxed">
+                    <p className="line-clamp-2 text-[8px] leading-relaxed text-[#756b67]">
                       {isVi ? product.description_vi : product.description_en}
                     </p>
                   </div>
-                  <div className="flex items-center justify-between pt-6 border-t border-[#E5E0D8] mt-6">
-                    <span className="text-lg font-black text-[#5C4B3E]">
-                      {product.price.toLocaleString()} VND
+                  <div className="mt-3 flex items-center justify-between border-t border-[#eadfdb] pt-2">
+                    <span className="text-[9px] font-bold text-[#6b5549]">
+                      {product.price.toLocaleString()}đ
                     </span>
                     <Link
                       href={`/menu/${product.slug}`}
-                      className="px-4 py-2 bg-[#1E1B18] text-[#FAF8F5] text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-[#EAAA08] hover:text-[#1E1B18] transition duration-200"
+                      aria-label={isVi ? 'Thêm vào giỏ' : 'Add to cart'}
+                      className="flex h-5 w-5 items-center justify-center rounded-full bg-[#fae6e2] text-[#ee6b61]"
                     >
-                      {isVi ? 'Tùy chỉnh' : 'Order Now'}
+                      <Plus className="h-3 w-3" />
                     </Link>
                   </div>
                 </div>
@@ -200,8 +159,8 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
-      {/* 3. Brand Story / Ingredients Section */}
-      <section className="py-24 bg-[#FAF8F5]">
+      {/* Additional content remains available below the compact reference fold. */}
+      <section className="hidden py-24 bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
             <span className="text-[#EAAA08] text-xs font-bold uppercase tracking-widest block">

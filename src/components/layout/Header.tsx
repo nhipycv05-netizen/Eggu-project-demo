@@ -61,23 +61,23 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#FAF8F5]/80 backdrop-blur-md border-b border-[#E5E0D8] py-3 shadow-sm'
-          : 'bg-transparent py-5'
+          ? 'bg-[#fff9f7]/95 backdrop-blur-md border-b border-[#eadfdb]'
+          : 'bg-[#fff9f7] border-b border-[#f1e7e4]'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      <div className="site-frame border-0 px-7 h-14 flex items-center justify-between">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center space-x-2 group">
-          <div className="w-9 h-9 rounded-full bg-[#EAAA08] flex items-center justify-center font-bold text-[#1E1B18] shadow-md group-hover:scale-105 transition duration-200">
-            🍳
+          <div className="w-7 h-7 rounded-full bg-[#f8c400] flex items-center justify-center text-[11px] font-black text-[#261d1b]">
+            E
           </div>
-          <span className="text-2xl font-black tracking-tight text-[#1E1B18]">
-            EGGU<span className="text-[#EAAA08]">.</span>
+          <span className="text-base font-bold tracking-tight text-[#6b5549]">
+            Eggu
           </span>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => {
             const isActive =
               link.href === '/'
@@ -87,15 +87,15 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-bold uppercase tracking-wider relative py-1 transition-colors duration-200 ${
+                className={`text-[10px] relative py-1 transition-colors duration-200 ${
                   isActive
-                    ? 'text-[#1E1B18]'
-                    : 'text-[#706860] hover:text-[#1E1B18]'
+                    ? 'text-[#6b5549] font-bold'
+                    : 'text-[#756b67] hover:text-[#6b5549]'
                 }`}
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#EAAA08] rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-px bg-[#f8c400]" />
                 )}
               </Link>
             );
@@ -103,14 +103,14 @@ export default function Header() {
         </nav>
 
         {/* Right side controls */}
-        <div className="hidden md:flex items-center space-x-6">
+        <div className="hidden md:flex items-center gap-4">
           <LanguageSwitcher />
 
           {/* Cart Trigger Link */}
-          <Link href="/cart" className="relative group p-2 rounded-full hover:bg-[#EFECE6] transition duration-200">
-            <ShoppingBag className="w-6 h-6 text-[#1E1B18] group-hover:scale-105 transition-transform duration-200" />
+          <Link href="/cart" aria-label="Cart" className="relative group p-1 transition duration-200">
+            <ShoppingBag className="w-4 h-4 text-[#6b5549]" />
             {cartCount > 0 && (
-              <span className="absolute top-0 right-0 w-5 h-5 bg-[#EAAA08] text-[#1E1B18] font-bold text-xs rounded-full flex items-center justify-center animate-bounce shadow-sm">
+                <span className="absolute -top-2 -right-2 w-3.5 h-3.5 bg-[#ee6b61] text-white font-bold text-[8px] rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}
@@ -120,8 +120,8 @@ export default function Header() {
         {/* Mobile controls bar */}
         <div className="flex md:hidden items-center space-x-4">
           {/* Cart icon for mobile */}
-          <Link href="/cart" className="relative p-2">
-            <ShoppingBag className="w-6 h-6 text-[#1E1B18]" />
+          <Link href="/cart" aria-label="Cart" className="relative p-2">
+            <ShoppingBag className="w-5 h-5 text-[#6b5549]" />
             {cartCount > 0 && (
               <span className="absolute top-0 right-0 w-4 h-4 bg-[#EAAA08] text-[#1E1B18] font-bold text-[10px] rounded-full flex items-center justify-center shadow-sm">
                 {cartCount}

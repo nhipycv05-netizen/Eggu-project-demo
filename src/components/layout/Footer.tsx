@@ -16,22 +16,18 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#1E1B18] text-[#FAF8F5] border-t border-neutral-800 pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="bg-[#e4e5e2] text-[#6b5549] border-t border-[#d7d9d5] py-7">
+      <div className="site-frame border-0 bg-transparent px-7 grid grid-cols-2 md:grid-cols-4 gap-6 text-[9px]">
         {/* Brand Column */}
-        <div className="space-y-4 md:col-span-2">
+        <div className="space-y-2 md:col-span-2">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-full bg-[#EAAA08] flex items-center justify-center font-bold text-[#1E1B18]">
-              🍳
-            </div>
-            <span className="text-xl font-black tracking-tight">
-              EGGU<span className="text-[#EAAA08]">.</span>
-            </span>
+            <div className="w-6 h-6 rounded-full bg-[#f8c400] flex items-center justify-center font-bold text-[#261d1b]">E</div>
+            <span className="text-sm font-bold">Eggu</span>
           </Link>
-          <p className="text-[#706860] max-w-sm text-sm font-medium leading-relaxed">
-            Crafting the ultimate Korean egg sandwich experience with fluffy, melt-in-your-mouth scrambled eggs, premium butter-toasted brioche, and signature sweet-savory sauces.
+          <p className="text-[#756b67] max-w-sm leading-relaxed">
+            © 2026 Eggu Korean Sandwich. All rights reserved.
           </p>
-          <div className="flex space-x-4 pt-2">
+          <div className="hidden">
             <a href="#" className="w-8 h-8 rounded-full bg-[#5C4B3E]/30 flex items-center justify-center text-sm font-bold hover:bg-[#EAAA08] hover:text-[#1E1B18] transition duration-200">
               FB
             </a>
@@ -46,15 +42,15 @@ export default function Footer() {
 
         {/* Quick Links Column */}
         <div>
-          <h4 className="text-[#EAAA08] font-bold text-xs uppercase tracking-wider mb-4">
-            Navigation
+          <h4 className="text-[#6b5549] font-bold mb-2">
+            About Us
           </h4>
-          <ul className="space-y-3">
+          <ul className="space-y-1 text-[#756b67]">
             {links.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-[#EFECE6]/70 hover:text-[#EAAA08] text-sm font-bold uppercase tracking-wider transition duration-150"
+                  className="hover:text-[#6b5549] transition duration-150"
                 >
                   {link.label}
                 </Link>
@@ -65,29 +61,19 @@ export default function Footer() {
 
         {/* Store Info Column */}
         <div className="space-y-3 text-sm">
-          <h4 className="text-[#EAAA08] font-bold text-xs uppercase tracking-wider mb-4">
-            Opening Hours
+          <h4 className="text-[#6b5549] font-bold mb-2">
+            Store Locator
           </h4>
-          <p className="text-[#EFECE6]/70 font-semibold">
-            Monday - Sunday
-          </p>
-          <p className="text-xl font-bold text-[#EFECE6]">
-            07:00 AM - 10:00 PM
-          </p>
-          <div className="border-t border-neutral-800 pt-4 mt-4 space-y-2">
-            <p className="text-[#706860] text-xs font-bold uppercase tracking-wider">
-              Hotline
-            </p>
-            <p className="font-extrabold text-[#EAAA08] text-lg">
-              1900 1234
-            </p>
+          <p className="text-[#756b67]">Nguyễn Huệ, Quận 1</p>
+          <div className="space-y-1 text-[#756b67]">
+            <p>Privacy Policy</p>
+            <p>07:00 - 22:00</p>
           </div>
         </div>
       </div>
 
       {/* Footer Bottom Bar */}
-      <div className="max-w-7xl mx-auto px-6 border-t border-neutral-800 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-[#706860] font-bold tracking-wider">
-        <p>© 2026 EGGU Korean Egg Sandwich. All rights reserved.</p>
+      <div className="hidden max-w-7xl mx-auto px-6">
         <div className="flex space-x-6 mt-4 md:mt-0">
           <a href="#" className="hover:text-[#EFECE6] transition duration-150">Privacy Policy</a>
           <a href="#" className="hover:text-[#EFECE6] transition duration-150">Terms of Service</a>
