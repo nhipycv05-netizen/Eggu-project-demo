@@ -49,26 +49,26 @@
 }
 
 :root {
-  --background: #FAF8F5; /* Warm Soft Cream */
-  --foreground: #1E1B18; /* Rich Charcoal */
-  --card: #FFFFFF;
+  --background: #fff9f7;
+  --foreground: #261d1b;
+  --card: #ffffff;
   --card-foreground: #1E1B18;
   --popover: #FFFFFF;
   --popover-foreground: #1E1B18;
-  --primary: #EAAA08; /* Vibrant Egg Yellow */
-  --primary-foreground: #1E1B18;
-  --secondary: #5C4B3E; /* Cozy Warm Brown */
-  --secondary-foreground: #FAF8F5;
-  --muted: #EFECE6;
-  --muted-foreground: #706860;
-  --accent: #FFF6DF; /* Soft light yellow for hovers */
-  --accent-foreground: #1E1B18;
+  --primary: #f8c400;
+  --primary-foreground: #261d1b;
+  --secondary: #6b5549;
+  --secondary-foreground: #fff9f7;
+  --muted: #f0f0ed;
+  --muted-foreground: #756b67;
+  --accent: #fff2d0;
+  --accent-foreground: #261d1b;
   --destructive: #DC2626;
   --destructive-foreground: #FAF8F5;
-  --border: #E5E0D8;
-  --input: #E5E0D8;
-  --ring: #EAAA08;
-  --radius: 0.75rem;
+  --border: #eadfdb;
+  --input: #eadfdb;
+  --ring: #f8c400;
+  --radius: 0.5rem;
   --sidebar: #FFFFFF;
   --sidebar-foreground: #1E1B18;
   --sidebar-primary: #EAAA08;
@@ -119,8 +119,19 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(#eadfdb 0.7px, transparent 0.7px);
+    background-size: 15px 15px;
   }
   html {
     @apply font-sans;
+  }
+}
+
+@layer components {
+  .site-frame {
+    width: min(100% - 1rem, 1180px);
+    margin-inline: auto;
+    background: #fff9f7;
+    border-inline: 1px solid #eadfdb;
   }
 }
