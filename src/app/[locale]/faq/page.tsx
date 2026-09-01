@@ -59,54 +59,56 @@ export default async function FaqPage({ params }: FaqPageProps) {
   const categories = Array.from(new Set(faqs.map((f) => f.category)));
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 pb-20">
-      <div className="max-w-3xl mx-auto px-6 space-y-16">
-        {/* Title Header */}
-        <div className="text-center space-y-4">
-          <span className="text-[#EAAA08] text-xs font-bold uppercase tracking-widest block">
-            {isVi ? 'Hỏi Đáp' : 'FAQ'}
-          </span>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-[#1E1B18]">
-            {t('title')}
-          </h1>
-          <p className="text-[#706860] font-medium text-lg leading-relaxed max-w-xl mx-auto">
-            {t('subtitle')}
-          </p>
-        </div>
+    <div className="min-h-screen bg-[#F8F9FA] pt-24 md:pt-28 pb-12 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto space-y-12 md:space-y-16">
+          {/* Title Header */}
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block">
+              {isVi ? 'Hỏi Đáp' : 'FAQ'}
+            </span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#111111]">
+              {t('title')}
+            </h1>
+            <p className="text-sm md:text-base text-[#6B7280] font-medium leading-relaxed">
+              {t('subtitle')}
+            </p>
+          </div>
 
-        {/* FAQ Categories Accodions List */}
-        <div className="space-y-12">
-          {categories.map((category) => {
-            const categoryFaqs = faqs.filter((f) => f.category === category);
-            return (
-              <div key={category} className="space-y-6">
-                <h2 className="text-xl font-black text-[#5C4B3E] uppercase tracking-wider border-b border-[#E5E0D8] pb-2">
-                  {category}
-                </h2>
-                <div className="divide-y divide-[#E5E0D8]/60">
-                  {categoryFaqs.map((faq) => (
-                    <details
-                      key={faq.id}
-                      className="group py-5 [&_summary::-webkit-details-marker]:hidden"
-                    >
-                      <summary className="flex items-center justify-between cursor-pointer focus:outline-none list-none">
-                        <h3 className="text-base md:text-lg font-bold text-[#1E1B18] group-open:text-[#EAAA08] transition-colors duration-200 pr-4">
-                          {isVi ? faq.question_vi : faq.question_en}
-                        </h3>
-                        <span className="relative w-5 h-5 shrink-0 flex items-center justify-center">
-                          <Plus className="w-5 h-5 text-[#706860] group-open:hidden transition-all duration-200" />
-                          <Minus className="w-5 h-5 text-[#706860] hidden group-open:block transition-all duration-200" />
-                        </span>
-                      </summary>
-                      <div className="mt-4 text-[#706860] text-sm md:text-base leading-relaxed font-medium pl-1 max-w-2xl">
-                        {isVi ? faq.answer_vi : faq.answer_en}
-                      </div>
-                    </details>
-                  ))}
+          {/* FAQ Categories Accodions List */}
+          <div className="space-y-12">
+            {categories.map((category) => {
+              const categoryFaqs = faqs.filter((f) => f.category === category);
+              return (
+                <div key={category} className="space-y-6">
+                  <h2 className="text-xl font-black text-[#111111] uppercase tracking-wider border-b border-[#E5E7EB] pb-2">
+                    {category}
+                  </h2>
+                  <div className="divide-y divide-[#E5E7EB]">
+                    {categoryFaqs.map((faq) => (
+                      <details
+                        key={faq.id}
+                        className="group py-5 [&_summary::-webkit-details-marker]:hidden"
+                      >
+                        <summary className="flex items-center justify-between cursor-pointer focus:outline-none list-none">
+                          <h3 className="text-base md:text-lg font-bold text-[#111111] group-open:text-[#E53935] transition-colors duration-200 pr-4">
+                            {isVi ? faq.question_vi : faq.question_en}
+                          </h3>
+                          <span className="relative w-5 h-5 shrink-0 flex items-center justify-center">
+                            <Plus className="w-5 h-5 text-[#6B7280] group-open:hidden transition-all duration-200" />
+                            <Minus className="w-5 h-5 text-[#E53935] hidden group-open:block transition-all duration-200" />
+                          </span>
+                        </summary>
+                        <div className="mt-4 text-[#6B7280] text-sm md:text-base leading-relaxed font-medium pl-1 max-w-2xl">
+                          {isVi ? faq.answer_vi : faq.answer_en}
+                        </div>
+                      </details>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

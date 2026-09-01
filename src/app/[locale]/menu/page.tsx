@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
+import SafeImage from '@/components/ui/SafeImage';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 
@@ -124,12 +124,12 @@ const MOCK_PRODUCTS = [
 
 interface MenuPageProps {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ category?: string; q?: string }>;
 }
 
 export default async function MenuPage({ params, searchParams }: MenuPageProps) {
   const { locale } = await params;
-  const { category: selectedCategorySlug = 'all' } = await searchParams;
+  const { category: selectedCategorySlug = 'all', q = '' } = await searchParams;
   
   const tm = await getTranslations('menu');
   const tc = await getTranslations('common');
@@ -170,36 +170,46 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
   // 2. Identify the active category record
   const activeCategory = categories.find((c) => c.slug === selectedCategorySlug) || categories[0];
 
-  // 3. Filter products
-  const filteredProducts = activeCategory.id === 'all'
+  // 3. Filter products by category and query
+  let filteredProducts = activeCategory.id === 'all'
     ? products
     : products.filter((p) => p.category_id === activeCategory.id);
 
+  if (q.trim()) {
+    const searchQuery = q.trim().toLowerCase();
+    filteredProducts = filteredProducts.filter((p) =>
+      p.name_vi.toLowerCase().includes(searchQuery) ||
+      p.name_en.toLowerCase().includes(searchQuery) ||
+      p.description_vi.toLowerCase().includes(searchQuery) ||
+      p.description_en.toLowerCase().includes(searchQuery)
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 pb-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-12 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Title Header */}
-        <div className="text-center max-w-xl mx-auto mb-16 space-y-4">
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-[#1E1B18]">
+        <div className="text-center max-w-xl mx-auto space-y-3">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#111111]">
             {tm('title')}
           </h1>
-          <p className="text-[#706860] font-medium text-sm md:text-base leading-relaxed">
+          <p className="text-sm md:text-base text-[#6B7280] font-medium leading-relaxed">
             {tm('subtitle')}
           </p>
         </div>
 
         {/* Categories Bar */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12 border-b border-[#E5E0D8] pb-6">
+        <div className="flex flex-wrap justify-center gap-2 border-b border-[#E5E7EB] pb-6">
           {categories.map((cat) => {
             const isActive = cat.slug === selectedCategorySlug;
             return (
               <Link
                 key={cat.id}
                 href={cat.slug === 'all' ? '/menu' : `/menu?category=${cat.slug}`}
-                className={`px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-200 ${
+                className={`px-4 sm:px-5 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#EAAA08] text-[#1E1B18] shadow-md scale-105'
-                    : 'bg-white text-[#706860] hover:text-[#1E1B18] hover:bg-[#EFECE6] border border-[#E5E0D8]'
+                    ? 'bg-[#E53935] text-white shadow-md scale-105'
+                    : 'bg-white text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA] border border-[#E5E7EB]'
                 }`}
               >
                 {isVi ? cat.name_vi : cat.name_en}
@@ -210,40 +220,41 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
 
         {/* Product Grid */}
         {filteredProducts.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-[#E5E0D8] max-w-md mx-auto p-8 space-y-4">
-            <span className="text-4xl">🍳</span>
-            <p className="text-[#706860] font-semibold">{tm('emptyState')}</p>
+          <div className="text-center py-16 bg-white rounded-3xl border border-[#E5E7EB] max-w-md mx-auto p-8 space-y-4 shadow-xs">
+            <span className="text-4xl block">🍳</span>
+            <p className="text-[#6B7280] font-bold text-sm">{tm('emptyState')}</p>
             <Link
               href="/menu"
-              className="inline-block text-xs font-black uppercase tracking-wider text-[#EAAA08] hover:text-[#5C4B3E]"
+              className="inline-block text-xs font-black uppercase tracking-wider text-[#111111] hover:text-[#E53935]"
             >
               Reset Filters
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-2xl overflow-hidden border border-[#E5E0D8] group hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="bg-white rounded-2xl overflow-hidden border border-[#E5E7EB] hover:border-[#E53935]/40 group hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full"
               >
                 {/* Product Thumbnail */}
                 <div className="relative aspect-square overflow-hidden bg-neutral-100">
-                  <Image
+                  <SafeImage
                     src={product.image_url || '/images/hero-sandwich.jpg'}
                     alt={isVi ? product.name_vi : product.name_en}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   {/* Badges overlay */}
                   <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                     {product.is_new && (
-                      <span className="bg-[#5C4B3E] text-[#FAF8F5] font-bold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm">
+                      <span className="bg-[#E53935] text-white font-bold text-[9px] uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
                         {tm('newBadge')}
                       </span>
                     )}
                     {product.is_best_seller && (
-                      <span className="bg-[#EAAA08] text-[#1E1B18] font-bold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm">
+                      <span className="bg-[#FFC107] text-[#111111] font-bold text-[9px] uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-sm">
                         {tm('bestSellerBadge')}
                       </span>
                     )}
@@ -253,21 +264,21 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
                 {/* Product Content Details */}
                 <div className="p-4 md:p-5 flex-grow flex flex-col justify-between space-y-4">
                   <div className="space-y-1.5">
-                    <h3 className="text-base md:text-lg font-black text-[#1E1B18] line-clamp-1 group-hover:text-[#EAAA08] transition duration-200">
+                    <h3 className="text-base sm:text-lg font-black text-[#111111] line-clamp-1 group-hover:text-[#E53935] transition-colors">
                       {isVi ? product.name_vi : product.name_en}
                     </h3>
-                    <p className="text-xs text-[#706860] line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#6B7280] line-clamp-2 leading-relaxed font-medium">
                       {isVi ? product.description_vi : product.description_en}
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-[#E5E0D8] gap-3">
-                    <span className="text-base font-black text-[#5C4B3E] shrink-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-[#E5E7EB] gap-3">
+                    <span className="text-base font-black text-[#E53935] shrink-0">
                       {product.price.toLocaleString()} {tc('currency')}
                     </span>
                     <Link
                       href={`/menu/${product.slug}`}
-                      className="w-full sm:w-auto px-4 py-2 bg-[#1E1B18] text-[#FAF8F5] text-center text-xs font-black uppercase tracking-wider rounded-lg hover:bg-[#EAAA08] hover:text-[#1E1B18] transition duration-200 shrink-0"
+                      className="w-full sm:w-auto px-4 py-2 bg-[#E53935] text-white text-center text-xs font-black uppercase tracking-wider rounded-full hover:bg-[#D32F2F] transition-all shrink-0 shadow-xs"
                     >
                       {tm('customize')}
                     </Link>

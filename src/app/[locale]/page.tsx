@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { ArrowRight, Clock, MapPin } from 'lucide-react';
+import { ArrowRight, Clock, MapPin, Plus, ShoppingBag, Coffee, Croissant, IceCreamBowl, Salad } from 'lucide-react';
 
 // Fallback mock products for visual demonstration when DB is not seeded yet
 const MOCK_FEATURED = [
@@ -42,6 +42,18 @@ const MOCK_FEATURED = [
     is_new: false,
     is_best_seller: true,
   },
+  {
+    id: 'cfcccccc-cccc-cccc-cccc-cccccccccccc',
+    name_vi: 'Bơ Sáp Tươi Đặc Biệt',
+    name_en: 'Avocado Holic',
+    slug: 'avocado-holic',
+    description_vi: 'Bơ sáp tươi thái lát bùi béo kết hợp trứng khuấy mềm và sốt trứng đặc chế.',
+    description_en: 'Rich soft-scrambled eggs combined with fresh sliced creamy avocado and signature sauce.',
+    price: 59000,
+    image_url: '/images/hero-sandwich.jpg',
+    is_new: true,
+    is_best_seller: true,
+  },
 ];
 
 interface HomePageProps {
@@ -50,7 +62,6 @@ interface HomePageProps {
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
-  const t = await getTranslations('home.hero');
   const tc = await getTranslations('common');
 
   // Fetch featured products from Supabase with a fallback to mock data
@@ -62,8 +73,8 @@ export default async function HomePage({ params }: HomePageProps) {
       .select('*')
       .eq('is_best_seller', true)
       .eq('is_active', true)
-      .limit(3);
-    
+      .limit(4);
+
     if (data && data.length > 0) {
       products = data;
     }
@@ -74,123 +85,152 @@ export default async function HomePage({ params }: HomePageProps) {
   const isVi = locale === 'vi';
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FAF8F5]">
+    <div className="flex min-h-screen flex-col bg-[#F8F9FA]">
       {/* 1. Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Hero Content */}
-          <div className="lg:col-span-6 space-y-6 z-10">
-            <span className="inline-block px-3 py-1 rounded-full bg-[#EAAA08]/15 text-[#EAAA08] font-bold text-xs uppercase tracking-wider">
-              {t('subtitle')}
-            </span>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-[#1E1B18] leading-none">
-              {isVi ? (
-                <>
-                  Chế biến <span className="text-[#EAAA08]">tươi</span>.<br />
-                  Ăn <span className="text-[#5C4B3E]">ngon</span> hơn.
-                </>
-              ) : (
-                <>
-                  Made <span className="text-[#EAAA08]">fresh</span>.<br />
-                  Made <span className="text-[#5C4B3E]">better</span>.
-                </>
-              )}
-            </h1>
-            <p className="text-[#706860] text-lg font-medium leading-relaxed max-w-lg">
-              {t('description')}
-            </p>
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Link
-                href="/menu"
-                className="px-8 py-4 bg-[#EAAA08] text-[#1E1B18] font-extrabold uppercase tracking-wider rounded-xl shadow-lg hover:shadow-xl hover:bg-[#EAAA08]/90 transition duration-200"
-              >
-                {tc('orderNow')}
-              </Link>
-              <Link
-                href="/about"
-                className="px-8 py-4 bg-white border border-[#E5E0D8] text-[#1E1B18] font-extrabold uppercase tracking-wider rounded-xl hover:bg-[#EFECE6] transition duration-200"
-              >
-                {tc('exploreMenu')}
-              </Link>
+      <section className="pt-24 md:pt-28 pb-12 md:pb-16 bg-[#F8F9FA]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl bg-white p-8 md:p-12 lg:p-16 shadow-sm border border-[#E5E7EB]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-7 space-y-6 text-left">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E53935]/10 text-[#E53935] text-xs font-black uppercase tracking-wider">
+                  <span className="w-2 h-2 rounded-full bg-[#E53935]" />
+                  <span>{isVi ? 'Sandwich Trứng Chuẩn Vị Hàn Quốc' : 'Authentic Korean Egg Sandwich'}</span>
+                </div>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-[#111111] tracking-tight">
+                  {isVi ? 'Bánh Mì Trứng Nóng Hổi Mỗi Ngày' : 'Freshly Toasted Gourmet Egg Sandwiches'}
+                </h1>
+                <p className="text-sm md:text-base lg:text-lg leading-relaxed text-[#6B7280] font-medium max-w-xl">
+                  {isVi
+                    ? 'Thưởng thức hương vị tươi mới, trứng khuấy bơ mềm mịn tan chảy cùng bánh mì Brioche nướng bơ tỏi giòn thơm chuẩn phong cách EGGDROP.'
+                    : 'Indulge in fluffy golden scrambled eggs paired with thick-sliced French brioche toast and signature homemade sauces.'}
+                </p>
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <Link
+                    href="/menu"
+                    className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#E53935] text-white font-black text-sm uppercase tracking-wider hover:bg-[#D32F2F] transition-all shadow-md active:scale-95"
+                  >
+                    {tc('orderNow')}
+                  </Link>
+                  <Link
+                    href="/about"
+                    className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#FFC107] text-[#111111] font-black text-sm uppercase tracking-wider hover:bg-[#FFB300] transition-all shadow-xs"
+                  >
+                    {isVi ? 'Tìm hiểu thêm' : 'Learn More'}
+                  </Link>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5 relative flex justify-center">
+                <div className="relative w-full max-w-[420px] aspect-square rounded-3xl overflow-hidden shadow-xl border-4 border-[#F8F9FA] transform hover:scale-105 transition-transform duration-500">
+                  <Image
+                    src="/images/hero-sandwich.jpg"
+                    alt="EGGU Sandwich"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 420px"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Hero Image */}
-          <div className="lg:col-span-6 relative flex justify-center z-10">
-            <div className="relative w-full max-w-[480px] aspect-square rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition duration-500">
-              <Image
-                src="/images/hero-sandwich.jpg"
-                alt="EGGU Sandwich"
-                fill
-                priority
-                className="object-cover"
-              />
-            </div>
-            {/* Background design elements */}
-            <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-[#EAAA08]/10 blur-2xl z-0" />
-            <div className="absolute -bottom-10 -right-10 w-52 h-52 rounded-full bg-[#5C4B3E]/10 blur-3xl z-0" />
+      {/* Category Icons Row */}
+      <section className="py-8 bg-white border-y border-[#E5E7EB]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6 text-center">
+            {[
+              ['Sandwich', ShoppingBag],
+              ['Topping', Salad],
+              ['Toast & Bread', Croissant],
+              ['Coffee & Tea', Coffee],
+              ['Fresh Drinks', IceCreamBowl],
+            ].map(([label, Icon], index) => (
+              <Link
+                key={String(label)}
+                href="/menu"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-[#F8F9FA] hover:bg-white hover:border-[#E53935] border border-[#E5E7EB] transition-all duration-200 group shadow-xs"
+              >
+                <div className={`flex h-12 w-12 items-center justify-center rounded-full transition-transform group-hover:scale-110 ${index === 0 ? 'bg-[#E53935] text-white' : 'bg-white text-[#111111] border border-[#E5E7EB]'}`}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <span className="text-xs font-bold text-[#111111] group-hover:text-[#E53935] transition-colors">{label as string}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
       {/* 2. Featured Products Section */}
-      <section className="py-20 bg-white border-y border-[#E5E0D8]">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <section className="py-12 md:py-16 bg-[#F8F9FA]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E5E7EB] pb-4">
             <div>
-              <span className="text-[#EAAA08] text-xs font-bold uppercase tracking-widest block mb-2">
-                {isVi ? 'Món Nổi Bật' : 'Signature Picks'}
+              <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block mb-1">
+                {isVi ? 'Món Nổi Bật' : 'Featured Products'}
               </span>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight text-[#1E1B18]">
-                {isVi ? 'Bán Chạy Nhất Tại EGGU' : 'Our Best Sellers'}
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#111111]">
+                {isVi ? 'Bestseller Được Yêu Thích' : 'Our Top Bestsellers'}
               </h2>
             </div>
             <Link
               href="/menu"
-              className="group flex items-center space-x-2 text-sm font-extrabold uppercase tracking-wider text-[#EAAA08] hover:text-[#5C4B3E] transition duration-200 mt-4 md:mt-0"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#111111] hover:text-[#E53935] transition-colors"
             >
-              <span>{isVi ? 'Xem thực đơn đầy đủ' : 'View Full Menu'}</span>
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+              <span>{isVi ? 'Xem toàn bộ thực đơn' : 'View All Menu'}</span>
+              <ArrowRight className="w-4 h-4 text-[#E53935]" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {products.map((product) => (
               <div
                 key={product.id}
-                className="bg-[#FAF8F5] rounded-2xl overflow-hidden border border-[#E5E0D8] group hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group flex flex-col justify-between h-full bg-white rounded-2xl overflow-hidden border border-[#E5E7EB] hover:border-[#E53935]/40 hover:shadow-xl transition-all duration-300"
               >
-                <div className="relative aspect-video overflow-hidden">
+                <div className="relative aspect-square overflow-hidden bg-neutral-100">
                   <Image
                     src={product.image_url || '/images/hero-sandwich.jpg'}
                     alt={isVi ? product.name_vi : product.name_en}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {product.is_best_seller && (
-                    <span className="absolute top-3 left-3 bg-[#EAAA08] text-[#1E1B18] font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
+                    <span className="absolute top-3 left-3 bg-[#FFC107] text-[#111111] px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-xs">
                       Best Seller
                     </span>
                   )}
+                  {product.is_new && (
+                    <span className="absolute top-3 right-3 bg-[#E53935] text-white px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-xs">
+                      NEW
+                    </span>
+                  )}
                 </div>
-                <div className="p-6 flex-grow flex flex-col justify-between">
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-[#1E1B18] group-hover:text-[#EAAA08] transition duration-200">
+
+                <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
+                  <div className="space-y-1.5">
+                    <h3 className="text-base sm:text-lg font-black text-[#111111] line-clamp-1 group-hover:text-[#E53935] transition-colors">
                       {isVi ? product.name_vi : product.name_en}
                     </h3>
-                    <p className="text-sm text-[#706860] line-clamp-2 leading-relaxed">
+                    <p className="line-clamp-2 text-xs text-[#6B7280] leading-relaxed font-medium">
                       {isVi ? product.description_vi : product.description_en}
                     </p>
                   </div>
-                  <div className="flex items-center justify-between pt-6 border-t border-[#E5E0D8] mt-6">
-                    <span className="text-lg font-black text-[#5C4B3E]">
-                      {product.price.toLocaleString()} VND
+
+                  <div className="flex items-center justify-between pt-4 border-t border-[#E5E7EB] gap-2">
+                    <span className="text-base font-black text-[#E53935]">
+                      {product.price.toLocaleString()}đ
                     </span>
                     <Link
                       href={`/menu/${product.slug}`}
-                      className="px-4 py-2 bg-[#1E1B18] text-[#FAF8F5] text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-[#EAAA08] hover:text-[#1E1B18] transition duration-200"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#111111] hover:bg-[#E53935] text-white font-bold text-xs transition-colors shadow-xs"
+                      aria-label={isVi ? 'Thêm vào giỏ' : 'Add to cart'}
                     >
-                      {isVi ? 'Tùy chỉnh' : 'Order Now'}
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>{isVi ? 'Chọn món' : 'Select'}</span>
                     </Link>
                   </div>
                 </div>
@@ -200,114 +240,115 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
-      {/* 3. Brand Story / Ingredients Section */}
-      <section className="py-24 bg-[#FAF8F5]">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-6">
-            <span className="text-[#EAAA08] text-xs font-bold uppercase tracking-widest block">
-              {isVi ? 'Câu Chuyện Thương Hiệu' : 'Our Ingredients'}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-[#1E1B18] leading-tight">
-              {isVi ? (
-                <>Bí mật tạo nên hương vị mềm béo tan chảy</>
-              ) : (
-                <>Fluffy, golden eggs cooked to perfection</>
-              )}
-            </h2>
-            <p className="text-[#706860] leading-relaxed font-medium">
-              {isVi
-                ? 'Tại EGGU, chúng tôi tin rằng một bữa sáng hoàn hảo bắt đầu từ những nguyên liệu chất lượng tốt nhất. Mỗi ổ bánh mì kẹp trứng đều được chuẩn bị cẩn thận: những quả trứng tươi sạch từ trang trại, phô mai Cheddar béo ngậy, thịt xông khói giòn tan kẹp giữa lớp bánh mì Brioche thơm nồng bơ tỏi nướng nóng hổi.'
-                : 'At EGGU, we believe that the perfect morning begins with high-quality ingredients. Every single sandwich is crafted with precision: farm-fresh organic eggs, rich melted Cheddar cheese, and crispy bacon slices wrapped inside thick-sliced, garlic butter-toasted French Brioche bread.'}
-            </p>
+      {/* 3. Story Section */}
+      <section className="py-12 md:py-16 bg-white border-t border-[#E5E7EB]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="lg:col-span-6 space-y-6">
+              <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block">
+                {isVi ? 'Câu Chuyện Thương Hiệu' : 'Our Ingredients'}
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#111111] leading-tight">
+                {isVi ? 'Bí quyết tạo nên hương vị mềm béo tan chảy' : 'Fluffy, golden eggs cooked to perfection'}
+              </h2>
+              <p className="text-sm md:text-base text-[#6B7280] leading-relaxed font-medium">
+                {isVi
+                  ? 'Tại EGGU, chúng tôi tin rằng một bữa sáng hoàn hảo bắt đầu từ những nguyên liệu chất lượng tốt nhất. Mỗi ổ bánh mì kẹp trứng đều được chuẩn bị cẩn thận: những quả trứng tươi sạch từ trang trại, phô mai Cheddar béo ngậy, thịt xông khói giòn tan kẹp giữa lớp bánh mì Brioche thơm nồng bơ tỏi nướng nóng hổi.'
+                  : 'At EGGU, we believe that the perfect morning begins with high-quality ingredients. Every single sandwich is crafted with precision: farm-fresh organic eggs, rich melted Cheddar cheese, and crispy bacon slices wrapped inside thick-sliced, garlic butter-toasted French Brioche bread.'}
+              </p>
 
-            <div className="grid grid-cols-2 gap-6 pt-4">
-              <div className="p-4 bg-white rounded-xl border border-[#E5E0D8]">
-                <h4 className="font-bold text-[#1E1B18] mb-1">🥚 Farm-Fresh Eggs</h4>
-                <p className="text-xs text-[#706860]">Pasteurized, locally sourced fresh eggs whipped with dairy butter.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="p-4 bg-[#F8F9FA] rounded-2xl border border-[#E5E7EB]">
+                  <h4 className="font-black text-[#111111] text-sm mb-1">🥚 Farm-Fresh Eggs</h4>
+                  <p className="text-xs text-[#6B7280]">Trứng thanh trùng sạch, đánh bông bơ lạt nguyên chất.</p>
+                </div>
+                <div className="p-4 bg-[#F8F9FA] rounded-2xl border border-[#E5E7EB]">
+                  <h4 className="font-black text-[#111111] text-sm mb-1">🍞 Butter Brioche</h4>
+                  <p className="text-xs text-[#6B7280]">Bánh mì nướng bơ tỏi Pháp mềm xốp, thơm nồng.</p>
+                </div>
               </div>
-              <div className="p-4 bg-white rounded-xl border border-[#E5E0D8]">
-                <h4 className="font-bold text-[#1E1B18] mb-1">🍞 Butter Brioche</h4>
-                <p className="text-xs text-[#706860]">Thick, soft bread toasted with rich French butter and aromatic garlic.</p>
+
+              <div className="pt-2">
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wider text-[#111111] hover:text-[#E53935] transition-colors"
+                >
+                  <span>{isVi ? 'Khám phá câu chuyện EGGU' : 'Discover EGGU Story'}</span>
+                  <ArrowRight className="w-4 h-4 text-[#E53935]" />
+                </Link>
               </div>
             </div>
 
-            <div className="pt-2">
-              <Link
-                href="/about"
-                className="inline-flex items-center space-x-2 text-sm font-extrabold uppercase tracking-wider text-[#5C4B3E] hover:text-[#EAAA08] transition duration-200"
-              >
-                <span>{isVi ? 'Khám phá câu chuyện EGGU' : 'Discover EGGU Story'}</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+            <div className="lg:col-span-6 relative flex justify-center">
+              <div className="relative aspect-square w-full max-w-[480px] rounded-3xl overflow-hidden shadow-xl border border-[#E5E7EB]">
+                <Image
+                  src="/images/hero-sandwich.jpg"
+                  alt="EGGU Story"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 480px"
+                  className="object-cover"
+                />
+              </div>
             </div>
-          </div>
-
-          <div className="relative aspect-square w-full max-w-[500px] mx-auto rounded-3xl overflow-hidden shadow-xl border border-[#E5E0D8]">
-            <Image
-              src="/images/hero-sandwich.jpg"
-              alt="EGGU Story"
-              fill
-              className="object-cover"
-            />
           </div>
         </div>
       </section>
 
       {/* 4. Branch Info Section */}
-      <section className="py-20 bg-white border-t border-[#E5E0D8]">
-        <div className="max-w-7xl mx-auto px-6 text-center space-y-12">
-          <div className="max-w-2xl mx-auto space-y-4">
-            <span className="text-[#EAAA08] text-xs font-bold uppercase tracking-widest block">
+      <section className="py-12 md:py-16 bg-[#F8F9FA] border-t border-[#E5E7EB]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="text-center max-w-2xl mx-auto space-y-3">
+            <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block">
               {isVi ? 'Ghé Thăm Cửa Hàng' : 'Visit Store'}
             </span>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-[#1E1B18]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#111111]">
               {isVi ? 'Tìm Cửa Hàng Gần Bạn Nhất' : 'Find An EGGU Store'}
             </h2>
-            <p className="text-[#706860] font-medium">
+            <p className="text-sm md:text-base text-[#6B7280] font-medium">
               {isVi
-                ? 'Đến cửa hàng của chúng tôi để tận hưởng không gian ấm cúng, sang trọng và ngửi thấy mùi bơ tỏi nướng thơm lừng.'
+                ? 'Đến cửa hàng của chúng tôi để tận hưởng không gian ấm cúng và ngửi thấy mùi bơ tỏi nướng thơm lừng.'
                 : 'Come by our locations for a cozy dining atmosphere and the irresistible aroma of fresh butter-toasted buns.'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
             {/* Store Card 1 */}
-            <div className="p-8 bg-[#FAF8F5] rounded-2xl border border-[#E5E0D8] text-left space-y-4">
-              <h3 className="text-xl font-bold text-[#1E1B18]">EGGU Nguyễn Huệ (Quận 1)</h3>
-              <div className="space-y-2 text-[#706860] text-sm font-semibold">
+            <div className="p-6 md:p-8 bg-white rounded-2xl border border-[#E5E7EB] space-y-4 shadow-xs hover:border-[#E53935]/40 transition-colors">
+              <h3 className="text-lg sm:text-xl font-black text-[#111111]">EGGU Nguyễn Huệ (Quận 1)</h3>
+              <div className="space-y-2 text-[#6B7280] text-sm font-semibold">
                 <p className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-[#EAAA08] shrink-0" />
+                  <MapPin className="w-4 h-4 text-[#E53935] shrink-0" />
                   <span>123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</span>
                 </p>
                 <p className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-[#EAAA08] shrink-0" />
+                  <Clock className="w-4 h-4 text-[#E53935] shrink-0" />
                   <span>07:00 AM - 10:00 PM</span>
                 </p>
               </div>
               <Link
                 href="/store"
-                className="inline-block mt-4 text-xs font-extrabold uppercase tracking-wider text-[#EAAA08] hover:text-[#5C4B3E] transition duration-200"
+                className="inline-block pt-2 text-xs font-black uppercase tracking-wider text-[#E53935] hover:text-[#D32F2F] transition-colors"
               >
                 {isVi ? 'Xem bản đồ & Liên hệ' : 'View map & contact'} →
               </Link>
             </div>
 
             {/* Store Card 2 */}
-            <div className="p-8 bg-[#FAF8F5] rounded-2xl border border-[#E5E0D8] text-left space-y-4">
-              <h3 className="text-xl font-bold text-[#1E1B18]">EGGU Nguyễn Đình Chiểu (Quận 3)</h3>
-              <div className="space-y-2 text-[#706860] text-sm font-semibold">
+            <div className="p-6 md:p-8 bg-white rounded-2xl border border-[#E5E7EB] space-y-4 shadow-xs hover:border-[#E53935]/40 transition-colors">
+              <h3 className="text-lg sm:text-xl font-black text-[#111111]">EGGU Nguyễn Đình Chiểu (Quận 3)</h3>
+              <div className="space-y-2 text-[#6B7280] text-sm font-semibold">
                 <p className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-[#EAAA08] shrink-0" />
+                  <MapPin className="w-4 h-4 text-[#E53935] shrink-0" />
                   <span>456 Nguyễn Đình Chiểu, Quận 3, TP. Hồ Chí Minh</span>
                 </p>
                 <p className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-[#EAAA08] shrink-0" />
+                  <Clock className="w-4 h-4 text-[#E53935] shrink-0" />
                   <span>07:00 AM - 10:00 PM</span>
                 </p>
               </div>
               <Link
                 href="/store"
-                className="inline-block mt-4 text-xs font-extrabold uppercase tracking-wider text-[#EAAA08] hover:text-[#5C4B3E] transition duration-200"
+                className="inline-block pt-2 text-xs font-black uppercase tracking-wider text-[#E53935] hover:text-[#D32F2F] transition-colors"
               >
                 {isVi ? 'Xem bản đồ & Liên hệ' : 'View map & contact'} →
               </Link>
@@ -317,27 +358,25 @@ export default async function HomePage({ params }: HomePageProps) {
       </section>
 
       {/* 5. Last CTA Section */}
-      <section className="py-24 bg-[#5C4B3E] text-[#FAF8F5] relative overflow-hidden text-center">
-        <div className="max-w-4xl mx-auto px-6 space-y-8 relative z-10">
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
+      <section className="py-12 md:py-16 bg-[#111111] text-white text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight">
             {isVi ? 'Sẵn sàng thưởng thức chiếc bánh mì tiếp theo?' : 'Ready for your next fresh egg sandwich?'}
           </h2>
-          <p className="text-[#EFECE6]/80 text-lg max-w-lg mx-auto font-medium">
+          <p className="text-[#9CA3AF] text-sm md:text-base max-w-lg mx-auto font-medium">
             {isVi
-              ? 'Đặt hàng ngay hôm nay để nhận giao hàng nhanh chóng, thanh toán COD bơ sữa nóng hổi tận nhà.'
+              ? 'Đặt hàng ngay hôm nay để nhận giao hàng nhanh chóng, bơ sữa nóng hổi tận nhà.'
               : 'Order today to experience our fresh butter-toasted gourmet sandwich delivered straight to your door.'}
           </p>
-          <div>
+          <div className="pt-2">
             <Link
               href="/menu"
-              className="inline-block px-10 py-5 bg-[#EAAA08] text-[#1E1B18] font-extrabold uppercase tracking-widest rounded-xl hover:bg-[#EAAA08]/90 transition duration-200 shadow-xl"
+              className="inline-block px-8 py-4 bg-[#E53935] text-white font-black uppercase tracking-wider rounded-full hover:bg-[#D32F2F] transition-colors shadow-lg"
             >
               {tc('orderNow')}
             </Link>
           </div>
         </div>
-        {/* Background egg vector style */}
-        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#EAAA08]/5 blur-2xl z-0" />
       </section>
     </div>
   );

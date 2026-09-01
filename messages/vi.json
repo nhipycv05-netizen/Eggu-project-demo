@@ -17,7 +17,8 @@
     "faq": "Hỏi đáp",
     "news": "Tin tức",
     "contact": "Liên hệ",
-    "cart": "Giỏ hàng"
+    "cart": "Giỏ hàng",
+    "searchPlaceholder": "thanh tìm kiếm bánh"
   },
   "home": {
     "hero": {

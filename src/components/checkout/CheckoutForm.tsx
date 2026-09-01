@@ -68,29 +68,26 @@ export default function CheckoutForm() {
 
   if (!isMounted) {
     return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 text-[#EAAA08] animate-spin" />
+      <div className="min-h-[400px] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#E53935] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
-  // Redirect to menu if cart is empty
   if (items.length === 0) {
     return (
-      <div className="text-center py-12 bg-white rounded-3xl border border-[#E5E0D8] p-8 space-y-4 max-w-md mx-auto">
-        <ShoppingBag className="w-12 h-12 text-[#706860] mx-auto" />
-        <h3 className="text-lg font-bold text-[#1E1B18]">{t('errors.cartEmpty')}</h3>
-        <button
-          onClick={() => router.push('/menu')}
-          className="px-6 py-2 bg-[#EAAA08] text-[#1E1B18] font-bold rounded-xl hover:bg-[#EAAA08]/90 transition"
-        >
-          {tc('exploreMenu')}
-        </button>
+      <div className="text-center py-20 bg-white rounded-3xl border border-[#E5E7EB] max-w-md mx-auto p-8 space-y-6 shadow-xs">
+        <div className="w-16 h-16 bg-[#E53935]/10 text-[#E53935] rounded-full flex items-center justify-center mx-auto">
+          <ShoppingBag className="w-8 h-8" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-black text-[#111111]">{t('emptyCart')}</h2>
+          <p className="text-sm text-[#6B7280] font-medium">{t('emptyCartDesc')}</p>
+        </div>
       </div>
     );
   }
 
-  // Calculate pricing
   const subtotal = items.reduce((sum, item) => {
     const optionsPrice = item.options.reduce((oSum, opt) => oSum + opt.price, 0);
     return sum + (item.price + optionsPrice) * item.quantity;
@@ -135,15 +132,15 @@ export default function CheckoutForm() {
       {/* Checkout Form - Left 7 columns */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="lg:col-span-7 bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6"
+        className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6"
       >
-        <h2 className="text-2xl font-black text-[#1E1B18]">{t('title')}</h2>
-        <p className="text-sm text-[#706860] font-medium leading-relaxed">
+        <h2 className="text-2xl font-black text-[#111111]">{t('title')}</h2>
+        <p className="text-sm text-[#6B7280] font-medium leading-relaxed">
           {t('subtitle')}
         </p>
 
         {submitError && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-semibold">
+          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-sm font-semibold">
             {submitError}
           </div>
         )}
@@ -151,7 +148,7 @@ export default function CheckoutForm() {
         <div className="space-y-4">
           {/* Full Name */}
           <div className="space-y-1">
-            <label htmlFor="fullName" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+            <label htmlFor="fullName" className="text-xs font-black uppercase tracking-wider text-[#111111]">
               {t('fullName')} *
             </label>
             <input
@@ -159,8 +156,8 @@ export default function CheckoutForm() {
               type="text"
               disabled={isSubmitting}
               {...register('fullName')}
-              className={`w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 text-[#1E1B18] font-medium bg-[#FAF8F5]/50 ${
-                errors.fullName ? 'border-red-500 focus:border-red-500' : 'border-[#E5E0D8]'
+              className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+                errors.fullName ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
             />
             {errors.fullName && (
@@ -170,7 +167,7 @@ export default function CheckoutForm() {
 
           {/* Phone Number */}
           <div className="space-y-1">
-            <label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+            <label htmlFor="phone" className="text-xs font-black uppercase tracking-wider text-[#111111]">
               {t('phone')} *
             </label>
             <input
@@ -178,8 +175,8 @@ export default function CheckoutForm() {
               type="text"
               disabled={isSubmitting}
               {...register('phone')}
-              className={`w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 text-[#1E1B18] font-medium bg-[#FAF8F5]/50 ${
-                errors.phone ? 'border-red-500 focus:border-red-500' : 'border-[#E5E0D8]'
+              className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+                errors.phone ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
             />
             {errors.phone && (
@@ -189,7 +186,7 @@ export default function CheckoutForm() {
 
           {/* Email Address */}
           <div className="space-y-1">
-            <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+            <label htmlFor="email" className="text-xs font-black uppercase tracking-wider text-[#111111]">
               {t('email')}
             </label>
             <input
@@ -197,8 +194,8 @@ export default function CheckoutForm() {
               type="text"
               disabled={isSubmitting}
               {...register('email')}
-              className={`w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 text-[#1E1B18] font-medium bg-[#FAF8F5]/50 ${
-                errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#E5E0D8]'
+              className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+                errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
             />
             {errors.email && (
@@ -208,7 +205,7 @@ export default function CheckoutForm() {
 
           {/* Delivery Address */}
           <div className="space-y-1">
-            <label htmlFor="address" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+            <label htmlFor="address" className="text-xs font-black uppercase tracking-wider text-[#111111]">
               {t('address')} *
             </label>
             <input
@@ -216,8 +213,8 @@ export default function CheckoutForm() {
               type="text"
               disabled={isSubmitting}
               {...register('address')}
-              className={`w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 text-[#1E1B18] font-medium bg-[#FAF8F5]/50 ${
-                errors.address ? 'border-red-500 focus:border-red-500' : 'border-[#E5E0D8]'
+              className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+                errors.address ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
             />
             {errors.address && (
@@ -227,7 +224,7 @@ export default function CheckoutForm() {
 
           {/* Special Delivery Note */}
           <div className="space-y-1">
-            <label htmlFor="note" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+            <label htmlFor="note" className="text-xs font-black uppercase tracking-wider text-[#111111]">
               {t('note')}
             </label>
             <textarea
@@ -235,7 +232,7 @@ export default function CheckoutForm() {
               disabled={isSubmitting}
               {...register('note')}
               rows={3}
-              className="w-full p-4 border border-[#E5E0D8] bg-[#FAF8F5]/50 rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 resize-none text-[#1E1B18] font-medium"
+              className="w-full p-4 border border-[#E5E7EB] bg-[#F8F9FA] rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 resize-none text-[#111111] font-medium"
             />
           </div>
         </div>
@@ -244,7 +241,7 @@ export default function CheckoutForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-4 bg-[#EAAA08] text-[#1E1B18] font-extrabold uppercase tracking-widest rounded-xl hover:bg-[#EAAA08]/90 transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+          className="w-full py-4 bg-[#E53935] text-white font-black uppercase tracking-widest rounded-full hover:bg-[#D32F2F] transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
         >
           {isSubmitting ? (
             <>
@@ -258,32 +255,32 @@ export default function CheckoutForm() {
       </form>
 
       {/* Cart Summary List - Right 5 columns */}
-      <div className="lg:col-span-5 bg-white p-6 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6">
-        <h3 className="text-lg font-black text-[#1E1B18] border-b border-[#E5E0D8] pb-4">
+      <div className="lg:col-span-5 bg-white p-6 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6">
+        <h3 className="text-lg font-black text-[#111111] border-b border-[#E5E7EB] pb-4">
           Review Items
         </h3>
 
         {/* Review list */}
-        <div className="divide-y divide-[#E5E0D8] max-h-[300px] overflow-y-auto pr-1">
+        <div className="divide-y divide-[#E5E7EB] max-h-[300px] overflow-y-auto pr-1">
           {items.map((item, idx) => {
             const optionsPrice = item.options.reduce((sum, opt) => sum + opt.price, 0);
             const price = (item.price + optionsPrice) * item.quantity;
             return (
               <div key={idx} className="py-4 flex justify-between items-start gap-4 text-sm font-semibold">
                 <div>
-                  <h4 className="font-extrabold text-[#1E1B18]">
+                  <h4 className="font-extrabold text-[#111111]">
                     {isVi ? item.name_vi : item.name_en}
-                    <span className="text-xs text-[#706860] font-black tracking-wider ml-1.5">
+                    <span className="text-xs text-[#6B7280] font-black tracking-wider ml-1.5">
                       x{item.quantity}
                     </span>
                   </h4>
                   {item.options.length > 0 && (
-                    <p className="text-xs text-[#706860] font-medium mt-0.5">
+                    <p className="text-xs text-[#6B7280] font-medium mt-0.5">
                       {item.options.map((o) => (isVi ? o.name_vi : o.name_en)).join(', ')}
                     </p>
                   )}
                 </div>
-                <span className="text-sm font-bold text-[#5C4B3E] shrink-0">
+                <span className="text-sm font-black text-[#E53935] shrink-0">
                   {price.toLocaleString()} {tc('currency')}
                 </span>
               </div>
@@ -292,22 +289,22 @@ export default function CheckoutForm() {
         </div>
 
         {/* Payment and Delivery Summary info */}
-        <div className="border-t border-[#E5E0D8] pt-6 space-y-3 text-sm font-semibold text-[#706860]">
+        <div className="border-t border-[#E5E7EB] pt-6 space-y-3 text-sm font-semibold text-[#6B7280]">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span className="text-[#1E1B18]">
+            <span className="text-[#111111] font-bold">
               {subtotal.toLocaleString()} {tc('currency')}
             </span>
           </div>
           <div className="flex justify-between">
             <span>Delivery Fee</span>
-            <span className="text-[#1E1B18]">
+            <span className="text-[#111111] font-bold">
               {deliveryFee.toLocaleString()} {tc('currency')}
             </span>
           </div>
-          <div className="border-t border-[#E5E0D8] pt-4 flex justify-between items-end">
-            <span className="text-base font-black text-[#1E1B18]">Total Amount</span>
-            <span className="text-xl font-black text-[#5C4B3E]">
+          <div className="border-t border-[#E5E7EB] pt-4 flex justify-between items-end">
+            <span className="text-base font-black text-[#111111]">Total Amount</span>
+            <span className="text-2xl font-black text-[#E53935]">
               {total.toLocaleString()} {tc('currency')}
             </span>
           </div>

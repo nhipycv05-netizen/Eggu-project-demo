@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
+import SafeImage from '@/components/ui/SafeImage';
 import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
@@ -57,37 +57,39 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   );
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 pb-20">
-      <div className="max-w-3xl mx-auto px-6 space-y-8">
+    <div className="min-h-screen bg-[#F8F9FA] pt-24 md:pt-28 pb-12 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto space-y-8">
         {/* Back Link */}
         <div>
           <Link
             href="/news"
-            className="inline-flex items-center space-x-2 text-sm font-bold uppercase tracking-wider text-[#706860] hover:text-[#1E1B18] transition duration-150"
+            className="inline-flex items-center space-x-2 text-sm font-bold uppercase tracking-wider text-[#6B7280] hover:text-[#E53935] transition duration-150"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-4 h-4 text-[#E53935]" />
             <span>{t('backToNews')}</span>
           </Link>
         </div>
 
         {/* Date and title */}
         <div className="space-y-4">
-          <div className="flex items-center space-x-2 text-xs font-bold text-neutral-400">
-            <Calendar className="w-3.5 h-3.5 text-[#EAAA08]" />
+          <div className="flex items-center space-x-2 text-xs font-bold text-[#9CA3AF]">
+            <Calendar className="w-3.5 h-3.5 text-[#E53935]" />
             <span>{formattedDate}</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-[#1E1B18] leading-tight">
+          <h1 className="text-3xl md:text-4xl font-black text-[#111111] leading-tight">
             {isVi ? article.title_vi : article.title_en}
           </h1>
         </div>
 
         {/* Hero image banner */}
-        <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-[#E5E0D8] shadow-lg">
-          <Image
+        <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-[#E5E7EB] shadow-lg">
+          <SafeImage
             src={article.thumbnail_url || '/images/hero-sandwich.jpg'}
             alt={isVi ? article.title_vi : article.title_en}
             fill
             priority
+            sizes="(max-width: 768px) 100vw, 900px"
             className="object-cover"
           />
         </div>
@@ -99,5 +101,6 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
         />
       </div>
     </div>
+  </div>
   );
 }

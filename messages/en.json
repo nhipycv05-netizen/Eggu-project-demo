@@ -17,7 +17,8 @@
     "faq": "FAQ",
     "news": "News",
     "contact": "Contact",
-    "cart": "Cart"
+    "cart": "Cart",
+    "searchPlaceholder": "Search egg sandwiches..."
   },
   "home": {
     "hero": {

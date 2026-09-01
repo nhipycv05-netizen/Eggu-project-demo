@@ -53,43 +53,43 @@ export default async function StorePage({ params }: StorePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 pb-20">
-      <div className="max-w-4xl mx-auto px-6 space-y-16">
+    <div className="min-h-screen bg-[#F8F9FA] pt-24 md:pt-28 pb-12 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16">
         {/* Title Header */}
-        <div className="text-center space-y-4">
-          <span className="text-[#EAAA08] text-xs font-bold uppercase tracking-widest block">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block">
             {isVi ? 'Hệ Thống Chi Nhánh' : 'Our Stores'}
           </span>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-[#1E1B18]">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#111111]">
             {t('title')}
           </h1>
-          <p className="text-[#706860] font-medium text-lg leading-relaxed max-w-xl mx-auto">
+          <p className="text-sm md:text-base text-[#6B7280] font-medium leading-relaxed">
             {t('subtitle')}
           </p>
         </div>
 
         {/* Stores List Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
           {stores.map((store) => (
             <div
               key={store.id}
-              className="bg-white rounded-3xl p-8 border border-[#E5E0D8] shadow-sm space-y-6 hover:shadow-md transition duration-200"
+              className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E5E7EB] shadow-xs space-y-6 hover:border-[#E53935]/40 hover:shadow-md transition duration-200 flex flex-col justify-between h-full"
             >
               {/* Branch name */}
-              <h2 className="text-2xl font-black text-[#1E1B18]">
+              <h2 className="text-2xl font-black text-[#111111]">
                 {isVi ? store.name_vi : store.name_en}
               </h2>
 
               {/* Branch details */}
-              <div className="space-y-4 text-sm font-semibold text-[#706860]">
+              <div className="space-y-4 text-sm font-semibold text-[#6B7280]">
                 {/* Address */}
                 <div className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-[#EAAA08] shrink-0 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs text-neutral-400 uppercase font-black tracking-wider mb-1">
+                    <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
                       {t('address')}
                     </p>
-                    <p className="text-[#1E1B18] font-medium leading-relaxed">
+                    <p className="text-[#111111] font-medium leading-relaxed">
                       {isVi ? store.address_vi : store.address_en}
                     </p>
                   </div>
@@ -97,12 +97,12 @@ export default async function StorePage({ params }: StorePageProps) {
 
                 {/* Opening hours */}
                 <div className="flex items-start space-x-3">
-                  <Clock className="w-5 h-5 text-[#EAAA08] shrink-0 mt-0.5" />
+                  <Clock className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs text-neutral-400 uppercase font-black tracking-wider mb-1">
+                    <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
                       {t('hours')}
                     </p>
-                    <p className="text-[#1E1B18] font-bold">
+                    <p className="text-[#111111] font-bold">
                       {isVi ? store.opening_hours_vi : store.opening_hours_en}
                     </p>
                   </div>
@@ -111,12 +111,12 @@ export default async function StorePage({ params }: StorePageProps) {
                 {/* Hotline */}
                 {store.phone && (
                   <div className="flex items-start space-x-3">
-                    <Phone className="w-5 h-5 text-[#EAAA08] shrink-0 mt-0.5" />
+                    <Phone className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs text-neutral-400 uppercase font-black tracking-wider mb-1">
+                      <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
                         {t('phone')}
                       </p>
-                      <a href={`tel:${store.phone}`} className="text-[#EAAA08] font-bold hover:underline">
+                      <a href={`tel:${store.phone}`} className="text-[#E53935] font-bold hover:underline">
                         {store.phone}
                       </a>
                     </div>
@@ -125,15 +125,15 @@ export default async function StorePage({ params }: StorePageProps) {
               </div>
 
               {/* Maps navigation */}
-              <div className="pt-4 border-t border-[#E5E0D8]">
+              <div className="pt-4 border-t border-[#E5E7EB]">
                 <a
                   href={store.google_maps_url || `https://maps.google.com/?q=${encodeURIComponent(isVi ? store.address_vi : store.address_en)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-2 text-xs font-black uppercase tracking-wider text-[#5C4B3E] hover:text-[#EAAA08] transition duration-150"
+                  className="inline-flex items-center space-x-2 text-xs font-black uppercase tracking-wider text-[#111111] hover:text-[#E53935] transition duration-150"
                 >
                   <span>{t('directions')}</span>
-                  <ArrowUpRight className="w-4 h-4" />
+                  <ArrowUpRight className="w-4 h-4 text-[#E53935]" />
                 </a>
               </div>
             </div>
