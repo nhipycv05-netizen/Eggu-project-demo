@@ -47,11 +47,11 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm space-y-6">
-      <h2 className="text-2xl font-black text-[#1E1B18]">{t('formTitle')}</h2>
+    <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6">
+      <h2 className="text-2xl font-black text-[#111111]">{t('formTitle')}</h2>
 
       {isSuccess && (
-        <div className="p-4 bg-[#22C55E]/15 border border-[#22C55E]/30 text-[#166534] rounded-xl text-sm font-semibold">
+        <div className="p-4 bg-[#22C55E]/15 border border-[#22C55E]/30 text-[#166534] rounded-2xl text-sm font-semibold">
           {t('success')}
         </div>
       )}
@@ -59,7 +59,7 @@ export default function ContactForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Full Name */}
         <div className="space-y-1.5">
-          <label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+          <label htmlFor="name" className="text-xs font-black uppercase tracking-wider text-[#111111]">
             {t('name')} *
           </label>
           <input
@@ -67,8 +67,8 @@ export default function ContactForm() {
             type="text"
             disabled={isSubmitting}
             {...register('name')}
-            className={`w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 text-[#1E1B18] font-medium bg-[#FAF8F5]/50 ${
-              errors.name ? 'border-red-500 focus:border-red-500' : 'border-[#E5E0D8]'
+            className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+              errors.name ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
             }`}
           />
           {errors.name && (
@@ -78,7 +78,7 @@ export default function ContactForm() {
 
         {/* Email */}
         <div className="space-y-1.5">
-          <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+          <label htmlFor="email" className="text-xs font-black uppercase tracking-wider text-[#111111]">
             {t('email')}
           </label>
           <input
@@ -86,8 +86,8 @@ export default function ContactForm() {
             type="text"
             disabled={isSubmitting}
             {...register('email')}
-            className={`w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 text-[#1E1B18] font-medium bg-[#FAF8F5]/50 ${
-              errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#E5E0D8]'
+            className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+              errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
             }`}
           />
           {errors.email && (
@@ -97,7 +97,7 @@ export default function ContactForm() {
 
         {/* Phone */}
         <div className="space-y-1.5">
-          <label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+          <label htmlFor="phone" className="text-xs font-black uppercase tracking-wider text-[#111111]">
             {t('phone')} *
           </label>
           <input
@@ -105,8 +105,8 @@ export default function ContactForm() {
             type="text"
             disabled={isSubmitting}
             {...register('phone')}
-            className={`w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 text-[#1E1B18] font-medium bg-[#FAF8F5]/50 ${
-              errors.phone ? 'border-red-500 focus:border-red-500' : 'border-[#E5E0D8]'
+            className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+              errors.phone ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
             }`}
           />
           {errors.phone && (
@@ -116,7 +116,7 @@ export default function ContactForm() {
 
         {/* Message */}
         <div className="space-y-1.5">
-          <label htmlFor="message" className="text-xs font-bold uppercase tracking-wider text-[#706860]">
+          <label htmlFor="message" className="text-xs font-black uppercase tracking-wider text-[#111111]">
             {t('message')} *
           </label>
           <textarea
@@ -124,8 +124,8 @@ export default function ContactForm() {
             disabled={isSubmitting}
             {...register('message')}
             rows={4}
-            className={`w-full p-4 border rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 resize-none text-[#1E1B18] font-medium bg-[#FAF8F5]/50 ${
-              errors.message ? 'border-red-500 focus:border-red-500' : 'border-[#E5E0D8]'
+            className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 resize-none text-[#111111] font-medium bg-[#F8F9FA] ${
+              errors.message ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
             }`}
           />
           {errors.message && (
@@ -137,7 +137,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-4 bg-[#EAAA08] text-[#1E1B18] font-extrabold uppercase tracking-widest rounded-xl hover:bg-[#EAAA08]/90 transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-4 bg-[#E53935] text-white font-black uppercase tracking-widest rounded-full hover:bg-[#D32F2F] transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Sending...' : t('submit')}
         </button>

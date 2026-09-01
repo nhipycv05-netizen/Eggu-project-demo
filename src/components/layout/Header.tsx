@@ -1,17 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Link, usePathname } from '@/i18n/navigation';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
+import { ShoppingCart, Search, Menu, X } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useCartStore } from '@/stores/cartStore';
 
 export default function Header() {
   const t = useTranslations('nav');
   const pathname = usePathname();
+  const router = useRouter();
+  
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Zustand cart items
   const cartItems = useCartStore((state) => state.items);
@@ -19,22 +23,17 @@ export default function Header() {
 
   // Prevent hydration mismatches by counting only after mount
   useEffect(() => {
-    let active = true;
-    setTimeout(() => {
-      if (active) {
-        setIsMounted(true);
-      }
+    const timer = setTimeout(() => {
+      setIsMounted(true);
     }, 0);
-    return () => {
-      active = false;
-    };
+    return () => clearTimeout(timer);
   }, []);
 
   const cartCount = isMounted
     ? cartItems.reduce((acc, item) => acc + item.quantity, 0)
     : 0;
 
-  // Handle scroll backdrop styling
+  // Handle scroll shadow/border styling
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -47,92 +46,145 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  // Exact 3 Navigation items
   const navLinks = [
-    { href: '/', label: t('home') },
-    { href: '/menu', label: t('menu') },
     { href: '/about', label: t('about') },
-    { href: '/store', label: t('store') },
-    { href: '/faq', label: t('faq') },
-    { href: '/news', label: t('news') },
+    { href: '/menu', label: t('menu') },
     { href: '/contact', label: t('contact') },
   ];
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/menu?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push('/menu');
+    }
+    setIsOpen(false);
+  };
+
+  const searchPlaceholder = t('searchPlaceholder') || 'thanh tìm kiếm bánh';
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[#fff9f7]/95 backdrop-blur-md border-b border-[#eadfdb]'
-          : 'bg-[#fff9f7] border-b border-[#f1e7e4]'
+          ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#E5E7EB]'
+          : 'bg-white border-b border-[#E5E7EB]'
       }`}
     >
-      <div className="site-frame border-0 px-7 h-14 flex items-center justify-between">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center space-x-2 group">
-          <div className="w-7 h-7 rounded-full bg-[#f8c400] flex items-center justify-center text-[11px] font-black text-[#261d1b]">
-            E
-          </div>
-          <span className="text-base font-bold tracking-tight text-[#6b5549]">
-            Eggu
-          </span>
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        {/* 1. Logo (Far Left) */}
+        <div className="flex-shrink-0">
+          <Link
+            href="/"
+            aria-label="EGGU Home"
+            className="flex items-center gap-2.5 group transition-transform duration-200 active:scale-95"
+          >
+            <div className="relative h-11 w-11 sm:h-12 sm:w-12 max-h-12 rounded-xl overflow-hidden bg-white shadow-xs border border-[#E5E7EB] group-hover:border-[#E53935]/40 group-hover:scale-105 transition-all duration-200 flex items-center justify-center">
+              <Image
+                src="/images/logo.png"
+                alt="EGGU Logo"
+                fill
+                priority
+                sizes="(max-width: 640px) 44px, 48px"
+                className="object-contain p-0.5"
+              />
+            </div>
+            <span className="text-xl font-black tracking-tight text-[#111111] group-hover:text-[#E53935] transition-colors">
+              Eggu
+            </span>
+          </Link>
+        </div>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6">
+        {/* 2. Navigation Menu (Centered - Exactly 3 items: Giới thiệu, Menu, Liên hệ) */}
+        <nav className="hidden md:flex items-center justify-center flex-1 space-x-1 lg:space-x-4">
           {navLinks.map((link) => {
-            const isActive =
-              link.href === '/'
-                ? pathname === '/'
-                : pathname.startsWith(link.href);
+            const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-[10px] relative py-1 transition-colors duration-200 ${
+                className={`relative px-4 py-2 text-xs lg:text-sm font-extrabold uppercase tracking-wider rounded-full transition-all duration-200 ${
                   isActive
-                    ? 'text-[#6b5549] font-bold'
-                    : 'text-[#756b67] hover:text-[#6b5549]'
+                    ? 'text-[#E53935] font-black'
+                    : 'text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA]'
                 }`}
               >
                 {link.label}
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-px bg-[#f8c400]" />
+                  <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#E53935] rounded-full" />
                 )}
               </Link>
             );
           })}
         </nav>
 
-        {/* Right side controls */}
-        <div className="hidden md:flex items-center gap-4">
+        {/* 3. Right Side Group: Search Bar -> Language Switcher -> Cart Icon */}
+        <div className="hidden md:flex items-center gap-3">
+          {/* Search Bar (Pill shape, placeholder, search icon on right) */}
+          <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={searchPlaceholder}
+              aria-label={searchPlaceholder}
+              className="w-44 lg:w-56 pl-4 pr-9 py-1.5 text-xs lg:text-sm bg-[#F8F9FA] hover:bg-white focus:bg-white text-[#111111] placeholder:text-[#9CA3AF] rounded-full border border-[#E5E7EB] shadow-xs focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition-all duration-200"
+            />
+            <button
+              type="submit"
+              aria-label="Search"
+              className="absolute right-2.5 p-1 text-[#6B7280] hover:text-[#E53935] transition-colors"
+            >
+              <Search className="w-3.5 h-3.5" />
+            </button>
+          </form>
+
+          {/* Language Switcher (Globe + VI/EN) */}
           <LanguageSwitcher />
 
-          {/* Cart Trigger Link */}
-          <Link href="/cart" aria-label="Cart" className="relative group p-1 transition duration-200">
-            <ShoppingBag className="w-4 h-4 text-[#6b5549]" />
+          {/* Cart Icon (Far right) */}
+          <Link
+            href="/cart"
+            aria-label={t('cart')}
+            className="relative p-2 text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA] rounded-full transition-colors duration-200"
+          >
+            <ShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 w-3.5 h-3.5 bg-[#ee6b61] text-white font-bold text-[8px] rounded-full flex items-center justify-center">
-                {cartCount}
+              <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-[#E53935] text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-xs animate-in zoom-in-50">
+                {cartCount > 99 ? '99+' : cartCount}
               </span>
             )}
           </Link>
         </div>
 
-        {/* Mobile controls bar */}
-        <div className="flex md:hidden items-center space-x-4">
-          {/* Cart icon for mobile */}
-          <Link href="/cart" aria-label="Cart" className="relative p-2">
-            <ShoppingBag className="w-5 h-5 text-[#6b5549]" />
+        {/* Mobile Controls (Cart & Hamburger Menu) */}
+        <div className="flex md:hidden items-center gap-2">
+          {/* Cart icon on mobile */}
+          <Link
+            href="/cart"
+            aria-label={t('cart')}
+            className="relative p-2 text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA] rounded-full transition-colors"
+          >
+            <ShoppingCart className="w-5 h-5" />
             {cartCount > 0 && (
-              <span className="absolute top-0 right-0 w-4 h-4 bg-[#EAAA08] text-[#1E1B18] font-bold text-[10px] rounded-full flex items-center justify-center shadow-sm">
-                {cartCount}
+              <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-[#E53935] text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-xs">
+                {cartCount > 99 ? '99+' : cartCount}
               </span>
             )}
           </Link>
 
-          {/* Hamburger Menu toggle */}
+          {/* Mobile Hamburger toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 text-[#1E1B18] hover:bg-[#EFECE6] rounded-full transition duration-200"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            className="p-2 text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA] rounded-full transition-colors duration-200"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -141,34 +193,59 @@ export default function Header() {
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 top-[60px] bg-[#FAF8F5] z-40 border-t border-[#E5E0D8] p-6 flex flex-col justify-between">
-          <nav className="flex flex-col space-y-6">
-            {navLinks.map((link) => {
-              const isActive =
-                link.href === '/'
-                  ? pathname === '/'
-                  : pathname.startsWith(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`text-xl font-extrabold uppercase tracking-wide transition-colors duration-200 ${
-                    isActive ? 'text-[#EAAA08]' : 'text-[#1E1B18] hover:text-[#EAAA08]'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
+        <div className="md:hidden fixed inset-0 top-16 bg-white z-40 border-t border-[#E5E7EB] p-6 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-200">
+          <div className="space-y-6">
+            {/* Search Bar for Mobile */}
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={searchPlaceholder}
+                aria-label={searchPlaceholder}
+                className="w-full pl-4 pr-10 py-2.5 text-sm bg-[#F8F9FA] text-[#111111] placeholder:text-[#9CA3AF] rounded-full border border-[#E5E7EB] shadow-xs focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
+              />
+              <button
+                type="submit"
+                aria-label="Search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#6B7280] hover:text-[#E53935]"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+            </form>
 
-          <div className="border-t border-[#E5E0D8] pt-6 flex flex-col space-y-4">
+            {/* 3 Nav Links */}
+            <nav className="flex flex-col space-y-2 pt-2">
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-2xl text-base font-extrabold uppercase tracking-wide transition-colors ${
+                      isActive
+                        ? 'bg-[#E53935] text-white shadow-xs'
+                        : 'text-[#111111] hover:bg-[#F8F9FA] hover:text-[#E53935]'
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    {isActive && <span className="w-2 h-2 rounded-full bg-white" />}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Bottom section in mobile drawer */}
+          <div className="border-t border-[#E5E7EB] pt-6 flex flex-col space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-[#706860]">Select Language</span>
+              <span className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">
+                Ngôn ngữ / Language
+              </span>
               <LanguageSwitcher />
             </div>
-            <p className="text-xs text-[#706860] text-center mt-4">
+            <p className="text-xs text-[#6B7280] text-center mt-2">
               © 2026 EGGU Korean Egg Sandwich. All rights reserved.
             </p>
           </div>

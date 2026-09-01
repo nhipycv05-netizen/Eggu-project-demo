@@ -65,10 +65,11 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 pb-20">
-      <div className="max-w-xl mx-auto px-6 space-y-8">
-        {/* Header checkmark */}
-        <div className="bg-white p-8 rounded-3xl border border-[#E5E0D8] shadow-sm text-center space-y-4">
+    <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-12 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-xl mx-auto space-y-8">
+          {/* Header checkmark */}
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E0D8] shadow-xs text-center space-y-4">
           <div className="w-16 h-16 bg-[#22C55E]/15 text-[#22C55E] rounded-full flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-10 h-10" />
           </div>
@@ -145,22 +146,22 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
             </div>
 
             {/* Prices details */}
-            <div className="border-t border-[#E5E0D8] pt-4 space-y-2">
-              <div className="flex justify-between text-xs">
+            <div className="border-t border-[#E5E7EB] pt-4 space-y-2">
+              <div className="flex justify-between text-xs font-semibold text-[#6B7280]">
                 <span>Subtotal</span>
-                <span className="text-[#1E1B18]">
+                <span className="text-[#111111] font-bold">
                   {Number(orderDetails.subtotal).toLocaleString()} {tc('currency')}
                 </span>
               </div>
-              <div className="flex justify-between text-xs">
+              <div className="flex justify-between text-xs font-semibold text-[#6B7280]">
                 <span>Delivery Fee</span>
-                <span className="text-[#1E1B18]">
+                <span className="text-[#111111] font-bold">
                   {Number(orderDetails.delivery_fee).toLocaleString()} {tc('currency')}
                 </span>
               </div>
-              <div className="border-t border-[#E5E0D8] pt-3 flex justify-between items-end">
-                <span className="text-base font-black text-[#1E1B18]">{t('total')}</span>
-                <span className="text-xl font-black text-[#5C4B3E]">
+              <div className="border-t border-[#E5E7EB] pt-3 flex justify-between items-end">
+                <span className="text-base font-black text-[#111111]">{t('total')}</span>
+                <span className="text-2xl font-black text-[#E53935]">
                   {Number(orderDetails.total).toLocaleString()} {tc('currency')}
                 </span>
               </div>
@@ -169,7 +170,7 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
         </div>
 
         {/* Confirmation banner */}
-        <div className="p-4 bg-[#EAAA08]/10 border border-[#EAAA08]/30 rounded-xl text-center text-sm font-bold text-[#5C4B3E]">
+        <div className="p-4 bg-[#FFC107]/15 border border-[#FFC107]/40 rounded-2xl text-center text-sm font-bold text-[#111111]">
           {t('confirmCall')}
         </div>
 
@@ -177,18 +178,19 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
         <div className="flex gap-4">
           <Link
             href="/"
-            className="flex-1 py-4 bg-white border border-[#E5E0D8] text-[#1E1B18] font-extrabold uppercase tracking-wider rounded-xl text-center shadow-sm hover:bg-[#EFECE6] transition duration-150 flex items-center justify-center space-x-2 text-xs"
+            className="flex-1 py-4 bg-white border border-[#E5E7EB] text-[#111111] font-black uppercase tracking-wider rounded-full text-center shadow-xs hover:bg-[#F8F9FA] hover:text-[#E53935] transition duration-150 flex items-center justify-center space-x-2 text-xs"
           >
             <Home className="w-4 h-4" />
             <span>{t('backHome')}</span>
           </Link>
           <Link
             href="/menu"
-            className="flex-1 py-4 bg-[#EAAA08] text-[#1E1B18] font-extrabold uppercase tracking-wider rounded-xl text-center shadow-md hover:shadow-lg hover:bg-[#EAAA08]/90 transition duration-150 flex items-center justify-center space-x-2 text-xs"
+            className="flex-1 py-4 bg-[#E53935] text-white font-black uppercase tracking-wider rounded-full text-center shadow-md hover:shadow-lg hover:bg-[#D32F2F] transition duration-150 flex items-center justify-center space-x-2 text-xs"
           >
             <ShoppingBag className="w-4 h-4" />
             <span>{t('continueShopping')}</span>
           </Link>
+          </div>
         </div>
       </div>
     </div>

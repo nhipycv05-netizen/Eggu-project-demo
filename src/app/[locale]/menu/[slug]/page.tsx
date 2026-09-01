@@ -195,13 +195,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     : product.nutrition;
 
   return (
-    <div className="site-frame min-h-screen bg-[#fff9f7] px-7 pb-16 pt-20">
-      <div className="mx-auto max-w-[1040px]">
+    <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-12 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Back Link */}
-        <div className="mb-8">
+        <div>
           <Link
             href="/menu"
-            className="inline-flex items-center space-x-2 text-sm font-bold uppercase tracking-wider text-[#706860] hover:text-[#1E1B18] transition duration-150"
+            className="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#706860] hover:text-[#1E1B18] transition duration-150"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>{isVi ? 'Quay lại thực đơn' : 'Back to Menu'}</span>
@@ -209,9 +209,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </div>
 
         {/* Product Page Detail Grid */}
-        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-12">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
           {/* Left Column: Image Card */}
-          <div className="relative mx-auto aspect-square w-full max-w-[520px] overflow-hidden rounded-xl border border-[#eadfdb] bg-neutral-100 shadow-sm">
+          <div className="lg:col-span-6 relative aspect-square w-full rounded-3xl overflow-hidden border border-[#E5E0D8] bg-neutral-100 shadow-sm">
             <Image
               src={product.image_url || '/images/hero-sandwich.jpg'}
               alt={isVi ? product.name_vi : product.name_en}

@@ -86,7 +86,7 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
       {/* Option Customizer List */}
       {options.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-sm font-bold text-[#706860] uppercase tracking-wider">
+          <h3 className="text-sm font-black text-[#111111] uppercase tracking-wider">
             {tp('options')}
           </h3>
           <div className="space-y-3">
@@ -96,27 +96,27 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
                 <button
                   key={option.id}
                   onClick={() => handleToggleOption(option)}
-                  className={`w-full p-4 rounded-xl border flex items-center justify-between transition-all duration-200 ${
+                  className={`w-full p-4 rounded-2xl border flex items-center justify-between transition-all duration-200 ${
                     isSelected
-                      ? 'border-[#EAAA08] bg-[#FFF6DF] shadow-sm'
-                      : 'border-[#E5E0D8] bg-white hover:border-[#706860]'
+                      ? 'border-[#E53935] bg-[#E53935]/5 shadow-xs'
+                      : 'border-[#E5E7EB] bg-white hover:border-[#111111]'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <div
                       className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
                         isSelected
-                          ? 'bg-[#EAAA08] border-[#EAAA08] text-[#1E1B18]'
-                          : 'border-[#E5E0D8] bg-white'
+                          ? 'bg-[#E53935] border-[#E53935] text-white'
+                          : 'border-[#E5E7EB] bg-white'
                       }`}
                     >
                       {isSelected && <Check className="w-3.5 h-3.5 stroke-[3px]" />}
                     </div>
-                    <span className="font-bold text-[#1E1B18] text-sm">
+                    <span className="font-bold text-[#111111] text-sm">
                       {isVi ? option.name_vi : option.name_en}
                     </span>
                   </div>
-                  <span className="text-sm font-extrabold text-[#5C4B3E]">
+                  <span className="text-sm font-black text-[#E53935]">
                     +{Number(option.price).toLocaleString()} {tc('currency')}
                   </span>
                 </button>
@@ -128,7 +128,7 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
 
       {/* Special Instruction Note */}
       <div className="space-y-2">
-        <label htmlFor="note" className="text-sm font-bold text-[#706860] uppercase tracking-wider block">
+        <label htmlFor="note" className="text-sm font-black text-[#111111] uppercase tracking-wider block">
           {tp('note')}
         </label>
         <textarea
@@ -137,41 +137,41 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
           onChange={(e) => setNote(e.target.value)}
           placeholder={tp('notePlaceholder')}
           rows={3}
-          className="w-full p-4 border border-[#E5E0D8] bg-white rounded-xl text-sm focus:outline-none focus:border-[#EAAA08] transition duration-150 resize-none font-medium text-[#1E1B18]"
+          className="w-full p-4 border border-[#E5E7EB] bg-white rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 resize-none font-medium text-[#111111]"
         />
       </div>
 
       {/* Quantity & Add to Cart Action Bar */}
-      <div className="border-t border-[#E5E0D8] pt-6 space-y-6">
+      <div className="border-t border-[#E5E7EB] pt-6 space-y-6">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-bold text-[#706860] uppercase tracking-wider">
+          <span className="text-sm font-black text-[#111111] uppercase tracking-wider">
             {tp('quantity')}
           </span>
-          <div className="flex items-center bg-[#EFECE6] border border-[#E5E0D8] rounded-xl p-1">
+          <div className="flex items-center bg-[#F8F9FA] border border-[#E5E7EB] rounded-full p-1">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="p-2 hover:bg-white rounded-lg transition duration-150"
+              className="p-2 hover:bg-white rounded-full transition duration-150"
             >
-              <Minus className="w-4 h-4 text-[#1E1B18]" />
+              <Minus className="w-4 h-4 text-[#111111]" />
             </button>
-            <span className="px-6 font-extrabold text-sm text-[#1E1B18] min-w-[50px] text-center">
+            <span className="px-6 font-black text-sm text-[#111111] min-w-[50px] text-center">
               {quantity}
             </span>
             <button
               onClick={() => setQuantity(quantity + 1)}
-              className="p-2 hover:bg-white rounded-lg transition duration-150"
+              className="p-2 hover:bg-white rounded-full transition duration-150"
             >
-              <Plus className="w-4 h-4 text-[#1E1B18]" />
+              <Plus className="w-4 h-4 text-[#111111]" />
             </button>
           </div>
         </div>
 
         {/* Pricing Summary */}
-        <div className="bg-[#5C4B3E]/5 p-4 rounded-xl border border-[#E5E0D8]/50 flex items-center justify-between">
-          <span className="text-sm font-bold text-[#706860] uppercase tracking-wider">
+        <div className="bg-[#F8F9FA] p-4 rounded-2xl border border-[#E5E7EB] flex items-center justify-between">
+          <span className="text-sm font-black text-[#111111] uppercase tracking-wider">
             {tp('totalPrice')}
           </span>
-          <span className="text-2xl font-black text-[#5C4B3E]">
+          <span className="text-2xl font-black text-[#E53935]">
             {totalPrice.toLocaleString()} {tc('currency')}
           </span>
         </div>
@@ -180,10 +180,10 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
         <button
           onClick={handleAddToCart}
           disabled={isAdded}
-          className={`w-full py-4 text-sm font-extrabold uppercase tracking-widest rounded-xl shadow-lg flex items-center justify-center space-x-2 transition-all duration-300 ${
+          className={`w-full py-4 text-sm font-black uppercase tracking-widest rounded-full shadow-md flex items-center justify-center space-x-2 transition-all duration-300 ${
             isAdded
               ? 'bg-[#22C55E] text-white shadow-none'
-              : 'bg-[#EAAA08] text-[#1E1B18] hover:bg-[#EAAA08]/90 hover:shadow-xl'
+              : 'bg-[#E53935] text-white hover:bg-[#D32F2F] hover:shadow-xl active:scale-98'
           }`}
         >
           <ShoppingBag className="w-5 h-5" />
