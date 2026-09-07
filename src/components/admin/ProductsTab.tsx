@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Plus, Edit2, Trash2, Loader2, Image as ImageIcon } from 'lucide-react';
+import { Plus, Edit2, Trash2, Loader2, Image as ImageIcon, Upload } from 'lucide-react';
 import Image from 'next/image';
 
 interface Product {
@@ -34,6 +34,7 @@ export default function ProductsTab() {
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   // Form states
   const [categoryId, setCategoryId] = useState('');
@@ -103,12 +104,54 @@ export default function ProductsTab() {
     setDescriptionVi('');
     setDescriptionEn('');
     setPrice(0);
-    setImageUrl('/images/hero-sandwich.jpg');
+    setImageUrl('');
     setIsActive(true);
     setIsNewFlag(false);
     setIsBestSellerFlag(false);
     setSortOrder(0);
     setIsModalOpen(true);
+  };
+
+  // Handle image upload to Supabase Storage
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('products')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage
+        .from('products')
+        .getPublicUrl(filePath);
+
+      setImageUrl(data.publicUrl);
+    } catch (err: unknown) {
+      console.error('Error uploading image to Supabase Storage:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      alert(`Failed to upload image: ${errorMessage}`);
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
   };
 
   // Handle Save
@@ -430,15 +473,51 @@ export default function ProductsTab() {
                 />
               </div>
 
-              {/* Image URL */}
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Image URL</label>
-                <input
-                  type="text"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
-                />
+              {/* Product Image Upload */}
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Product Image</label>
+                <div className="flex items-center gap-3">
+                  <label className={`inline-flex items-center gap-2 px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl hover:border-[#EAAA08] hover:bg-neutral-100 transition cursor-pointer text-xs font-bold text-neutral-700 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                    {uploading ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-[#EAAA08]" />
+                    ) : (
+                      <Upload className="w-4 h-4 text-neutral-500" />
+                    )}
+                    <span>{uploading ? 'Uploading to Supabase...' : 'Choose Image File'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                      className="hidden"
+                    />
+                  </label>
+                  {imageUrl && !uploading && (
+                    <button
+                      type="button"
+                      onClick={() => setImageUrl('')}
+                      className="text-xs text-red-500 hover:text-red-700 font-semibold px-2 py-1 transition"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+
+                {/* Preview Box */}
+                {imageUrl && (
+                  <div className="space-y-1 pt-1">
+                    <span className="text-[10px] uppercase text-neutral-400 font-bold block">Preview:</span>
+                    <div className="relative w-32 h-32 rounded-xl overflow-hidden border border-neutral-200 bg-neutral-50">
+                      <Image
+                        src={imageUrl}
+                        alt="Product preview"
+                        fill
+                        className="object-cover"
+                        sizes="128px"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Switches */}
@@ -485,9 +564,10 @@ export default function ProductsTab() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-[#EAAA08] text-[#1E1B18] font-bold uppercase rounded-xl hover:bg-[#EAAA08]/90 transition"
+                  disabled={loading || uploading}
+                  className="flex-1 py-3 bg-[#EAAA08] text-[#1E1B18] font-bold uppercase rounded-xl hover:bg-[#EAAA08]/90 transition disabled:opacity-50"
                 >
-                  Save Product
+                  {loading ? 'Saving...' : 'Save Product'}
                 </button>
               </div>
             </form>
