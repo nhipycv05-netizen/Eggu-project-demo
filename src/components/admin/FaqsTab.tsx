@@ -31,6 +31,15 @@ export default function FaqsTab() {
   const [isActive, setIsActive] = useState(true);
   const [sortOrder, setSortOrder] = useState(0);
 
+  const FAQ_CATEGORY_LABELS: Record<string, string> = {
+    Ordering: 'Đặt hàng',
+    Delivery: 'Giao hàng',
+    Payment: 'Thanh toán',
+    Products: 'Sản phẩm',
+    Store: 'Cửa hàng',
+    General: 'Thông tin chung',
+  };
+
   const fetchFaqs = useCallback(async () => {
     try {
       const { data, error } = await supabase
@@ -45,7 +54,7 @@ export default function FaqsTab() {
         setLoading(false);
       }, 0);
     } catch (err) {
-      console.error('Error fetching FAQs:', err);
+      console.error('Lỗi khi tải danh sách FAQ:', err);
       setTimeout(() => setLoading(false), 0);
     }
   }, [supabase]);
@@ -108,15 +117,15 @@ export default function FaqsTab() {
       setIsModalOpen(false);
       await fetchFaqs();
     } catch (err) {
-      console.error('Error saving FAQ details:', err);
-      alert('Failed to save FAQ entry');
+      console.error('Lỗi khi lưu câu hỏi FAQ:', err);
+      alert('Lưu câu hỏi FAQ thất bại');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteFaq = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this FAQ entry?')) return;
+    if (!confirm('Bạn có chắc chắn muốn xóa câu hỏi FAQ này không?')) return;
     setLoading(true);
 
     try {
@@ -124,8 +133,8 @@ export default function FaqsTab() {
       if (error) throw error;
       await fetchFaqs();
     } catch (err) {
-      console.error('Error deleting FAQ:', err);
-      alert('Failed to delete FAQ');
+      console.error('Lỗi khi xóa FAQ:', err);
+      alert('Xóa FAQ thất bại');
     } finally {
       setLoading(false);
     }
@@ -135,9 +144,9 @@ export default function FaqsTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-[#1E1B18]">FAQs Management</h2>
+          <h2 className="text-xl font-black text-[#1E1B18]">Quản Lý Hỏi Đáp (FAQ)</h2>
           <p className="text-xs text-neutral-500 font-semibold uppercase tracking-wider">
-            Edit Q&A details displayed in the help panel
+            Chỉnh sửa các câu hỏi thường gặp và giải đáp thắc mắc
           </p>
         </div>
 
@@ -146,7 +155,7 @@ export default function FaqsTab() {
           className="px-4 py-2 bg-[#EAAA08] text-[#1E1B18] font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#EAAA08]/90 transition flex items-center space-x-1.5 shadow-sm"
         >
           <Plus className="w-4 h-4 stroke-[3px]" />
-          <span>Add New FAQ</span>
+          <span>Thêm Câu Hỏi FAQ Mới</span>
         </button>
       </div>
 
@@ -160,27 +169,29 @@ export default function FaqsTab() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-500 font-bold uppercase tracking-wider">
-                  <th className="p-4">Category</th>
-                  <th className="p-4">Question (English)</th>
-                  <th className="p-4">Question (Vietnamese)</th>
-                  <th className="p-4">Sort Order</th>
-                  <th className="p-4">Active</th>
-                  <th className="p-4 text-right">Actions</th>
+                  <th className="p-4">Chủ đề</th>
+                  <th className="p-4">Câu hỏi (Tiếng Việt)</th>
+                  <th className="p-4">Câu hỏi (Tiếng Anh)</th>
+                  <th className="p-4">Thứ tự</th>
+                  <th className="p-4">Trạng thái</th>
+                  <th className="p-4 text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                 {faqs.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-8 text-center text-neutral-400 font-bold">
-                      No FAQ entries found.
+                      Không có câu hỏi FAQ nào.
                     </td>
                   </tr>
                 ) : (
                   faqs.map((faq) => (
                     <tr key={faq.id} className="hover:bg-neutral-50/50 transition">
-                      <td className="p-4 text-neutral-500 font-bold">{faq.category}</td>
-                      <td className="p-4 font-extrabold text-neutral-900 max-w-xs truncate">{faq.question_en}</td>
-                      <td className="p-4 font-bold text-neutral-800 max-w-xs truncate">{faq.question_vi}</td>
+                      <td className="p-4 text-neutral-500 font-bold">
+                        {FAQ_CATEGORY_LABELS[faq.category] || faq.category}
+                      </td>
+                      <td className="p-4 font-extrabold text-neutral-900 max-w-xs truncate">{faq.question_vi}</td>
+                      <td className="p-4 font-medium text-neutral-600 max-w-xs truncate">{faq.question_en}</td>
                       <td className="p-4 text-neutral-900 font-bold">{faq.sort_order}</td>
                       <td className="p-4">
                         <span
@@ -190,7 +201,7 @@ export default function FaqsTab() {
                               : 'bg-neutral-100 text-neutral-800 border border-neutral-200'
                           }`}
                         >
-                          {faq.is_active ? 'Active' : 'Inactive'}
+                          {faq.is_active ? 'Hoạt động' : 'Tạm ẩn'}
                         </span>
                       </td>
                       <td className="p-4 text-right space-x-1">
@@ -221,29 +232,29 @@ export default function FaqsTab() {
         <div className="fixed inset-0 bg-[#1E1B18]/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
           <div className="bg-white border border-neutral-200 p-8 rounded-3xl w-full max-w-lg shadow-xl max-h-[85vh] overflow-y-auto space-y-6">
             <h3 className="text-xl font-black text-neutral-900">
-              {editingFaq ? 'Edit FAQ Details' : 'Add New FAQ Entry'}
+              {editingFaq ? 'Chỉnh Sửa Câu Hỏi FAQ' : 'Thêm Câu Hỏi FAQ Mới'}
             </h3>
 
             <form onSubmit={handleSaveFaq} className="space-y-4 text-xs font-semibold text-neutral-700">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Category</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Chủ đề / Nhóm</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full p-3 border border-neutral-200 rounded-xl bg-white focus:outline-none focus:border-[#EAAA08] font-bold"
                   >
-                    <option value="Ordering">Ordering</option>
-                    <option value="Delivery">Delivery</option>
-                    <option value="Payment">Payment</option>
-                    <option value="Products">Products</option>
-                    <option value="Store">Store</option>
-                    <option value="General">General</option>
+                    <option value="Ordering">Đặt hàng (Ordering)</option>
+                    <option value="Delivery">Giao hàng (Delivery)</option>
+                    <option value="Payment">Thanh toán (Payment)</option>
+                    <option value="Products">Sản phẩm (Products)</option>
+                    <option value="Store">Cửa hàng (Store)</option>
+                    <option value="General">Thông tin chung (General)</option>
                   </select>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Sort Order</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Thứ tự sắp xếp</label>
                   <input
                     type="number"
                     value={sortOrder}
@@ -254,18 +265,7 @@ export default function FaqsTab() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Question (EN)</label>
-                <input
-                  type="text"
-                  required
-                  value={questionEn}
-                  onChange={(e) => setQuestionEn(e.target.value)}
-                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Question (VI)</label>
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Câu hỏi (Tiếng Việt)</label>
                 <input
                   type="text"
                   required
@@ -276,22 +276,33 @@ export default function FaqsTab() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Answer (EN)</label>
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Câu hỏi (Tiếng Anh)</label>
+                <input
+                  type="text"
+                  required
+                  value={questionEn}
+                  onChange={(e) => setQuestionEn(e.target.value)}
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Câu trả lời (Tiếng Việt)</label>
                 <textarea
                   required
-                  value={answerEn}
-                  onChange={(e) => setAnswerEn(e.target.value)}
+                  value={answerVi}
+                  onChange={(e) => setAnswerVi(e.target.value)}
                   rows={3}
                   className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08] resize-none"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Answer (VI)</label>
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Câu trả lời (Tiếng Anh)</label>
                 <textarea
                   required
-                  value={answerVi}
-                  onChange={(e) => setAnswerVi(e.target.value)}
+                  value={answerEn}
+                  onChange={(e) => setAnswerEn(e.target.value)}
                   rows={3}
                   className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08] resize-none"
                 />
@@ -305,7 +316,7 @@ export default function FaqsTab() {
                     onChange={(e) => setIsActive(e.target.checked)}
                     className="rounded border-neutral-300 text-[#EAAA08] focus:ring-[#EAAA08] w-4 h-4"
                   />
-                  <span>Active FAQ Entry</span>
+                  <span>Kích hoạt câu hỏi FAQ này</span>
                 </label>
               </div>
 
@@ -315,13 +326,13 @@ export default function FaqsTab() {
                   onClick={() => setIsModalOpen(false)}
                   className="flex-1 py-3 border border-neutral-200 text-neutral-700 font-bold uppercase rounded-xl hover:bg-neutral-50 transition"
                 >
-                  Cancel
+                  Hủy
                 </button>
                 <button
                   type="submit"
                   className="flex-1 py-3 bg-[#EAAA08] text-[#1E1B18] font-bold uppercase rounded-xl hover:bg-[#EAAA08]/90 transition"
                 >
-                  Save FAQ
+                  Lưu câu hỏi FAQ
                 </button>
               </div>
             </form>

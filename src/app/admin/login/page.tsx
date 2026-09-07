@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
       router.push('/admin/dashboard');
       router.refresh();
     } catch (err: unknown) {
-      setError((err as Error)?.message || 'An unexpected error occurred');
+      setError((err as Error)?.message || 'Đã xảy ra lỗi không mong muốn');
       setIsLoading(false);
     }
   };
@@ -72,10 +72,10 @@ export default function AdminLoginPage() {
         <div className="text-center space-y-2">
           <span className="text-4xl">🍳</span>
           <h1 className="text-2xl font-black tracking-tight text-white">
-            EGGU Admin Panel
+            Trang Quản Trị EGGU
           </h1>
           <p className="text-neutral-400 text-xs font-semibold uppercase tracking-widest">
-            Control Dashboard Access
+            Đăng nhập hệ thống quản lý
           </p>
         </div>
 
@@ -89,7 +89,7 @@ export default function AdminLoginPage() {
           {/* Email address */}
           <div className="space-y-1.5">
             <label className="text-[10px] font-black uppercase tracking-wider text-neutral-400 block">
-              Email Address
+              Địa chỉ Email
             </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-neutral-400">
@@ -110,7 +110,7 @@ export default function AdminLoginPage() {
           {/* Password */}
           <div className="space-y-1.5">
             <label className="text-[10px] font-black uppercase tracking-wider text-neutral-400 block">
-              Password
+              Mật khẩu
             </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-neutral-400">
@@ -144,10 +144,10 @@ export default function AdminLoginPage() {
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Verifying Access...</span>
+                <span>Đang xác thực...</span>
               </>
             ) : (
-              <span>Sign In</span>
+              <span>Đăng nhập</span>
             )}
           </button>
         </form>

@@ -57,6 +57,17 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Tab titles mapping in Vietnamese
+  const TAB_NAMES: Record<string, string> = {
+    orders: 'Quản lý đơn hàng',
+    products: 'Quản lý sản phẩm',
+    categories: 'Quản lý danh mục',
+    stores: 'Hệ thống cửa hàng',
+    faqs: 'Hỏi đáp (FAQ)',
+    news: 'Tin tức & Bài viết',
+    promotions: 'Chương trình khuyến mãi',
+  };
+
   return (
     <main className="min-h-screen flex bg-neutral-50 text-neutral-900 font-sans">
       {/* Sidebar navigation */}
@@ -68,12 +79,12 @@ export default function AdminDashboardPage() {
           {/* Top Panel bar info */}
           <div className="flex items-center justify-between border-b border-neutral-200 pb-5">
             <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
-              System Console / {activeTab}
+              Bảng điều khiển / {TAB_NAMES[activeTab] || activeTab}
             </span>
             <div className="flex items-center space-x-3 text-xs font-bold text-neutral-500">
-              <span>{new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span className="capitalize">{new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-green-600 uppercase tracking-wider text-[10px]">Server Live</span>
+              <span className="text-green-600 uppercase tracking-wider text-[10px]">Hệ thống hoạt động</span>
             </div>
           </div>
 

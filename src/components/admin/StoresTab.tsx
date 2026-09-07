@@ -47,7 +47,7 @@ export default function StoresTab() {
         setLoading(false);
       }, 0);
     } catch (err) {
-      console.error('Error fetching stores:', err);
+      console.error('Lỗi khi tải danh sách cửa hàng:', err);
       setTimeout(() => setLoading(false), 0);
     }
   }, [supabase]);
@@ -116,15 +116,15 @@ export default function StoresTab() {
       setIsModalOpen(false);
       await fetchStores();
     } catch (err) {
-      console.error('Error saving store details:', err);
-      alert('Failed to save store branch details');
+      console.error('Lỗi khi lưu thông tin chi nhánh:', err);
+      alert('Lưu thông tin chi nhánh thất bại');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteStore = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this store branch location?')) return;
+    if (!confirm('Bạn có chắc chắn muốn xóa chi nhánh cửa hàng này không?')) return;
     setLoading(true);
 
     try {
@@ -132,8 +132,8 @@ export default function StoresTab() {
       if (error) throw error;
       await fetchStores();
     } catch (err) {
-      console.error('Error deleting store branch:', err);
-      alert('Failed to delete store');
+      console.error('Lỗi khi xóa chi nhánh:', err);
+      alert('Xóa chi nhánh thất bại');
     } finally {
       setLoading(false);
     }
@@ -143,9 +143,9 @@ export default function StoresTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-[#1E1B18]">Stores & Branches</h2>
+          <h2 className="text-xl font-black text-[#1E1B18]">Hệ Thống Cửa Hàng & Chi Nhánh</h2>
           <p className="text-xs text-neutral-500 font-semibold uppercase tracking-wider">
-            Manage your physical shop locations, hotlines, and maps
+            Quản lý địa chỉ cửa hàng, hotline và định vị bản đồ
           </p>
         </div>
 
@@ -154,7 +154,7 @@ export default function StoresTab() {
           className="px-4 py-2 bg-[#EAAA08] text-[#1E1B18] font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#EAAA08]/90 transition flex items-center space-x-1.5 shadow-sm"
         >
           <Plus className="w-4 h-4 stroke-[3px]" />
-          <span>Add New Store</span>
+          <span>Thêm Chi Nhánh Mới</span>
         </button>
       </div>
 
@@ -168,33 +168,33 @@ export default function StoresTab() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-500 font-bold uppercase tracking-wider">
-                  <th className="p-4">Branch Name</th>
-                  <th className="p-4">Address</th>
-                  <th className="p-4">Phone</th>
-                  <th className="p-4">Hours</th>
-                  <th className="p-4">Active</th>
-                  <th className="p-4 text-right">Actions</th>
+                  <th className="p-4">Tên chi nhánh</th>
+                  <th className="p-4">Địa chỉ</th>
+                  <th className="p-4">Số điện thoại</th>
+                  <th className="p-4">Giờ mở cửa</th>
+                  <th className="p-4">Trạng thái</th>
+                  <th className="p-4 text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                 {stores.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-8 text-center text-neutral-400 font-bold">
-                      No branches found.
+                      Không có chi nhánh nào.
                     </td>
                   </tr>
                 ) : (
                   stores.map((store) => (
                     <tr key={store.id} className="hover:bg-neutral-50/50 transition">
                       <td className="p-4 space-y-0.5">
-                        <p className="font-extrabold text-neutral-900">{store.name_en}</p>
-                        <p className="text-[10px] text-neutral-400">{store.name_vi}</p>
+                        <p className="font-extrabold text-neutral-900">{store.name_vi}</p>
+                        <p className="text-[10px] text-neutral-400">{store.name_en}</p>
                       </td>
                       <td className="p-4 max-w-xs truncate text-neutral-500 font-medium">
-                        {store.address_en}
+                        {store.address_vi}
                       </td>
                       <td className="p-4 font-bold text-neutral-900">{store.phone}</td>
-                      <td className="p-4 font-bold text-neutral-900">{store.opening_hours_en}</td>
+                      <td className="p-4 font-bold text-neutral-900">{store.opening_hours_vi}</td>
                       <td className="p-4">
                         <span
                           className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
@@ -203,7 +203,7 @@ export default function StoresTab() {
                               : 'bg-neutral-100 text-neutral-800 border border-neutral-200'
                           }`}
                         >
-                          {store.is_active ? 'Active' : 'Inactive'}
+                          {store.is_active ? 'Hoạt động' : 'Tạm đóng'}
                         </span>
                       </td>
                       <td className="p-4 text-right space-x-1">
@@ -234,24 +234,13 @@ export default function StoresTab() {
         <div className="fixed inset-0 bg-[#1E1B18]/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
           <div className="bg-white border border-neutral-200 p-8 rounded-3xl w-full max-w-lg shadow-xl max-h-[85vh] overflow-y-auto space-y-6">
             <h3 className="text-xl font-black text-neutral-900">
-              {editingStore ? 'Edit Store Branch Location' : 'Add New Branch Location'}
+              {editingStore ? 'Chỉnh Sửa Chi Nhánh Cửa Hàng' : 'Thêm Chi Nhánh Cửa Hàng Mới'}
             </h3>
 
             <form onSubmit={handleSaveStore} className="space-y-4 text-xs font-semibold text-neutral-700">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Branch Name (EN)</label>
-                  <input
-                    type="text"
-                    required
-                    value={nameEn}
-                    onChange={(e) => setNameEn(e.target.value)}
-                    className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Branch Name (VI)</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Tên chi nhánh (Tiếng Việt)</label>
                   <input
                     type="text"
                     required
@@ -260,21 +249,21 @@ export default function StoresTab() {
                     className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
                   />
                 </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Tên chi nhánh (Tiếng Anh)</label>
+                  <input
+                    type="text"
+                    required
+                    value={nameEn}
+                    onChange={(e) => setNameEn(e.target.value)}
+                    className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
+                  />
+                </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Address (EN)</label>
-                <input
-                  type="text"
-                  required
-                  value={addressEn}
-                  onChange={(e) => setAddressEn(e.target.value)}
-                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Address (VI)</label>
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Địa chỉ (Tiếng Việt)</label>
                 <input
                   type="text"
                   required
@@ -284,9 +273,20 @@ export default function StoresTab() {
                 />
               </div>
 
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Địa chỉ (Tiếng Anh)</label>
+                <input
+                  type="text"
+                  required
+                  value={addressEn}
+                  onChange={(e) => setAddressEn(e.target.value)}
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
+                />
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Hotline Phone</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Số điện thoại Hotline</label>
                   <input
                     type="text"
                     required
@@ -297,7 +297,7 @@ export default function StoresTab() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Maps Coordinates URL</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Đường dẫn Google Maps</label>
                   <input
                     type="text"
                     value={googleMapsUrl}
@@ -309,23 +309,23 @@ export default function StoresTab() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Hours (EN)</label>
-                  <input
-                    type="text"
-                    required
-                    value={openingHoursEn}
-                    onChange={(e) => setOpeningHoursEn(e.target.value)}
-                    className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Hours (VI)</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Giờ mở cửa (Tiếng Việt)</label>
                   <input
                     type="text"
                     required
                     value={openingHoursVi}
                     onChange={(e) => setOpeningHoursVi(e.target.value)}
+                    className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Giờ mở cửa (Tiếng Anh)</label>
+                  <input
+                    type="text"
+                    required
+                    value={openingHoursEn}
+                    onChange={(e) => setOpeningHoursEn(e.target.value)}
                     className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
                   />
                 </div>
@@ -339,7 +339,7 @@ export default function StoresTab() {
                     onChange={(e) => setIsActive(e.target.checked)}
                     className="rounded border-neutral-300 text-[#EAAA08] focus:ring-[#EAAA08] w-4 h-4"
                   />
-                  <span>Active Location</span>
+                  <span>Kích hoạt chi nhánh này</span>
                 </label>
               </div>
 
@@ -349,13 +349,13 @@ export default function StoresTab() {
                   onClick={() => setIsModalOpen(false)}
                   className="flex-1 py-3 border border-neutral-200 text-neutral-700 font-bold uppercase rounded-xl hover:bg-neutral-50 transition"
                 >
-                  Cancel
+                  Hủy
                 </button>
                 <button
                   type="submit"
                   className="flex-1 py-3 bg-[#EAAA08] text-[#1E1B18] font-bold uppercase rounded-xl hover:bg-[#EAAA08]/90 transition"
                 >
-                  Save Branch
+                  Lưu chi nhánh
                 </button>
               </div>
             </form>
