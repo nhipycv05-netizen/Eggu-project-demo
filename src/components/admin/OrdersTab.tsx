@@ -34,12 +34,12 @@ interface Order {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'NEW', label: 'New', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-  { value: 'CONFIRMED', label: 'Confirmed', color: 'bg-blue-100 text-blue-800 border-blue-200' },
-  { value: 'PREPARING', label: 'Preparing', color: 'bg-orange-100 text-orange-800 border-orange-200' },
-  { value: 'DELIVERING', label: 'Delivering', color: 'bg-purple-100 text-purple-800 border-purple-200' },
-  { value: 'COMPLETED', label: 'Completed', color: 'bg-green-100 text-green-800 border-green-200' },
-  { value: 'CANCELLED', label: 'Cancelled', color: 'bg-red-100 text-red-800 border-red-200' },
+  { value: 'NEW', label: 'Mới', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
+  { value: 'CONFIRMED', label: 'Đã xác nhận', color: 'bg-blue-100 text-blue-800 border-blue-200' },
+  { value: 'PREPARING', label: 'Đang chuẩn bị', color: 'bg-orange-100 text-orange-800 border-orange-200' },
+  { value: 'DELIVERING', label: 'Đang giao hàng', color: 'bg-purple-100 text-purple-800 border-purple-200' },
+  { value: 'COMPLETED', label: 'Hoàn thành', color: 'bg-green-100 text-green-800 border-green-200' },
+  { value: 'CANCELLED', label: 'Đã hủy', color: 'bg-red-100 text-red-800 border-red-200' },
 ];
 
 export default function OrdersTab() {
@@ -65,7 +65,7 @@ export default function OrdersTab() {
         setLoading(false);
       }, 0);
     } catch (err) {
-      console.error('Error fetching orders:', err);
+      console.error('Lỗi khi tải danh sách đơn hàng:', err);
       setTimeout(() => setLoading(false), 0);
     }
   }, [supabase]);
@@ -115,8 +115,8 @@ export default function OrdersTab() {
         setSelectedOrder((prev) => (prev ? { ...prev, ...updates } : null));
       }
     } catch (err) {
-      console.error('Error updating order status:', err);
-      alert('Failed to update status');
+      console.error('Lỗi khi cập nhật trạng thái đơn hàng:', err);
+      alert('Cập nhật trạng thái thất bại');
     }
   };
 
@@ -133,7 +133,7 @@ export default function OrdersTab() {
       if (error) throw error;
       setSelectedOrder((prev) => (prev ? { ...prev, items: data || [] } : null));
     } catch (err) {
-      console.error('Error fetching order items:', err);
+      console.error('Lỗi khi tải chi tiết món:', err);
     } finally {
       setLoadingDetails(false);
     }
@@ -156,9 +156,9 @@ export default function OrdersTab() {
       {/* Header section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-black text-[#1E1B18]">Order Tracking</h2>
+          <h2 className="text-xl font-black text-[#1E1B18]">Quản Lý Đơn Hàng</h2>
           <p className="text-xs text-neutral-500 font-semibold uppercase tracking-wider">
-            Real-time live monitoring
+            Theo dõi đơn hàng theo thời gian thực
           </p>
         </div>
 
@@ -169,7 +169,7 @@ export default function OrdersTab() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <input
               type="text"
-              placeholder="Search order, customer, phone..."
+              placeholder="Tìm mã đơn, tên khách, SĐT..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 pr-4 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-[#EAAA08] bg-white font-medium text-neutral-800 min-w-[240px]"
@@ -184,7 +184,7 @@ export default function OrdersTab() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="pl-10 pr-8 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-[#EAAA08] bg-white font-bold text-neutral-700 appearance-none"
             >
-              <option value="ALL">All Statuses</option>
+              <option value="ALL">Tất cả trạng thái</option>
               {STATUS_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
@@ -207,18 +207,18 @@ export default function OrdersTab() {
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-500 font-bold uppercase tracking-wider">
-                    <th className="p-4">Order #</th>
-                    <th className="p-4">Customer</th>
-                    <th className="p-4">Total</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4 text-right">Actions</th>
+                    <th className="p-4">Mã đơn</th>
+                    <th className="p-4">Khách hàng</th>
+                    <th className="p-4">Tổng tiền</th>
+                    <th className="p-4">Trạng thái</th>
+                    <th className="p-4 text-right">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                   {filteredOrders.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="p-8 text-center text-neutral-400 font-bold">
-                        No orders matching current filter.
+                        Không tìm thấy đơn hàng nào phù hợp với bộ lọc.
                       </td>
                     </tr>
                   ) : (
@@ -247,7 +247,7 @@ export default function OrdersTab() {
                                 statusStyle?.color || ''
                               }`}
                             >
-                              {order.order_status}
+                              {statusStyle?.label || order.order_status}
                             </span>
                           </td>
                           <td className="p-4 text-right">
@@ -270,14 +270,14 @@ export default function OrdersTab() {
           {/* Details Sidebar Panel - Right 4 columns */}
           <div className="lg:col-span-4 bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm space-y-6">
             <h3 className="text-sm font-black text-neutral-500 uppercase tracking-widest border-b border-neutral-200 pb-4">
-              Order Details
+              Chi Tiết Đơn Hàng
             </h3>
 
             {selectedOrder ? (
               <div className="space-y-6 text-xs font-semibold text-neutral-700">
                 {/* ID Header */}
                 <div className="space-y-1">
-                  <span className="text-[10px] text-neutral-400 uppercase font-black">Tracking Number</span>
+                  <span className="text-[10px] text-neutral-400 uppercase font-black">Mã đơn hàng</span>
                   <p className="text-base font-extrabold text-neutral-900">
                     {selectedOrder.order_number}
                   </p>
@@ -285,7 +285,7 @@ export default function OrdersTab() {
 
                 {/* Customer Info */}
                 <div className="space-y-2 border-t border-neutral-100 pt-4">
-                  <span className="text-[10px] text-neutral-400 uppercase font-black">Customer Contacts</span>
+                  <span className="text-[10px] text-neutral-400 uppercase font-black">Thông tin khách hàng</span>
                   <p className="text-neutral-900 font-bold">
                     {selectedOrder.customer_name} ({selectedOrder.phone})
                   </p>
@@ -304,7 +304,7 @@ export default function OrdersTab() {
 
                 {/* Status controller drop-down */}
                 <div className="space-y-2 border-t border-neutral-100 pt-4">
-                  <span className="text-[10px] text-neutral-400 uppercase font-black">Change Status</span>
+                  <span className="text-[10px] text-neutral-400 uppercase font-black">Cập nhật trạng thái</span>
                   <select
                     value={selectedOrder.order_status}
                     onChange={(e) => handleUpdateStatus(selectedOrder.id, e.target.value)}
@@ -320,7 +320,7 @@ export default function OrdersTab() {
 
                 {/* Ordered Items summary list */}
                 <div className="space-y-3 border-t border-neutral-100 pt-4">
-                  <span className="text-[10px] text-neutral-400 uppercase font-black">Items List</span>
+                  <span className="text-[10px] text-neutral-400 uppercase font-black">Danh sách món</span>
                   {loadingDetails ? (
                     <div className="flex justify-center py-4">
                       <Loader2 className="w-5 h-5 text-[#EAAA08] animate-spin" />
@@ -343,7 +343,7 @@ export default function OrdersTab() {
                             )}
                             {item.note && (
                               <p className="text-[10px] text-amber-600 italic mt-0.5">
-                                Note: &ldquo;{item.note}&rdquo;
+                                Ghi chú: &ldquo;{item.note}&rdquo;
                               </p>
                             )}
                           </div>
@@ -354,26 +354,26 @@ export default function OrdersTab() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-neutral-400 italic">No items found</p>
+                    <p className="text-neutral-400 italic">Không có món nào</p>
                   )}
                 </div>
 
                 {/* Pricing summary */}
                 <div className="border-t border-neutral-100 pt-4 space-y-1.5 font-bold text-neutral-500">
                   <div className="flex justify-between">
-                    <span>Subtotal</span>
+                    <span>Tạm tính</span>
                     <span className="text-neutral-800">
                       {Number(selectedOrder.subtotal).toLocaleString()} VND
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Delivery Fee</span>
+                    <span>Phí giao hàng</span>
                     <span className="text-neutral-800">
                       {Number(selectedOrder.delivery_fee).toLocaleString()} VND
                     </span>
                   </div>
                   <div className="border-t border-neutral-100 pt-3 flex justify-between items-end">
-                    <span className="text-sm font-black text-neutral-900">Total</span>
+                    <span className="text-sm font-black text-neutral-900">Tổng thanh toán</span>
                     <span className="text-lg font-black text-[#5C4B3E]">
                       {Number(selectedOrder.total).toLocaleString()} VND
                     </span>
@@ -382,7 +382,7 @@ export default function OrdersTab() {
               </div>
             ) : (
               <div className="text-center py-20 text-neutral-400 font-bold italic">
-                Select an order from the list to view its complete details.
+                Chọn một đơn hàng trong danh sách để xem chi tiết đầy đủ.
               </div>
             )}
           </div>

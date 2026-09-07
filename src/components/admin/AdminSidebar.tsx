@@ -19,13 +19,13 @@ interface AdminSidebarProps {
 }
 
 const MENU_ITEMS = [
-  { id: 'orders', label: 'Orders', icon: ClipboardList },
-  { id: 'products', label: 'Products', icon: ShoppingBag },
-  { id: 'categories', label: 'Categories', icon: Tags },
-  { id: 'stores', label: 'Stores', icon: MapPin },
-  { id: 'faqs', label: 'FAQs', icon: HelpCircle },
-  { id: 'news', label: 'News & Blog', icon: FileText },
-  { id: 'promotions', label: 'Promotions', icon: Percent },
+  { id: 'orders', label: 'Đơn hàng', icon: ClipboardList },
+  { id: 'products', label: 'Sản phẩm', icon: ShoppingBag },
+  { id: 'categories', label: 'Danh mục', icon: Tags },
+  { id: 'stores', label: 'Cửa hàng', icon: MapPin },
+  { id: 'faqs', label: 'Hỏi đáp (FAQ)', icon: HelpCircle },
+  { id: 'news', label: 'Tin tức & Blog', icon: FileText },
+  { id: 'promotions', label: 'Khuyến mãi', icon: Percent },
 ];
 
 export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
@@ -38,7 +38,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
       router.push('/admin/login');
       router.refresh();
     } catch (err) {
-      console.error('Error logging out:', err);
+      console.error('Lỗi khi đăng xuất:', err);
     }
   };
 
@@ -53,7 +53,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
               EGGU Admin
             </h2>
             <span className="text-[10px] text-[#EAAA08] font-bold uppercase tracking-wider mt-0.5 block">
-              Management Suite
+              Hệ Thống Quản Trị
             </span>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
           className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 transition duration-150"
         >
           <LogOut className="w-4.5 h-4.5" />
-          <span>Sign Out</span>
+          <span>Đăng xuất</span>
         </button>
       </div>
     </aside>

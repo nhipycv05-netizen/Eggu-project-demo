@@ -48,7 +48,7 @@ export default function PromotionsTab() {
         setLoading(false);
       }, 0);
     } catch (err) {
-      console.error('Error fetching promotions:', err);
+      console.error('Lỗi khi tải danh sách khuyến mãi:', err);
       setTimeout(() => setLoading(false), 0);
     }
   }, [supabase]);
@@ -119,15 +119,15 @@ export default function PromotionsTab() {
       setIsModalOpen(false);
       await fetchPromotions();
     } catch (err) {
-      console.error('Error saving promo details:', err);
-      alert('Failed to save promotion');
+      console.error('Lỗi khi lưu thông tin khuyến mãi:', err);
+      alert('Lưu mã khuyến mãi thất bại');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeletePromo = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this promotion code?')) return;
+    if (!confirm('Bạn có chắc chắn muốn xóa mã khuyến mãi này không?')) return;
     setLoading(true);
 
     try {
@@ -135,8 +135,8 @@ export default function PromotionsTab() {
       if (error) throw error;
       await fetchPromotions();
     } catch (err) {
-      console.error('Error deleting promo:', err);
-      alert('Failed to delete promotion');
+      console.error('Lỗi khi xóa mã khuyến mãi:', err);
+      alert('Xóa mã khuyến mãi thất bại');
     } finally {
       setLoading(false);
     }
@@ -146,9 +146,9 @@ export default function PromotionsTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-[#1E1B18]">Promotions Management</h2>
+          <h2 className="text-xl font-black text-[#1E1B18]">Quản Lý Khuyến Mãi & Giảm Giá</h2>
           <p className="text-xs text-neutral-500 font-semibold uppercase tracking-wider">
-            Edit voucher discount codes, percentage ratios, and active timelines
+            Quản lý mã giảm giá, tỷ lệ chiết khấu và thời gian áp dụng
           </p>
         </div>
 
@@ -157,7 +157,7 @@ export default function PromotionsTab() {
           className="px-4 py-2 bg-[#EAAA08] text-[#1E1B18] font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#EAAA08]/90 transition flex items-center space-x-1.5 shadow-sm"
         >
           <Plus className="w-4 h-4 stroke-[3px]" />
-          <span>Add New Promotion</span>
+          <span>Thêm Mã Khuyến Mãi</span>
         </button>
       </div>
 
@@ -171,19 +171,19 @@ export default function PromotionsTab() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-500 font-bold uppercase tracking-wider">
-                  <th className="p-4">Promo Code</th>
-                  <th className="p-4">Discount</th>
-                  <th className="p-4">Min Order</th>
-                  <th className="p-4">Timeline</th>
-                  <th className="p-4">Active</th>
-                  <th className="p-4 text-right">Actions</th>
+                  <th className="p-4">Mã khuyến mãi</th>
+                  <th className="p-4">Mức giảm</th>
+                  <th className="p-4">Đơn tối thiểu</th>
+                  <th className="p-4">Thời gian áp dụng</th>
+                  <th className="p-4">Trạng thái</th>
+                  <th className="p-4 text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                 {promotions.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-8 text-center text-neutral-400 font-bold">
-                      No promotions found.
+                      Không có mã khuyến mãi nào.
                     </td>
                   </tr>
                 ) : (
@@ -198,11 +198,11 @@ export default function PromotionsTab() {
                       <td className="p-4 text-neutral-500">
                         {promo.min_order_value
                           ? `${Number(promo.min_order_value).toLocaleString()} VND`
-                          : 'None'}
+                          : 'Không yêu cầu'}
                       </td>
                       <td className="p-4 text-neutral-500 font-medium">
-                        {new Date(promo.start_date).toLocaleDateString()} -{' '}
-                        {new Date(promo.end_date).toLocaleDateString()}
+                        {new Date(promo.start_date).toLocaleDateString('vi-VN')} -{' '}
+                        {new Date(promo.end_date).toLocaleDateString('vi-VN')}
                       </td>
                       <td className="p-4">
                         <span
@@ -212,7 +212,7 @@ export default function PromotionsTab() {
                               : 'bg-neutral-100 text-neutral-800 border border-neutral-200'
                           }`}
                         >
-                          {promo.is_active ? 'Active' : 'Inactive'}
+                          {promo.is_active ? 'Hoạt động' : 'Tạm ngừng'}
                         </span>
                       </td>
                       <td className="p-4 text-right space-x-1">
@@ -243,17 +243,17 @@ export default function PromotionsTab() {
         <div className="fixed inset-0 bg-[#1E1B18]/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
           <div className="bg-white border border-neutral-200 p-8 rounded-3xl w-full max-w-lg shadow-xl max-h-[85vh] overflow-y-auto space-y-6">
             <h3 className="text-xl font-black text-neutral-900">
-              {editingPromo ? 'Edit Promotion Details' : 'Add New Promotion Code'}
+              {editingPromo ? 'Chỉnh Sửa Mã Khuyến Mãi' : 'Thêm Mã Khuyến Mãi Mới'}
             </h3>
 
             <form onSubmit={handleSavePromo} className="space-y-4 text-xs font-semibold text-neutral-700">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Promo Code</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Mã khuyến mãi (Code)</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. EGGUNEW"
+                    placeholder="vd: EGGUNEW"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
                     className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08] font-bold"
@@ -261,21 +261,21 @@ export default function PromotionsTab() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Discount Type</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Loại giảm giá</label>
                   <select
                     value={discountType}
                     onChange={(e) => setDiscountType(e.target.value as 'PERCENTAGE' | 'FIXED')}
                     className="w-full p-3 border border-neutral-200 rounded-xl bg-white focus:outline-none focus:border-[#EAAA08] font-bold"
                   >
-                    <option value="PERCENTAGE">PERCENTAGE (%)</option>
-                    <option value="FIXED">FIXED VALUE (VND)</option>
+                    <option value="PERCENTAGE">Phần trăm (%)</option>
+                    <option value="FIXED">Số tiền cố định (VNĐ)</option>
                   </select>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Discount Value</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Giá trị giảm</label>
                   <input
                     type="number"
                     required
@@ -286,7 +286,7 @@ export default function PromotionsTab() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Min Order Value (VND)</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Đơn hàng tối thiểu (VNĐ)</label>
                   <input
                     type="number"
                     value={minOrderValue}
@@ -298,7 +298,7 @@ export default function PromotionsTab() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Start Date</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Ngày bắt đầu</label>
                   <input
                     type="date"
                     required
@@ -309,7 +309,7 @@ export default function PromotionsTab() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">End Date</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Ngày kết thúc</label>
                   <input
                     type="date"
                     required
@@ -321,23 +321,23 @@ export default function PromotionsTab() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Description (EN)</label>
-                <input
-                  type="text"
-                  required
-                  value={descriptionEn}
-                  onChange={(e) => setDescriptionEn(e.target.value)}
-                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Description (VI)</label>
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Mô tả (Tiếng Việt)</label>
                 <input
                   type="text"
                   required
                   value={descriptionVi}
                   onChange={(e) => setDescriptionVi(e.target.value)}
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Mô tả (Tiếng Anh)</label>
+                <input
+                  type="text"
+                  required
+                  value={descriptionEn}
+                  onChange={(e) => setDescriptionEn(e.target.value)}
                   className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
                 />
               </div>
@@ -350,7 +350,7 @@ export default function PromotionsTab() {
                     onChange={(e) => setIsActive(e.target.checked)}
                     className="rounded border-neutral-300 text-[#EAAA08] focus:ring-[#EAAA08] w-4 h-4"
                   />
-                  <span>Active Promotion</span>
+                  <span>Kích hoạt mã khuyến mãi này</span>
                 </label>
               </div>
 
@@ -360,13 +360,13 @@ export default function PromotionsTab() {
                   onClick={() => setIsModalOpen(false)}
                   className="flex-1 py-3 border border-neutral-200 text-neutral-700 font-bold uppercase rounded-xl hover:bg-neutral-50 transition"
                 >
-                  Cancel
+                  Hủy
                 </button>
                 <button
                   type="submit"
                   className="flex-1 py-3 bg-[#EAAA08] text-[#1E1B18] font-bold uppercase rounded-xl hover:bg-[#EAAA08]/90 transition"
                 >
-                  Save Promotion
+                  Lưu mã khuyến mãi
                 </button>
               </div>
             </form>

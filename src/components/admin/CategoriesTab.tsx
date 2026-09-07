@@ -40,7 +40,7 @@ export default function CategoriesTab() {
         setLoading(false);
       }, 0);
     } catch (err) {
-      console.error('Error fetching categories:', err);
+      console.error('Lỗi khi tải danh mục:', err);
       setTimeout(() => setLoading(false), 0);
     }
   }, [supabase]);
@@ -97,15 +97,15 @@ export default function CategoriesTab() {
       setIsModalOpen(false);
       await fetchCategories();
     } catch (err) {
-      console.error('Error saving category:', err);
-      alert('Failed to save category');
+      console.error('Lỗi khi lưu danh mục:', err);
+      alert('Lưu danh mục thất bại');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteCategory = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category? All products under it will become unassigned.')) return;
+    if (!confirm('Bạn có chắc chắn muốn xóa danh mục này? Tất cả sản phẩm thuộc danh mục sẽ chuyển thành Chưa phân loại.')) return;
     setLoading(true);
 
     try {
@@ -113,8 +113,8 @@ export default function CategoriesTab() {
       if (error) throw error;
       await fetchCategories();
     } catch (err) {
-      console.error('Error deleting category:', err);
-      alert('Failed to delete category');
+      console.error('Lỗi khi xóa danh mục:', err);
+      alert('Xóa danh mục thất bại');
     } finally {
       setLoading(false);
     }
@@ -124,9 +124,9 @@ export default function CategoriesTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-black text-[#1E1B18]">Categories Management</h2>
+          <h2 className="text-xl font-black text-[#1E1B18]">Quản Lý Danh Mục</h2>
           <p className="text-xs text-neutral-500 font-semibold uppercase tracking-wider">
-            Define structure segments for menu catalog listings
+            Thiết lập các nhóm danh mục cho thực đơn
           </p>
         </div>
 
@@ -135,7 +135,7 @@ export default function CategoriesTab() {
           className="px-4 py-2 bg-[#EAAA08] text-[#1E1B18] font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#EAAA08]/90 transition flex items-center space-x-1.5 shadow-sm"
         >
           <Plus className="w-4 h-4 stroke-[3px]" />
-          <span>Add New Category</span>
+          <span>Thêm Danh Mục Mới</span>
         </button>
       </div>
 
@@ -149,26 +149,26 @@ export default function CategoriesTab() {
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-500 font-bold uppercase tracking-wider">
-                  <th className="p-4">Name (English)</th>
-                  <th className="p-4">Name (Vietnamese)</th>
-                  <th className="p-4">URL Slug</th>
-                  <th className="p-4">Sort Order</th>
-                  <th className="p-4">Active</th>
-                  <th className="p-4 text-right">Actions</th>
+                  <th className="p-4">Tên (Tiếng Việt)</th>
+                  <th className="p-4">Tên (Tiếng Anh)</th>
+                  <th className="p-4">Đường dẫn URL (Slug)</th>
+                  <th className="p-4">Thứ tự</th>
+                  <th className="p-4">Trạng thái</th>
+                  <th className="p-4 text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                 {categories.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="p-8 text-center text-neutral-400 font-bold">
-                      No categories found.
+                      Không có danh mục nào.
                     </td>
                   </tr>
                 ) : (
                   categories.map((category) => (
                     <tr key={category.id} className="hover:bg-neutral-50/50 transition">
-                      <td className="p-4 font-extrabold text-neutral-900">{category.name_en}</td>
-                      <td className="p-4 font-bold text-neutral-800">{category.name_vi}</td>
+                      <td className="p-4 font-extrabold text-neutral-900">{category.name_vi}</td>
+                      <td className="p-4 font-bold text-neutral-600">{category.name_en}</td>
                       <td className="p-4 text-neutral-500 font-mono">{category.slug}</td>
                       <td className="p-4 text-neutral-900 font-bold">{category.sort_order}</td>
                       <td className="p-4">
@@ -179,7 +179,7 @@ export default function CategoriesTab() {
                               : 'bg-neutral-100 text-neutral-800 border border-neutral-200'
                           }`}
                         >
-                          {category.is_active ? 'Active' : 'Inactive'}
+                          {category.is_active ? 'Hoạt động' : 'Tạm ẩn'}
                         </span>
                       </td>
                       <td className="p-4 text-right space-x-1">
@@ -210,23 +210,12 @@ export default function CategoriesTab() {
         <div className="fixed inset-0 bg-[#1E1B18]/50 backdrop-blur-sm z-50 flex items-center justify-center p-6">
           <div className="bg-white border border-neutral-200 p-8 rounded-3xl w-full max-w-md shadow-xl space-y-6">
             <h3 className="text-xl font-black text-neutral-900">
-              {editingCategory ? 'Edit Category Details' : 'Create New Category'}
+              {editingCategory ? 'Chỉnh Sửa Danh Mục' : 'Thêm Danh Mục Mới'}
             </h3>
 
             <form onSubmit={handleSaveCategory} className="space-y-4 text-xs font-semibold text-neutral-700">
               <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Name (EN)</label>
-                <input
-                  type="text"
-                  required
-                  value={nameEn}
-                  onChange={(e) => setNameEn(e.target.value)}
-                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-neutral-400 font-black block">Name (VI)</label>
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Tên danh mục (Tiếng Việt)</label>
                 <input
                   type="text"
                   required
@@ -236,12 +225,23 @@ export default function CategoriesTab() {
                 />
               </div>
 
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">Tên danh mục (Tiếng Anh)</label>
+                <input
+                  type="text"
+                  required
+                  value={nameEn}
+                  onChange={(e) => setNameEn(e.target.value)}
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
+                />
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">URL Slug</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Đường dẫn URL (Slug)</label>
                   <input
                     type="text"
-                    placeholder="e.g. toast"
+                    placeholder="vd: banh-mi"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
                     className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
@@ -249,7 +249,7 @@ export default function CategoriesTab() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Sort Order</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Thứ tự sắp xếp</label>
                   <input
                     type="number"
                     value={sortOrder}
@@ -267,7 +267,7 @@ export default function CategoriesTab() {
                     onChange={(e) => setIsActive(e.target.checked)}
                     className="rounded border-neutral-300 text-[#EAAA08] focus:ring-[#EAAA08] w-4 h-4"
                   />
-                  <span>Active Category</span>
+                  <span>Kích hoạt danh mục này</span>
                 </label>
               </div>
 
@@ -277,13 +277,13 @@ export default function CategoriesTab() {
                   onClick={() => setIsModalOpen(false)}
                   className="flex-1 py-3 border border-neutral-200 text-neutral-700 font-bold uppercase rounded-xl hover:bg-neutral-50 transition"
                 >
-                  Cancel
+                  Hủy
                 </button>
                 <button
                   type="submit"
                   className="flex-1 py-3 bg-[#EAAA08] text-[#1E1B18] font-bold uppercase rounded-xl hover:bg-[#EAAA08]/90 transition"
                 >
-                  Save Category
+                  Lưu danh mục
                 </button>
               </div>
             </form>

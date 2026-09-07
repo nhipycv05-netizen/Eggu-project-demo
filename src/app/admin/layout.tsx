@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: 'EGGU Admin Dashboard',
-  description: 'Management Dashboard for EGGU Korean Egg Sandwich',
+  title: 'EGGU - Trang Quản Trị Hệ Thống',
+  description: 'Trang quản trị hệ thống bánh mì trứng EGGU Hàn Quốc',
 };
 
 interface AdminLayoutProps {
@@ -22,7 +22,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="vi" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-neutral-50 text-neutral-900 font-sans">
         {children}
       </body>
