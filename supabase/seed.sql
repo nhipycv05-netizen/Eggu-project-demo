@@ -2,18 +2,14 @@
 
 -- 1. Insert Categories
 insert into public.categories (id, name_vi, name_en, slug, image_url, sort_order, is_active) values
-('1a111111-1111-1111-1111-111111111111', 'Bánh Mì Kẹp', 'Sandwich', 'sandwich', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/sandwich.jpg', 1, true),
-('2b222222-2222-2222-2222-222222222222', 'Bánh Mì Nướng', 'Toast', 'toast', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/toast.jpg', 2, true),
-('3c333333-3333-3333-3333-333333333333', 'Bánh Vòng', 'Bagel', 'bagel', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/bagel.jpg', 3, true),
-('4d444444-4444-4444-4444-444444444444', 'Bữa Sáng Trễ', 'Brunch', 'brunch', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/brunch.jpg', 4, true),
-('5e555555-5555-5555-5555-555555555555', 'Món Phụ', 'Side', 'side', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/side.jpg', 5, true),
-('6f666666-6666-6666-6666-666666666666', 'Nước Giải Khát', 'Drinks', 'drinks', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/drinks.jpg', 6, true),
-('7a777777-7777-7777-7777-777777777777', 'Cà Phê', 'Coffee', 'coffee', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/coffee.jpg', 7, true),
-('8b888888-8888-8888-8888-888888888888', 'Combo Tiết Kiệm', 'Combo', 'combo', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/combo.jpg', 8, true);
+('1a111111-1111-1111-1111-111111111111', 'SANDWICH', 'SANDWICH', 'sandwich', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/sandwich.jpg', 1, true),
+('2b222222-2222-2222-2222-222222222222', 'FRIED FOOD', 'FRIED FOOD', 'fried-food', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/fried-food.jpg', 2, true),
+('3c333333-3333-3333-3333-333333333333', 'COFFEE & DRINKS', 'COFFEE & DRINKS', 'coffee-drinks', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/coffee.jpg', 3, true),
+('4d444444-4444-4444-4444-444444444444', 'SMOOTHIE & FRESH JUICE', 'SMOOTHIE & FRESH JUICE', 'smoothie-fresh-juice', 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/categories/drinks.jpg', 4, true);
 
 -- 2. Insert Products
 insert into public.products (id, category_id, name_vi, name_en, slug, description_vi, description_en, price, image_url, ingredients_vi, ingredients_en, nutrition, allergy_info_vi, allergy_info_en, is_new, is_best_seller, is_active, sort_order) values
--- Sandwiches
+-- SANDWICH
 ('9a999999-9999-9999-9999-999999999999', '1a111111-1111-1111-1111-111111111111', 
  'Mr. Egg', 'Mr. Egg', 'mr-egg', 
  'Bánh mì nướng bơ tỏi thơm lừng kẹp trứng khuấy mềm béo và sốt sriracha ngọt dịu đặc trưng.', 
@@ -54,8 +50,7 @@ insert into public.products (id, category_id, name_vi, name_en, slug, descriptio
  'Có chứa trứng, sữa, gluten, hạt.', 'Contains eggs, dairy, gluten, seeds.',
  true, false, true, 4),
 
--- Toast
-('dfdddddd-dddd-dddd-dddd-dddddddddddd', '2b222222-2222-2222-2222-222222222222', 
+('dfdddddd-dddd-dddd-dddd-dddddddddddd', '1a111111-1111-1111-1111-111111111111', 
  'Bánh Mì Tỏi Thịt Xông Khói & Phô Mai', 'Garlic Bacon Cheese Toast', 'garlic-bacon-cheese-toast', 
  'Bánh mì nướng tỏi thơm nồng kẹp phô mai, thịt xông khói giòn và nước sốt mật ong ngọt ngào.', 
  'Toasted garlic bread loaded with crispy bacon, melted cheese, and a sweet drizzle of honey.', 
@@ -65,8 +60,8 @@ insert into public.products (id, category_id, name_vi, name_en, slug, descriptio
  'Có chứa gluten, tỏi, sữa.', 'Contains gluten, garlic, dairy.',
  true, true, true, 5),
 
--- Sides
-('efeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '5e555555-5555-5555-5555-555555555555', 
+-- FRIED FOOD
+('efeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '2b222222-2222-2222-2222-222222222222', 
  'Khoai Tây Chiên Pháp', 'French Fries', 'french-fries', 
  'Khoai tây chiên giòn vàng đều, phủ nhẹ muối biển nhuyễn.', 
  'Golden crispy French fries lightly dusted with fine sea salt.', 
@@ -76,8 +71,18 @@ insert into public.products (id, category_id, name_vi, name_en, slug, descriptio
  'Không chứa tác nhân dị ứng phổ biến.', 'Free from common allergens.',
  false, false, true, 6),
 
--- Coffee
-('aff77777-7777-7777-7777-777777777777', '7a777777-7777-7777-7777-777777777777', 
+('cff88888-8888-8888-8888-888888888888', '2b222222-2222-2222-2222-222222222222', 
+ 'Phô Mai Que Giòn Rụm', 'Crispy Cheese Sticks', 'crispy-cheese-sticks', 
+ 'Phô mai Mozzarella bọc bột chiên xù giòn tan kéo sợi thơm ngon hấp dẫn.', 
+ 'Crispy golden fried Mozzarella cheese sticks with melted stretchy cheese inside.', 
+ 35000.00, 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/crispy-cheese-sticks.jpg',
+ 'Phô mai Mozzarella, Bột chiên xù, Trứng', 'Mozzarella Cheese, Breadcrumbs, Eggs',
+ '{"calories": 340, "protein": "14g", "fat": "20g", "carbs": "26g"}',
+ 'Có chứa sữa, gluten, trứng.', 'Contains dairy, gluten, eggs.',
+ true, true, true, 7),
+
+-- COFFEE & DRINKS
+('aff77777-7777-7777-7777-777777777777', '3c333333-3333-3333-3333-333333333333', 
  'Cà Phê Americano Đá', 'Iced Americano', 'iced-americano', 
  'Cà phê espresso nguyên chất pha với nước lạnh và đá, đậm đà tỉnh táo.', 
  'Rich espresso shot mixed with cold water and ice for a crisp, refreshing kick.', 
@@ -85,9 +90,9 @@ insert into public.products (id, category_id, name_vi, name_en, slug, descriptio
  'Hạt cà phê Arabica & Robusta, Nước lọc, Đá', 'Arabica & Robusta Coffee Beans, Water, Ice',
  '{"calories": 15, "protein": "0.5g", "fat": "0g", "carbs": "3g"}',
  'Chứa caffeine.', 'Contains caffeine.',
- false, true, true, 7),
+ false, true, true, 8),
 
-('bff77777-7777-7777-7777-777777777777', '7a777777-7777-7777-7777-777777777777', 
+('bff77777-7777-7777-7777-777777777777', '3c333333-3333-3333-3333-333333333333', 
  'Cà Phê Bạc Xỉu Đá', 'Iced White Coffee', 'iced-white-coffee', 
  'Cà phê pha phin truyền thống hòa quyện cùng lượng sữa đặc ngọt ngào béo ngậy.', 
  'Traditional Vietnamese coffee blended with a generous sweet splash of condensed milk and fresh milk.', 
@@ -95,7 +100,28 @@ insert into public.products (id, category_id, name_vi, name_en, slug, descriptio
  'Cà phê espresso, Sữa đặc, Sữa tươi, Đá', 'Espresso, Condensed Milk, Fresh Milk, Ice',
  '{"calories": 220, "protein": "5g", "fat": "6g", "carbs": "32g"}',
  'Có chứa sữa, caffeine.', 'Contains dairy, caffeine.',
- false, true, true, 8);
+ false, true, true, 9),
+
+-- SMOOTHIE & FRESH JUICE
+('dff99999-9999-9999-9999-999999999999', '4d444444-4444-4444-4444-444444444444', 
+ 'Sinh Tố Bơ Tươi Dẻo', 'Fresh Avocado Smoothie', 'fresh-avocado-smoothie', 
+ 'Sinh tố bơ Đắk Lắk nguyên chất béo ngậy, ngọt dịu thanh mát.', 
+ 'Creamy fresh avocado smoothie made with fresh milk and condensed milk.', 
+ 45000.00, 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/fresh-avocado-smoothie.jpg',
+ 'Bơ sáp tươi, Sữa tươi, Sữa đặc, Đá xay', 'Fresh Avocado, Fresh Milk, Condensed Milk, Ice',
+ '{"calories": 380, "protein": "6g", "fat": "18g", "carbs": "48g"}',
+ 'Có chứa sữa.', 'Contains dairy.',
+ true, true, true, 10),
+
+('eff00000-0000-0000-0000-000000000000', '4d444444-4444-4444-4444-444444444444', 
+ 'Nước Cam Vắt Tươi Nguyên Chất', 'Fresh Orange Juice', 'fresh-orange-juice', 
+ 'Nước cam sành vắt tươi mọng nước, giàu Vitamin C tăng cường sức đề kháng.', 
+ 'Freshly squeezed orange juice, rich in natural Vitamin C.', 
+ 39000.00, 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/fresh-orange-juice.jpg',
+ 'Cam sành tươi 100%, Đường mía tự nhiên, Đá', '100% Fresh Orange, Cane Sugar, Ice',
+ '{"calories": 120, "protein": "2g", "fat": "0.2g", "carbs": "28g"}',
+ 'Không chứa chất gây dị ứng.', 'Free from common allergens.',
+ false, false, true, 11);
 
 -- 3. Insert Product Options
 insert into public.product_options (id, product_id, name_vi, name_en, price, is_active, sort_order) values
