@@ -2,7 +2,8 @@ import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { ArrowRight, Clock, MapPin, Plus, ShoppingBag, Coffee, Croissant, IceCreamBowl, Salad } from 'lucide-react';
+import ProductCard from '@/components/menu/ProductCard';
+import { ArrowRight, Clock, MapPin, ShoppingBag, Coffee, Croissant, IceCreamBowl, Salad } from 'lucide-react';
 
 // Fallback mock products for visual demonstration when DB is not seeded yet
 const MOCK_FEATURED = [
@@ -63,6 +64,7 @@ interface HomePageProps {
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params;
   const tc = await getTranslations('common');
+  const tm = await getTranslations('menu');
 
   // Fetch featured products from Supabase with a fallback to mock data
   let products = MOCK_FEATURED;
@@ -186,55 +188,15 @@ export default async function HomePage({ params }: HomePageProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
             {products.map((product) => (
-              <div
+              <ProductCard
                 key={product.id}
-                className="group flex flex-col justify-between h-full bg-white rounded-2xl overflow-hidden border border-[#E5E7EB] hover:border-[#E53935]/40 hover:shadow-xl transition-all duration-300"
-              >
-                <div className="relative aspect-square overflow-hidden bg-neutral-100">
-                  <Image
-                    src={product.image_url || '/images/hero-sandwich.jpg'}
-                    alt={isVi ? product.name_vi : product.name_en}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  {product.is_best_seller && (
-                    <span className="absolute top-3 left-3 bg-[#FFC107] text-[#111111] px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-xs">
-                      Best Seller
-                    </span>
-                  )}
-                  {product.is_new && (
-                    <span className="absolute top-3 right-3 bg-[#E53935] text-white px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-xs">
-                      NEW
-                    </span>
-                  )}
-                </div>
-
-                <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
-                  <div className="space-y-1.5">
-                    <h3 className="text-base sm:text-lg font-black text-[#111111] line-clamp-1 group-hover:text-[#E53935] transition-colors">
-                      {isVi ? product.name_vi : product.name_en}
-                    </h3>
-                    <p className="line-clamp-2 text-xs text-[#6B7280] leading-relaxed font-medium">
-                      {isVi ? product.description_vi : product.description_en}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-[#E5E7EB] gap-2">
-                    <span className="text-base font-black text-[#E53935]">
-                      {product.price.toLocaleString()}đ
-                    </span>
-                    <Link
-                      href={`/menu/${product.slug}`}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#111111] hover:bg-[#E53935] text-white font-bold text-xs transition-colors shadow-xs"
-                      aria-label={isVi ? 'Thêm vào giỏ' : 'Add to cart'}
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                      <span>{isVi ? 'Chọn món' : 'Select'}</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+                product={product}
+                locale={locale}
+                buttonLabel={tm('customize')}
+                currencyLabel={tc('currency')}
+                newBadgeLabel={tm('newBadge')}
+                bestSellerBadgeLabel={tm('bestSellerBadge')}
+              />
             ))}
           </div>
         </div>
