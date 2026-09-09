@@ -5,6 +5,9 @@ import { createClient } from '@/lib/supabase/server';
 import ProductCard from '@/components/menu/ProductCard';
 import { ArrowRight, Clock, MapPin, ShoppingBag, Coffee, Croissant, IceCreamBowl, Salad } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
+
 // Fallback mock products for visual demonstration when DB is not seeded yet
 const MOCK_FEATURED = [
   {
@@ -82,6 +85,24 @@ export default async function HomePage({ params }: HomePageProps) {
     }
   } catch (error) {
     console.error('Supabase query failed on homepage, using mock fallbacks:', error);
+  }
+
+  // Fetch stores for homepage
+  let stores: any[] = [];
+  try {
+    const supabase = await createClient();
+    const { data: storeData } = await supabase
+      .from('stores')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: true })
+      .limit(2);
+
+    if (storeData && storeData.length > 0) {
+      stores = storeData;
+    }
+  } catch (error) {
+    console.error('Supabase query stores failed on homepage:', error);
   }
 
   const isVi = locale === 'vi';
@@ -274,47 +295,40 @@ export default async function HomePage({ params }: HomePageProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
-            {/* Store Card 1 */}
-            <div className="p-6 md:p-8 bg-white rounded-2xl border border-[#E5E7EB] space-y-4 shadow-xs hover:border-[#E53935]/40 transition-colors">
-              <h3 className="text-lg sm:text-xl font-black text-[#111111]">EGGU Nguyễn Huệ (Quận 1)</h3>
-              <div className="space-y-2 text-[#6B7280] text-sm font-semibold">
-                <p className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-[#E53935] shrink-0" />
-                  <span>123 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</span>
-                </p>
-                <p className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-[#E53935] shrink-0" />
-                  <span>07:00 AM - 10:00 PM</span>
-                </p>
+            {stores.length > 0 ? (
+              stores.map((store) => (
+                <div
+                  key={store.id}
+                  className="p-6 md:p-8 bg-white rounded-2xl border border-[#E5E7EB] space-y-4 shadow-xs hover:border-[#E53935]/40 transition-colors flex flex-col justify-between"
+                >
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-black text-[#111111]">
+                      {isVi ? store.name_vi : store.name_en}
+                    </h3>
+                    <div className="space-y-2 text-[#6B7280] text-sm font-semibold mt-3">
+                      <p className="flex items-center space-x-2">
+                        <MapPin className="w-4 h-4 text-[#E53935] shrink-0" />
+                        <span>{isVi ? store.address_vi : store.address_en}</span>
+                      </p>
+                      <p className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-[#E53935] shrink-0" />
+                        <span>{isVi ? store.opening_hours_vi : store.opening_hours_en}</span>
+                      </p>
+                    </div>
+                  </div>
+                  <Link
+                    href="/store"
+                    className="inline-block pt-2 text-xs font-black uppercase tracking-wider text-[#E53935] hover:text-[#D32F2F] transition-colors"
+                  >
+                    {isVi ? 'Xem bản đồ & Liên hệ' : 'View map & contact'} →
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full p-8 bg-white rounded-2xl border border-[#E5E7EB] text-center text-neutral-400 font-bold">
+                {isVi ? 'Đang cập nhật chi nhánh...' : 'Updating store locations...'}
               </div>
-              <Link
-                href="/store"
-                className="inline-block pt-2 text-xs font-black uppercase tracking-wider text-[#E53935] hover:text-[#D32F2F] transition-colors"
-              >
-                {isVi ? 'Xem bản đồ & Liên hệ' : 'View map & contact'} →
-              </Link>
-            </div>
-
-            {/* Store Card 2 */}
-            <div className="p-6 md:p-8 bg-white rounded-2xl border border-[#E5E7EB] space-y-4 shadow-xs hover:border-[#E53935]/40 transition-colors">
-              <h3 className="text-lg sm:text-xl font-black text-[#111111]">EGGU Nguyễn Đình Chiểu (Quận 3)</h3>
-              <div className="space-y-2 text-[#6B7280] text-sm font-semibold">
-                <p className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-[#E53935] shrink-0" />
-                  <span>456 Nguyễn Đình Chiểu, Quận 3, TP. Hồ Chí Minh</span>
-                </p>
-                <p className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-[#E53935] shrink-0" />
-                  <span>07:00 AM - 10:00 PM</span>
-                </p>
-              </div>
-              <Link
-                href="/store"
-                className="inline-block pt-2 text-xs font-black uppercase tracking-wider text-[#E53935] hover:text-[#D32F2F] transition-colors"
-              >
-                {isVi ? 'Xem bản đồ & Liên hệ' : 'View map & contact'} →
-              </Link>
-            </div>
+            )}
           </div>
         </div>
       </section>

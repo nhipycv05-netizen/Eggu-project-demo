@@ -88,6 +88,12 @@ export default function StoresTab() {
     e.preventDefault();
     setLoading(true);
 
+    let cleanMapsUrl = googleMapsUrl.trim();
+    const iframeMatch = cleanMapsUrl.match(/src=["']([^"']+)["']/);
+    if (iframeMatch) {
+      cleanMapsUrl = iframeMatch[1];
+    }
+
     const payload = {
       name_vi: nameVi,
       name_en: nameEn,
@@ -96,7 +102,7 @@ export default function StoresTab() {
       phone,
       opening_hours_vi: openingHoursVi,
       opening_hours_en: openingHoursEn,
-      google_maps_url: googleMapsUrl || null,
+      google_maps_url: cleanMapsUrl || null,
       is_active: isActive,
     };
 
@@ -297,9 +303,10 @@ export default function StoresTab() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Đường dẫn Google Maps</label>
+                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Đường dẫn Google Maps (URL hoặc mã nhúng iframe)</label>
                   <input
                     type="text"
+                    placeholder="https://maps.google.com/... hoặc <iframe src=...>"
                     value={googleMapsUrl}
                     onChange={(e) => setGoogleMapsUrl(e.target.value)}
                     className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"

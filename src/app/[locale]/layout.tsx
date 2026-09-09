@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { createClient } from '@/lib/supabase/server';
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -34,6 +35,25 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   // Retrieve all messages for the locale
   const messages = await getMessages();
 
+  // Fetch primary store info for footer
+  let store = null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('stores')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (data) {
+      store = data;
+    }
+  } catch (error) {
+    console.error('Failed to fetch store in layout:', error);
+  }
+
   return (
     <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-background text-foreground font-sans">
@@ -42,7 +62,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
           <main className="flex-grow">
             {children}
           </main>
-          <Footer />
+          <Footer store={store} locale={locale} />
         </NextIntlClientProvider>
       </body>
     </html>
