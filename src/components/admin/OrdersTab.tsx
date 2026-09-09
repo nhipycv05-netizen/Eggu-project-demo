@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Eye, Search, Filter, Loader2 } from 'lucide-react';
+import { Eye, Search, Filter, Loader2, Trash2, AlertTriangle, CheckCircle2, X, Clock } from 'lucide-react';
 
 interface OrderItem {
   id: string;
@@ -50,6 +50,49 @@ export default function OrdersTab() {
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const formatOrderTimeTable = (dateStr: string) => {
+    if (!dateStr) return '—';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${hours}:${minutes} - ${day}/${month}/${year}`;
+    } catch {
+      return dateStr;
+    }
+  };
+
+  const formatOrderTimeDetail = (dateStr: string) => {
+    if (!dateStr) return '—';
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const seconds = String(d.getSeconds()).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${hours}:${minutes}:${seconds} ngày ${day}/${month}/${year}`;
+    } catch {
+      return dateStr;
+    }
+  };
+
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    setTimeout(() => {
+      setToastMessage((current) => (current === message ? null : current));
+    }, 3000);
+  };
 
   // Fetch orders list
   const fetchOrders = useCallback(async () => {
@@ -115,8 +158,48 @@ export default function OrdersTab() {
         setSelectedOrder((prev) => (prev ? { ...prev, ...updates } : null));
       }
     } catch (err) {
-      console.error('Lỗi khi cập nhật trạng thái đơn hàng:', err);
+      console.error('Lỗi khi cập trạng thái đơn hàng:', err);
       alert('Cập nhật trạng thái thất bại');
+    }
+  };
+
+  // Delete order
+  const handleDeleteOrder = async (order: Order) => {
+    setIsDeleting(true);
+    try {
+      // Delete associated order_items first for referential safety
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .delete()
+        .eq('order_id', order.id);
+
+      if (itemsError) {
+        console.warn('Lỗi khi xóa order_items:', itemsError);
+      }
+
+      // Delete the order itself
+      const { error: orderError } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', order.id);
+
+      if (orderError) throw orderError;
+
+      // Immediately update local state without reloading whole page
+      setOrders((prev) => prev.filter((o) => o.id !== order.id));
+
+      // Reset selected order if the deleted one was selected
+      if (selectedOrder?.id === order.id) {
+        setSelectedOrder(null);
+      }
+
+      setOrderToDelete(null);
+      showToast('Đã xóa đơn hàng thành công');
+    } catch (err) {
+      console.error('Lỗi khi xóa đơn hàng:', err);
+      alert('Xóa đơn hàng thất bại. Vui lòng thử lại!');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -152,7 +235,7 @@ export default function OrdersTab() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       {/* Header section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -208,6 +291,7 @@ export default function OrdersTab() {
                 <thead>
                   <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-500 font-bold uppercase tracking-wider">
                     <th className="p-4">Mã đơn</th>
+                    <th className="p-4">Thời gian</th>
                     <th className="p-4">Khách hàng</th>
                     <th className="p-4">Tổng tiền</th>
                     <th className="p-4">Trạng thái</th>
@@ -217,7 +301,7 @@ export default function OrdersTab() {
                 <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                   {filteredOrders.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-neutral-400 font-bold">
+                      <td colSpan={6} className="p-8 text-center text-neutral-400 font-bold">
                         Không tìm thấy đơn hàng nào phù hợp với bộ lọc.
                       </td>
                     </tr>
@@ -233,6 +317,12 @@ export default function OrdersTab() {
                         >
                           <td className="p-4 font-extrabold text-neutral-900">
                             {order.order_number}
+                          </td>
+                          <td className="p-4 text-neutral-600 font-medium whitespace-nowrap">
+                            <div className="flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+                              <span>{formatOrderTimeTable(order.created_at)}</span>
+                            </div>
                           </td>
                           <td className="p-4 space-y-0.5">
                             <p className="font-bold text-neutral-800">{order.customer_name}</p>
@@ -251,12 +341,22 @@ export default function OrdersTab() {
                             </span>
                           </td>
                           <td className="p-4 text-right">
-                            <button
-                              onClick={() => handleViewOrder(order)}
-                              className="p-2 hover:bg-neutral-200 rounded-lg text-neutral-500 hover:text-neutral-900 transition"
-                            >
-                              <Eye className="w-4 h-4" />
-                            </button>
+                            <div className="flex items-center justify-end gap-1">
+                              <button
+                                onClick={() => handleViewOrder(order)}
+                                className="p-2 hover:bg-neutral-200 rounded-lg text-neutral-500 hover:text-neutral-900 transition"
+                                title="Xem chi tiết"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => setOrderToDelete(order)}
+                                className="p-2 hover:bg-red-50 rounded-lg text-red-500 hover:text-red-700 transition"
+                                title="Xóa đơn hàng"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -281,6 +381,15 @@ export default function OrdersTab() {
                   <p className="text-base font-extrabold text-neutral-900">
                     {selectedOrder.order_number}
                   </p>
+                </div>
+
+                {/* Order Time */}
+                <div className="space-y-1 border-t border-neutral-100 pt-4">
+                  <span className="text-[10px] text-neutral-400 uppercase font-black">Thời gian đặt</span>
+                  <div className="flex items-center gap-1.5 text-neutral-800 font-bold">
+                    <Clock className="w-3.5 h-3.5 text-[#EAAA08] shrink-0" />
+                    <span>{formatOrderTimeDetail(selectedOrder.created_at)}</span>
+                  </div>
                 </div>
 
                 {/* Customer Info */}
@@ -379,6 +488,18 @@ export default function OrdersTab() {
                     </span>
                   </div>
                 </div>
+
+                {/* Delete Order Button */}
+                <div className="border-t border-neutral-100 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setOrderToDelete(selectedOrder)}
+                    className="w-full py-2.5 px-4 bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 font-bold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-xs active:scale-[0.99]"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    <span>Xóa đơn hàng</span>
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="text-center py-20 text-neutral-400 font-bold italic">
@@ -386,6 +507,70 @@ export default function OrdersTab() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {orderToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-neutral-100 space-y-5 animate-in zoom-in-95 duration-150">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5 stroke-[2.5]" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-extrabold text-neutral-900">
+                  Xác nhận xóa đơn hàng
+                </h3>
+                <p className="text-xs text-neutral-500 font-medium leading-relaxed">
+                  Bạn có chắc chắn muốn xóa vĩnh viễn đơn hàng <span className="font-bold text-neutral-800">#{orderToDelete.order_number}</span> không? Thao tác này không thể hoàn tác.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setOrderToDelete(null)}
+                className="px-4 py-2 border border-neutral-200 rounded-xl text-xs font-bold text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900 transition disabled:opacity-50"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => handleDeleteOrder(orderToDelete)}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-2 shadow-sm disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Đang xóa...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Xóa vĩnh viễn</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 bg-neutral-900 text-white px-4 py-3 rounded-xl shadow-lg border border-neutral-700 animate-in slide-in-from-bottom-5 duration-200">
+          <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />
+          <span className="text-xs font-bold">{toastMessage}</span>
+          <button
+            onClick={() => setToastMessage(null)}
+            className="ml-2 text-neutral-400 hover:text-white p-0.5"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
         </div>
       )}
     </div>
