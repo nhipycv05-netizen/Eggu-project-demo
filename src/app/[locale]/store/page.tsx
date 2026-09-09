@@ -2,6 +2,9 @@ import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { MapPin, Phone, Clock, ArrowUpRight } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
+
 const MOCK_STORES = [
   {
     id: 'store-1',

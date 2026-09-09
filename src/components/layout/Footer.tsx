@@ -5,8 +5,30 @@ import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
-export default function Footer() {
+interface FooterProps {
+  store?: {
+    name_vi?: string;
+    name_en?: string;
+    address_vi?: string;
+    address_en?: string;
+    phone?: string;
+    opening_hours_vi?: string;
+    opening_hours_en?: string;
+  } | null;
+  locale?: string;
+}
+
+export default function Footer({ store, locale = 'vi' }: FooterProps) {
   const t = useTranslations('nav');
+  const isVi = locale === 'vi';
+
+  const address = store
+    ? (isVi ? store.address_vi : store.address_en) || store.address_vi
+    : '54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội';
+  const hours = store
+    ? (isVi ? store.opening_hours_vi : store.opening_hours_en) || store.opening_hours_vi
+    : '07:00 - 21:00';
+  const phone = store?.phone || '0356779899';
 
   const links = [
     { href: '/about', label: t('about') },
@@ -69,11 +91,11 @@ export default function Footer() {
             <div className="space-y-2.5 text-sm text-[#9CA3AF] font-medium">
               <p className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#E53935] shrink-0 mt-0.5" />
-                <span>123 Nguyễn Huệ, Quận 1, TP.HCM</span>
+                <span>{address}</span>
               </p>
               <p className="flex items-start gap-2">
                 <Clock className="w-4 h-4 text-[#E53935] shrink-0 mt-0.5" />
-                <span>07:00 AM - 10:00 PM</span>
+                <span>{hours}</span>
               </p>
             </div>
           </div>
@@ -86,7 +108,7 @@ export default function Footer() {
             <div className="space-y-2.5 text-sm text-[#9CA3AF] font-medium">
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#E53935] shrink-0" />
-                <a href="tel:02812345678" className="hover:text-[#E53935] transition-colors">028 1234 5678</a>
+                <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-[#E53935] transition-colors">{phone}</a>
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#E53935] shrink-0" />
