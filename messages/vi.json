@@ -36,6 +36,8 @@
     "addToCart": "Thêm Vào Giỏ",
     "newBadge": "MỚI",
     "bestSellerBadge": "Bán Chạy",
+    "soldOutBadge": "HẾT MÓN",
+    "soldOutBtn": "HẾT HÀNG",
     "emptyState": "Không tìm thấy món ăn nào trong danh mục này."
   },
   "product": {

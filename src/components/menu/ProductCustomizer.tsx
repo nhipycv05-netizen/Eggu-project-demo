@@ -21,6 +21,7 @@ interface ProductCustomizerProps {
     name_en: string;
     price: number;
     image_url: string;
+    is_available?: boolean;
   };
   options: DBProductOption[];
   locale: string;
@@ -39,9 +40,11 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
   const [isAdded, setIsAdded] = useState(false);
 
   const isVi = locale === 'vi';
+  const isSoldOut = product.is_available === false;
 
   // Toggle option selection
   const handleToggleOption = (option: DBProductOption) => {
+    if (isSoldOut) return;
     const isSelected = selectedOptions.some((o) => o.id === option.id);
     if (isSelected) {
       setSelectedOptions(selectedOptions.filter((o) => o.id !== option.id));
@@ -57,6 +60,7 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
 
   // Add to cart handler
   const handleAddToCart = () => {
+    if (isSoldOut) return;
     const cartOptions: CartItemOption[] = selectedOptions.map((o) => ({
       id: o.id,
       name_vi: o.name_vi || o.name || '',
@@ -150,8 +154,10 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
           </span>
           <div className="flex items-center bg-[#F8F9FA] border border-[#E5E7EB] rounded-full p-1">
             <button
+              type="button"
+              disabled={isSoldOut}
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="p-2 hover:bg-white rounded-full transition duration-150"
+              className="p-2 hover:bg-white rounded-full transition duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Minus className="w-4 h-4 text-[#111111]" />
             </button>
@@ -159,8 +165,10 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
               {quantity}
             </span>
             <button
+              type="button"
+              disabled={isSoldOut}
               onClick={() => setQuantity(quantity + 1)}
-              className="p-2 hover:bg-white rounded-full transition duration-150"
+              className="p-2 hover:bg-white rounded-full transition duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Plus className="w-4 h-4 text-[#111111]" />
             </button>
@@ -179,16 +187,27 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
 
         {/* Action Button */}
         <button
+          type="button"
           onClick={handleAddToCart}
-          disabled={isAdded}
+          disabled={isAdded || isSoldOut}
           className={`w-full py-4 text-sm font-black uppercase tracking-widest rounded-full shadow-md flex items-center justify-center space-x-2 transition-all duration-300 ${
-            isAdded
+            isSoldOut
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none'
+              : isAdded
               ? 'bg-[#22C55E] text-white shadow-none'
               : 'bg-[#E53935] text-white hover:bg-[#D32F2F] hover:shadow-xl active:scale-98'
           }`}
         >
           <ShoppingBag className="w-5 h-5" />
-          <span>{isAdded ? tp('addedToCart') : tm('addToCart')}</span>
+          <span>
+            {isSoldOut
+              ? isVi
+                ? 'HẾT HÀNG'
+                : 'SOLD OUT'
+              : isAdded
+              ? tp('addedToCart')
+              : tm('addToCart')}
+          </span>
         </button>
       </div>
     </div>

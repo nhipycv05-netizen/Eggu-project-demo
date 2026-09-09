@@ -32,6 +32,7 @@ create table public.products (
   allergy_info_en text,
   is_new boolean default false,
   is_best_seller boolean default false,
+  is_available boolean default true,
   is_active boolean default true,
   sort_order integer default 0,
   created_at timestamptz default now() not null,

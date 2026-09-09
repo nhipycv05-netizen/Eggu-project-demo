@@ -265,6 +265,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     ? JSON.parse(product.nutrition)
     : product.nutrition;
 
+  // Check if sold out
+  const isSoldOut = (product as Record<string, any>)?.is_available === false;
+
   return (
     <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-12 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -289,8 +292,15 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               fill
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-              className="object-cover"
+              className={`object-cover ${isSoldOut ? 'opacity-75 grayscale-[30%]' : ''}`}
             />
+            {isSoldOut && (
+              <div className="absolute top-4 left-4 z-10">
+                <span className="bg-[#1E1B18]/90 backdrop-blur-xs text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md">
+                  {isVi ? 'HẾT MÓN' : 'SOLD OUT'}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Right Column: Customizer Details */}
@@ -315,6 +325,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 name_en: product.name_en,
                 price: product.price,
                 image_url: product.image_url || '',
+                is_available: !isSoldOut,
               }}
               options={options}
               locale={locale}

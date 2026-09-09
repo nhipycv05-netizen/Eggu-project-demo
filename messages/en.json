@@ -36,6 +36,8 @@
     "addToCart": "Add to Cart",
     "newBadge": "NEW",
     "bestSellerBadge": "Best Seller",
+    "soldOutBadge": "SOLD OUT",
+    "soldOutBtn": "SOLD OUT",
     "emptyState": "No items found in this category."
   },
   "product": {

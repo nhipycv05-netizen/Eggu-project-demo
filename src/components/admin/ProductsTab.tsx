@@ -16,6 +16,7 @@ interface Product {
   price: number;
   image_url: string | null;
   is_active: boolean;
+  is_available?: boolean;
   is_new: boolean;
   is_best_seller: boolean;
   sort_order: number;
@@ -46,6 +47,7 @@ export default function ProductsTab() {
   const [price, setPrice] = useState(0);
   const [imageUrl, setImageUrl] = useState('');
   const [isActive, setIsActive] = useState(true);
+  const [isAvailable, setIsAvailable] = useState(true);
   const [isNewFlag, setIsNewFlag] = useState(false);
   const [isBestSellerFlag, setIsBestSellerFlag] = useState(false);
   const [sortOrder, setSortOrder] = useState(0);
@@ -89,6 +91,7 @@ export default function ProductsTab() {
     setPrice(Number(product.price));
     setImageUrl(product.image_url || '');
     setIsActive(product.is_active);
+    setIsAvailable(product.is_available !== false);
     setIsNewFlag(product.is_new);
     setIsBestSellerFlag(product.is_best_seller);
     setSortOrder(product.sort_order);
@@ -106,6 +109,7 @@ export default function ProductsTab() {
     setPrice(0);
     setImageUrl('');
     setIsActive(true);
+    setIsAvailable(true);
     setIsNewFlag(false);
     setIsBestSellerFlag(false);
     setSortOrder(0);
@@ -169,6 +173,7 @@ export default function ProductsTab() {
       price: Number(price),
       image_url: imageUrl || null,
       is_active: isActive,
+      is_available: isAvailable,
       is_new: isNewFlag,
       is_best_seller: isBestSellerFlag,
       sort_order: Number(sortOrder),
@@ -215,6 +220,33 @@ export default function ProductsTab() {
       );
     } catch (err) {
       console.error('Lỗi khi thay đổi trạng thái:', err);
+    }
+  };
+
+  // Toggle available status directly
+  const handleToggleAvailable = async (product: Product) => {
+    const nextVal = product.is_available === false ? true : false;
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ is_available: nextVal })
+        .eq('id', product.id);
+
+      if (error) throw error;
+
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? { ...p, is_available: nextVal } : p))
+      );
+    } catch (err: unknown) {
+      console.error('Lỗi khi thay đổi trạng thái còn hàng:', err);
+      const errObj = err as { code?: string; message?: string };
+      if (errObj?.code === '42703' || errObj?.message?.includes('is_available')) {
+        alert(
+          'Chưa có cột "is_available" trong bảng products.\nVui lòng chạy file migration "supabase/migrations/20260822000002_add_is_available_to_products.sql" trong Supabase SQL Editor.'
+        );
+      } else {
+        alert(`Không thể thay đổi trạng thái còn hàng: ${errObj?.message || 'Lỗi không xác định'}`);
+      }
     }
   };
 
@@ -269,6 +301,7 @@ export default function ProductsTab() {
                   <th className="p-4">Danh mục</th>
                   <th className="p-4">Giá bán</th>
                   <th className="p-4">Hiển thị</th>
+                  <th className="p-4">Còn hàng</th>
                   <th className="p-4">Huy hiệu</th>
                   <th className="p-4 text-right">Thao tác</th>
                 </tr>
@@ -276,7 +309,7 @@ export default function ProductsTab() {
               <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                 {products.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="p-8 text-center text-neutral-400 font-bold">
+                    <td colSpan={7} className="p-8 text-center text-neutral-400 font-bold">
                       Không có sản phẩm nào.
                     </td>
                   </tr>
@@ -312,7 +345,9 @@ export default function ProductsTab() {
                         </td>
                         <td className="p-4">
                           <button
+                            type="button"
                             onClick={() => handleToggleActive(product)}
+                            title={product.is_active ? 'Đang hiển thị' : 'Đang ẩn'}
                             className={`w-10 h-6 rounded-full p-0.5 transition duration-200 focus:outline-none ${
                               product.is_active ? 'bg-green-500' : 'bg-neutral-200'
                             }`}
@@ -323,6 +358,33 @@ export default function ProductsTab() {
                               }`}
                             />
                           </button>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center space-x-2">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleAvailable(product)}
+                              title={product.is_available !== false ? 'Còn món' : 'Hết món'}
+                              className={`w-10 h-6 rounded-full p-0.5 transition duration-200 focus:outline-none ${
+                                product.is_available !== false ? 'bg-green-500' : 'bg-neutral-300'
+                              }`}
+                            >
+                              <div
+                                className={`bg-white w-5 h-5 rounded-full shadow-sm transform transition duration-200 ${
+                                  product.is_available !== false ? 'translate-x-4' : 'translate-x-0'
+                                }`}
+                              />
+                            </button>
+                            <span
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                product.is_available !== false
+                                  ? 'bg-green-50 text-green-700 border border-green-200'
+                                  : 'bg-neutral-100 text-neutral-500 border border-neutral-200'
+                              }`}
+                            >
+                              {product.is_available !== false ? 'Còn món' : 'Hết món'}
+                            </span>
+                          </div>
                         </td>
                         <td className="p-4 space-x-1.5 shrink-0">
                           {product.is_new && (
@@ -530,6 +592,18 @@ export default function ProductsTab() {
                     className="rounded border-neutral-300 text-[#EAAA08] focus:ring-[#EAAA08] w-4 h-4"
                   />
                   <span>Hiển thị sản phẩm</span>
+                </label>
+
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isAvailable}
+                    onChange={(e) => setIsAvailable(e.target.checked)}
+                    className="rounded border-neutral-300 text-green-600 focus:ring-green-500 w-4 h-4"
+                  />
+                  <span className={isAvailable ? 'text-green-700 font-bold' : 'text-neutral-500'}>
+                    {isAvailable ? 'Còn hàng (Trong kho)' : 'Hết món (Tạm hết)'}
+                  </span>
                 </label>
 
                 <label className="flex items-center space-x-2 cursor-pointer">

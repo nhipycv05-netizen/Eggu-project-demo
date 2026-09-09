@@ -276,6 +276,8 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
                 currencyLabel={tc('currency')}
                 newBadgeLabel={tm('newBadge')}
                 bestSellerBadgeLabel={tm('bestSellerBadge')}
+                soldOutBadgeLabel={tm('soldOutBadge')}
+                soldOutBtnLabel={tm('soldOutBtn')}
               />
             ))}
           </div>

@@ -31,7 +31,8 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
 1. Truy cập vào giao diện quản trị **Supabase Console** -> **SQL Editor**.
 2. Mở file [20260822000000_init_schema.sql](file:///Users/leduycuong/Desktop/Projects/nextjs/Eggu-project-demo/supabase/migrations/20260822000000_init_schema.sql) và chạy lệnh SQL để khởi tạo các bảng dữ liệu (`categories`, `products`, `orders`, v.v.).
 3. Mở file [20260822000001_add_anon_insert_policies.sql](file:///Users/leduycuong/Desktop/Projects/nextjs/Eggu-project-demo/supabase/migrations/20260822000001_add_anon_insert_policies.sql) chạy tiếp để bật quyền gửi đơn hàng cho khách hàng không đăng nhập.
-4. Mở tiếp file [seed.sql](file:///Users/leduycuong/Desktop/Projects/nextjs/Eggu-project-demo/supabase/seed.sql) chạy toàn bộ lệnh SQL để thêm danh mục, món ăn, chi nhánh và tài khoản admin mẫu.
+4. Mở file [20260822000002_add_is_available_to_products.sql](file:///Users/leduycuong/Desktop/Projects/nextjs/Eggu-project-demo/supabase/migrations/20260822000002_add_is_available_to_products.sql) chạy để thêm trường quản lý hết món (`is_available`).
+5. Mở tiếp file [seed.sql](file:///Users/leduycuong/Desktop/Projects/nextjs/Eggu-project-demo/supabase/seed.sql) chạy toàn bộ lệnh SQL để thêm danh mục, món ăn, chi nhánh và tài khoản admin mẫu.
 
 ### 5. Khởi chạy Ứng dụng
 - **Chạy môi trường phát triển (Development):**

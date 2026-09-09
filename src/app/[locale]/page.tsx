@@ -217,6 +217,8 @@ export default async function HomePage({ params }: HomePageProps) {
                 currencyLabel={tc('currency')}
                 newBadgeLabel={tm('newBadge')}
                 bestSellerBadgeLabel={tm('bestSellerBadge')}
+                soldOutBadgeLabel={tm('soldOutBadge')}
+                soldOutBtnLabel={tm('soldOutBtn')}
               />
             ))}
           </div>
