@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 import ProductCard from '@/components/menu/ProductCard';
+import HeroSandwichCarousel from '@/components/home/HeroSandwichCarousel';
 import { ArrowRight, Clock, MapPin, ShoppingBag, Coffee, Croissant, IceCreamBowl, Salad } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -18,7 +19,7 @@ const MOCK_FEATURED = [
     description_vi: 'Bánh mì nướng bơ tỏi thơm lừng kẹp trứng khuấy mềm béo và sốt sriracha ngọt dịu.',
     description_en: 'Garlic butter toast filled with fluffy soft-scrambled eggs and our signature sweet sriracha mayo.',
     price: 39000,
-    image_url: '/images/hero-sandwich.jpg',
+    image_url: '/images/carousel/sandwich-egg-scramble.jpg',
     is_new: false,
     is_best_seller: true,
   },
@@ -30,8 +31,44 @@ const MOCK_FEATURED = [
     description_vi: 'Trứng khuấy bông mềm kết hợp thịt nguội cao cấp và phô mai Cheddar tan chảy.',
     description_en: 'Fluffy soft-scrambled eggs, premium ham slices, and melted Cheddar cheese.',
     price: 49000,
-    image_url: '/images/hero-sandwich.jpg',
+    image_url: '/images/carousel/sandwich-bacon-cheese.jpg',
     is_new: false,
+    is_best_seller: true,
+  },
+  {
+    id: 'bfbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    name_vi: 'Bánh Mì Thịt Xông Khói & Phô Mai Kép',
+    name_en: 'Bacon Double Cheese',
+    slug: 'bacon-double-cheese',
+    description_vi: 'Thịt xông khói áp chảo giòn rụm nhân đôi, trứng khuấy mềm và phô mai Cheddar kép béo ngậy.',
+    description_en: 'Double crispy bacon, fluffy soft-scrambled eggs, and double melted Cheddar cheese on toasted brioche.',
+    price: 55000,
+    image_url: '/images/carousel/sandwich-bacon-cheese.jpg',
+    is_new: false,
+    is_best_seller: true,
+  },
+  {
+    id: 'cfcccccc-cccc-cccc-cccc-cccccccccccc',
+    name_vi: 'Sweet Corn & Bacon',
+    name_en: 'Sweet Corn & Bacon',
+    slug: 'sweet-corn-bacon',
+    description_vi: 'Bắp ngọt giòn mọng nước kết hợp cùng thịt xông khói đậm đà và trứng bơ béo ngậy.',
+    description_en: 'Juicy golden corn kernels paired with crispy bacon, melted cheese and fluffy egg.',
+    price: 52000,
+    image_url: '/images/carousel/sandwich-corn-bacon.jpg',
+    is_new: true,
+    is_best_seller: false,
+  },
+  {
+    id: 'dfdddddd-dddd-dddd-dddd-dddddddddddd',
+    name_vi: 'Herb Grilled Chicken',
+    name_en: 'Herb Grilled Chicken',
+    slug: 'grilled-chicken-herb',
+    description_vi: 'Ức gà nướng sốt thảo mộc tươi mát kết hợp trứng khuấy mềm ngậy giàu protein.',
+    description_en: 'Tender grilled herb chicken with signature fluffy scrambled eggs and melted cheese.',
+    price: 59000,
+    image_url: '/images/carousel/sandwich-chicken-herbs.jpg',
+    is_new: true,
     is_best_seller: true,
   },
   {
@@ -109,56 +146,8 @@ export default async function HomePage({ params }: HomePageProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F8F9FA]">
-      {/* 1. Hero Section */}
-      <section className="pt-24 md:pt-28 pb-12 md:pb-16 bg-[#F8F9FA]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-3xl bg-white p-8 md:p-12 lg:p-16 shadow-sm border border-[#E5E7EB]">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-7 space-y-6 text-left">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E53935]/10 text-[#E53935] text-xs font-black uppercase tracking-wider">
-                  <span className="w-2 h-2 rounded-full bg-[#E53935]" />
-                  <span>{isVi ? 'Sandwich Trứng Chuẩn Vị Hàn Quốc' : 'Authentic Korean Egg Sandwich'}</span>
-                </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-[#111111] tracking-tight">
-                  {isVi ? 'Bánh Mì Trứng Nóng Hổi Mỗi Ngày' : 'Freshly Toasted Gourmet Egg Sandwiches'}
-                </h1>
-                <p className="text-sm md:text-base lg:text-lg leading-relaxed text-[#6B7280] font-medium max-w-xl">
-                  {isVi
-                    ? 'Thưởng thức hương vị tươi mới, trứng khuấy bơ mềm mịn tan chảy cùng bánh mì Brioche nướng bơ tỏi giòn thơm chuẩn phong cách EGGDROP.'
-                    : 'Indulge in fluffy golden scrambled eggs paired with thick-sliced French brioche toast and signature homemade sauces.'}
-                </p>
-                <div className="flex flex-wrap items-center gap-4 pt-2">
-                  <Link
-                    href="/menu"
-                    className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#E53935] text-white font-black text-sm uppercase tracking-wider hover:bg-[#D32F2F] transition-all shadow-md active:scale-95"
-                  >
-                    {tc('orderNow')}
-                  </Link>
-                  <Link
-                    href="/about"
-                    className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#FFC107] text-[#111111] font-black text-sm uppercase tracking-wider hover:bg-[#FFB300] transition-all shadow-xs"
-                  >
-                    {isVi ? 'Tìm hiểu thêm' : 'Learn More'}
-                  </Link>
-                </div>
-              </div>
-
-              <div className="lg:col-span-5 relative flex justify-center">
-                <div className="relative w-full max-w-[420px] aspect-square rounded-3xl overflow-hidden shadow-xl border-4 border-[#F8F9FA] transform hover:scale-105 transition-transform duration-500">
-                  <Image
-                    src="/images/hero-sandwich.jpg"
-                    alt="EGGU Sandwich"
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 420px"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 1. Interactive Sandwich Carousel Hero */}
+      <HeroSandwichCarousel locale={locale} />
 
       {/* Category Icons Row */}
       <section className="py-8 bg-white border-y border-[#E5E7EB]">
