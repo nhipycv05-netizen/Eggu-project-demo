@@ -475,12 +475,14 @@ export default function OrdersTab() {
                       {Number(selectedOrder.subtotal).toLocaleString()} VND
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Phí giao hàng</span>
-                    <span className="text-neutral-800">
-                      {Number(selectedOrder.delivery_fee).toLocaleString()} VND
-                    </span>
-                  </div>
+                  {Number(selectedOrder.delivery_fee) > 0 && (
+                    <div className="flex justify-between">
+                      <span>Phí giao hàng</span>
+                      <span className="text-neutral-800">
+                        {Number(selectedOrder.delivery_fee).toLocaleString()} VND
+                      </span>
+                    </div>
+                  )}
                   <div className="border-t border-neutral-100 pt-3 flex justify-between items-end">
                     <span className="text-sm font-black text-neutral-900">Tổng thanh toán</span>
                     <span className="text-lg font-black text-[#5C4B3E]">

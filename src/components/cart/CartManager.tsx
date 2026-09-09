@@ -65,8 +65,7 @@ export default function CartManager({ locale }: CartManagerProps) {
     return sum + (item.price + optionsPrice) * item.quantity;
   }, 0);
 
-  const deliveryFee = 20000; // Fixed delivery fee 20,000 VND
-  const total = subtotal + deliveryFee;
+  const total = subtotal;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -181,14 +180,6 @@ export default function CartManager({ locale }: CartManagerProps) {
             <span>{t('subtotal')}</span>
             <span className="text-[#111111] font-bold">
               {subtotal.toLocaleString()} {tc('currency')}
-            </span>
-          </div>
-
-          {/* Delivery Fee */}
-          <div className="flex justify-between">
-            <span>{t('deliveryFee')}</span>
-            <span className="text-[#111111] font-bold">
-              {deliveryFee.toLocaleString()} {tc('currency')}
             </span>
           </div>
 
