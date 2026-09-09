@@ -8,8 +8,9 @@ import { Plus, Minus, Check, ShoppingBag } from 'lucide-react';
 
 interface DBProductOption {
   id: string;
-  name_vi: string;
-  name_en: string;
+  name?: string;
+  name_vi?: string;
+  name_en?: string;
   price: number;
 }
 
@@ -58,8 +59,8 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
   const handleAddToCart = () => {
     const cartOptions: CartItemOption[] = selectedOptions.map((o) => ({
       id: o.id,
-      name_vi: o.name_vi,
-      name_en: o.name_en,
+      name_vi: o.name_vi || o.name || '',
+      name_en: o.name_en || o.name || '',
       price: Number(o.price),
     }));
 
@@ -113,7 +114,7 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
                       {isSelected && <Check className="w-3.5 h-3.5 stroke-[3px]" />}
                     </div>
                     <span className="font-bold text-[#111111] text-sm">
-                      {isVi ? option.name_vi : option.name_en}
+                      {option.name || (isVi ? option.name_vi : option.name_en)}
                     </span>
                   </div>
                   <span className="text-sm font-black text-[#E53935]">

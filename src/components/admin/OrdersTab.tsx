@@ -447,7 +447,7 @@ export default function OrdersTab() {
                             </p>
                             {item.options && item.options.length > 0 && (
                               <p className="text-[10px] text-neutral-500 font-medium mt-0.5">
-                                + {item.options.map((o) => o.name_vi).join(', ')}
+                                + {item.options.map((o) => o.price ? `${o.name_vi} (+${Number(o.price).toLocaleString()} VND)` : o.name_vi).join(', ')}
                               </p>
                             )}
                             {item.note && (
