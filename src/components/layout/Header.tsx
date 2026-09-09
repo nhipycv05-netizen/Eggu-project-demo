@@ -88,7 +88,7 @@ export default function Header() {
           >
             <div className="relative h-11 w-11 sm:h-12 sm:w-12 max-h-12 rounded-xl overflow-hidden bg-white shadow-xs border border-[#E5E7EB] group-hover:border-[#E53935]/40 group-hover:scale-105 transition-all duration-200 flex items-center justify-center">
               <Image
-                src="/images/logo.png"
+                src="/logo.png"
                 alt="EGGU Logo"
                 fill
                 priority

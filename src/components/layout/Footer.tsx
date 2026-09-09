@@ -48,7 +48,7 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
             <Link href="/" className="inline-flex items-center space-x-2.5 group">
               <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white p-0.5 shadow-xs border border-[#333333] group-hover:scale-105 transition-transform">
                 <Image
-                  src="/images/logo.png"
+                  src="/logo.png"
                   alt="EGGU Logo"
                   fill
                   sizes="40px"

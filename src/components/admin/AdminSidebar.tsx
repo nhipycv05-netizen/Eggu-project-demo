@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
   ClipboardList,
   ShoppingBag,
@@ -46,13 +47,21 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
     <aside className="w-64 bg-[#1E1B18] text-white flex flex-col justify-between shrink-0 h-screen sticky top-0 border-r border-white/5">
       {/* Brand logo details */}
       <div className="space-y-6">
-        <div className="p-6 border-b border-white/5 flex items-center space-x-2">
-          <span className="text-2xl">🍳</span>
+        <div className="p-5 border-b border-white/5 flex items-center space-x-3">
+          <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white p-0.5 shadow-xs border border-white/10 shrink-0 flex items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="EGGU Admin Logo"
+              fill
+              sizes="40px"
+              className="object-contain"
+            />
+          </div>
           <div>
             <h2 className="font-black text-sm tracking-tight text-white leading-none">
               EGGU Admin
             </h2>
-            <span className="text-[10px] text-[#EAAA08] font-bold uppercase tracking-wider mt-0.5 block">
+            <span className="text-[10px] text-[#EAAA08] font-bold uppercase tracking-wider mt-1 block">
               Hệ Thống Quản Trị
             </span>
           </div>
