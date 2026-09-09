@@ -92,8 +92,7 @@ export default function CheckoutForm() {
     const optionsPrice = item.options.reduce((oSum, opt) => oSum + opt.price, 0);
     return sum + (item.price + optionsPrice) * item.quantity;
   }, 0);
-  const deliveryFee = 20000;
-  const total = subtotal + deliveryFee;
+  const total = subtotal;
 
   const onSubmit = async (data: CheckoutFormValues) => {
     setIsSubmitting(true);
@@ -294,12 +293,6 @@ export default function CheckoutForm() {
             <span>Subtotal</span>
             <span className="text-[#111111] font-bold">
               {subtotal.toLocaleString()} {tc('currency')}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span>Delivery Fee</span>
-            <span className="text-[#111111] font-bold">
-              {deliveryFee.toLocaleString()} {tc('currency')}
             </span>
           </div>
           <div className="border-t border-[#E5E7EB] pt-4 flex justify-between items-end">

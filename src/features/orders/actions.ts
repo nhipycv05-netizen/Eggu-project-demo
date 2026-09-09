@@ -168,8 +168,8 @@ export async function createOrder(
       });
     }
 
-    const deliveryFee = 20000; // Fixed delivery fee 20,000 VND
-    const total = subtotal + deliveryFee;
+    const deliveryFee = 0;
+    const total = subtotal;
 
     // 5. Generate unique order number (EGGU-YYYYMMDD-XXXX)
     const today = new Date();

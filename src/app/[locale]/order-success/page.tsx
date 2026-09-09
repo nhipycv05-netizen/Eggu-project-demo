@@ -153,12 +153,14 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
                   {Number(orderDetails.subtotal).toLocaleString()} {tc('currency')}
                 </span>
               </div>
-              <div className="flex justify-between text-xs font-semibold text-[#6B7280]">
-                <span>Delivery Fee</span>
-                <span className="text-[#111111] font-bold">
-                  {Number(orderDetails.delivery_fee).toLocaleString()} {tc('currency')}
-                </span>
-              </div>
+              {Number(orderDetails.delivery_fee) > 0 && (
+                <div className="flex justify-between text-xs font-semibold text-[#6B7280]">
+                  <span>Delivery Fee</span>
+                  <span className="text-[#111111] font-bold">
+                    {Number(orderDetails.delivery_fee).toLocaleString()} {tc('currency')}
+                  </span>
+                </div>
+              )}
               <div className="border-t border-[#E5E7EB] pt-3 flex justify-between items-end">
                 <span className="text-base font-black text-[#111111]">{t('total')}</span>
                 <span className="text-2xl font-black text-[#E53935]">
