@@ -51,6 +51,21 @@ interface OrderItemInsert {
   note: string | null;
 }
 
+const STANDARD_TOPPINGS: Record<string, { name_vi: string; name_en: string; price: number }> = {
+  bacon: { name_vi: 'Bacon / Thịt xông khói', name_en: 'Bacon / Thịt xông khói', price: 12000 },
+  'opt-bacon': { name_vi: 'Bacon / Thịt xông khói', name_en: 'Bacon / Thịt xông khói', price: 12000 },
+  ham: { name_vi: 'Ham / Thịt dăm bông', name_en: 'Ham / Thịt dăm bông', price: 12000 },
+  'opt-ham': { name_vi: 'Ham / Thịt dăm bông', name_en: 'Ham / Thịt dăm bông', price: 12000 },
+  scrambled_egg: { name_vi: 'Scrambled egg / Trứng bác', name_en: 'Scrambled egg / Trứng bác', price: 10000 },
+  'opt-scrambled-egg': { name_vi: 'Scrambled egg / Trứng bác', name_en: 'Scrambled egg / Trứng bác', price: 10000 },
+  cheese: { name_vi: 'Cheese / Phô mai', name_en: 'Cheese / Phô mai', price: 10000 },
+  'opt-cheese': { name_vi: 'Cheese / Phô mai', name_en: 'Cheese / Phô mai', price: 10000 },
+  garlic_butter: { name_vi: 'Garlic butter / Xốt bơ tỏi phết mặt bánh', name_en: 'Garlic butter / Xốt bơ tỏi phết mặt bánh', price: 7000 },
+  'opt-garlic-butter': { name_vi: 'Garlic butter / Xốt bơ tỏi phết mặt bánh', name_en: 'Garlic butter / Xốt bơ tỏi phết mặt bánh', price: 7000 },
+  boiled_egg: { name_vi: 'Boiled Egg / Trứng luộc', name_en: 'Boiled Egg / Trứng luộc', price: 10000 },
+  'opt-boiled-egg': { name_vi: 'Boiled Egg / Trứng luộc', name_en: 'Boiled Egg / Trứng luộc', price: 10000 },
+};
+
 export async function createOrder(
   checkoutData: z.infer<typeof checkoutFormSchema>,
   cartItems: ActionCartItem[]
@@ -84,10 +99,9 @@ export async function createOrder(
         .from('product_options')
         .select('*')
         .in('id', optionIds);
-      if (optError) {
-        return { success: false, error: 'Failed to verify product options' };
+      if (!optError && fetchedOptions) {
+        dbOptions = fetchedOptions as DBProductOption[];
       }
-      dbOptions = (fetchedOptions || []) as DBProductOption[];
     }
 
     // 4. Calculate prices on the server (do NOT trust client-side prices)
@@ -106,16 +120,27 @@ export async function createOrder(
 
       for (const opt of item.options) {
         const dbOption = dbOptions.find((o) => o.id === opt.id);
-        if (!dbOption) {
+        const standardOption = STANDARD_TOPPINGS[opt.id];
+
+        if (dbOption) {
+          itemOptionsPrice += Number(dbOption.price);
+          selectedOptionsDetails.push({
+            id: dbOption.id,
+            name_vi: dbOption.name_vi,
+            name_en: dbOption.name_en,
+            price: Number(dbOption.price),
+          });
+        } else if (standardOption) {
+          itemOptionsPrice += standardOption.price;
+          selectedOptionsDetails.push({
+            id: opt.id,
+            name_vi: standardOption.name_vi,
+            name_en: standardOption.name_en,
+            price: standardOption.price,
+          });
+        } else {
           return { success: false, error: `Product option not found: ${opt.id}` };
         }
-        itemOptionsPrice += Number(dbOption.price);
-        selectedOptionsDetails.push({
-          id: dbOption.id,
-          name_vi: dbOption.name_vi,
-          name_en: dbOption.name_en,
-          price: Number(dbOption.price),
-        });
       }
 
       const unitPrice = Number(dbProduct.price) + itemOptionsPrice;

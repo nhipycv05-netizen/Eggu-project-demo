@@ -9,6 +9,8 @@ import { ChevronLeft } from 'lucide-react';
 const MOCK_PRODUCTS = [
   {
     id: '9a999999-9999-9999-9999-999999999999',
+    category_id: '1a111111-1111-1111-1111-111111111111',
+    category_slug: 'sandwich',
     name_vi: 'Mr. Egg',
     name_en: 'Mr. Egg',
     slug: 'mr-egg',
@@ -24,6 +26,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'afaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    category_id: '1a111111-1111-1111-1111-111111111111',
+    category_slug: 'sandwich',
     name_vi: 'American Ham & Cheese',
     name_en: 'American Ham & Cheese',
     slug: 'american-ham-cheese',
@@ -39,6 +43,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'bfbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    category_id: '1a111111-1111-1111-1111-111111111111',
+    category_slug: 'sandwich',
     name_vi: 'Bacon Double Cheese',
     name_en: 'Bacon Double Cheese',
     slug: 'bacon-double-cheese',
@@ -54,6 +60,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'cfcccccc-cccc-cccc-cccc-cccccccccccc',
+    category_id: '1a111111-1111-1111-1111-111111111111',
+    category_slug: 'sandwich',
     name_vi: 'Avocado Holic',
     name_en: 'Avocado Holic',
     slug: 'avocado-holic',
@@ -69,6 +77,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'dfdddddd-dddd-dddd-dddd-dddddddddddd',
+    category_id: '1a111111-1111-1111-1111-111111111111',
+    category_slug: 'sandwich',
     name_vi: 'Bánh Mì Tỏi Thịt Xông Khói & Phô Mai',
     name_en: 'Garlic Bacon Cheese Toast',
     slug: 'garlic-bacon-cheese-toast',
@@ -84,6 +94,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'efeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',
+    category_id: '2b222222-2222-2222-2222-222222222222',
+    category_slug: 'fried-food',
     name_vi: 'Khoai Tây Chiên Pháp',
     name_en: 'French Fries',
     slug: 'french-fries',
@@ -99,6 +111,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'aff77777-7777-7777-7777-777777777777',
+    category_id: '3c333333-3333-3333-3333-333333333333',
+    category_slug: 'coffee-drinks',
     name_vi: 'Cà Phê Americano Đá',
     name_en: 'Iced Americano',
     slug: 'iced-americano',
@@ -114,6 +128,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'bff77777-7777-7777-7777-777777777777',
+    category_id: '3c333333-3333-3333-3333-333333333333',
+    category_slug: 'coffee-drinks',
     name_vi: 'Cà Phê Bạc Xỉu Đá',
     name_en: 'Iced White Coffee',
     slug: 'iced-white-coffee',
@@ -129,6 +145,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'cff88888-8888-8888-8888-888888888888',
+    category_id: '2b222222-2222-2222-2222-222222222222',
+    category_slug: 'fried-food',
     name_vi: 'Phô Mai Que Giòn Rụm',
     name_en: 'Crispy Cheese Sticks',
     slug: 'crispy-cheese-sticks',
@@ -144,6 +162,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'dff99999-9999-9999-9999-999999999999',
+    category_id: '4d444444-4444-4444-4444-444444444444',
+    category_slug: 'smoothie-fresh-juice',
     name_vi: 'Sinh Tố Bơ Tươi Dẻo',
     name_en: 'Fresh Avocado Smoothie',
     slug: 'fresh-avocado-smoothie',
@@ -159,6 +179,8 @@ const MOCK_PRODUCTS = [
   },
   {
     id: 'eff00000-0000-0000-0000-000000000000',
+    category_id: '4d444444-4444-4444-4444-444444444444',
+    category_slug: 'smoothie-fresh-juice',
     name_vi: 'Nước Cam Vắt Tươi Nguyên Chất',
     name_en: 'Fresh Orange Juice',
     slug: 'fresh-orange-juice',
@@ -174,11 +196,13 @@ const MOCK_PRODUCTS = [
   }
 ];
 
-const MOCK_OPTIONS = [
-  { id: 'opt-cheese', name_vi: 'Thêm Phô Mai Cheddar', name_en: 'Extra Cheddar Cheese', price: 10000 },
-  { id: 'opt-bacon', name_vi: 'Thêm Thịt Xông Khói', name_en: 'Extra Crispy Bacon', price: 15000 },
-  { id: 'opt-avocado', name_vi: 'Thêm Bơ Sáp Tươi', name_en: 'Extra Sliced Avocado', price: 15000 },
-  { id: 'opt-egg', name_vi: 'Thêm Trứng Khuấy', name_en: 'Extra Scrambled Egg', price: 12000 }
+export const SANDWICH_TOPPINGS = [
+  { id: 'bacon', name: 'Bacon / Thịt xông khói', name_vi: 'Bacon / Thịt xông khói', name_en: 'Bacon / Thịt xông khói', price: 12000 },
+  { id: 'ham', name: 'Ham / Thịt dăm bông', name_vi: 'Ham / Thịt dăm bông', name_en: 'Ham / Thịt dăm bông', price: 12000 },
+  { id: 'scrambled_egg', name: 'Scrambled egg / Trứng bác', name_vi: 'Scrambled egg / Trứng bác', name_en: 'Scrambled egg / Trứng bác', price: 10000 },
+  { id: 'cheese', name: 'Cheese / Phô mai', name_vi: 'Cheese / Phô mai', name_en: 'Cheese / Phô mai', price: 10000 },
+  { id: 'garlic_butter', name: 'Garlic butter / Xốt bơ tỏi phết mặt bánh', name_vi: 'Garlic butter / Xốt bơ tỏi phết mặt bánh', name_en: 'Garlic butter / Xốt bơ tỏi phết mặt bánh', price: 7000 },
+  { id: 'boiled_egg', name: 'Boiled Egg / Trứng luộc', name_vi: 'Boiled Egg / Trứng luộc', name_en: 'Boiled Egg / Trứng luộc', price: 10000 },
 ];
 
 interface ProductDetailPageProps {
@@ -192,38 +216,22 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const tc = await getTranslations('common');
   const isVi = locale === 'vi';
 
-  // 1. Fetch Product and its Options from Supabase with full fallbacks
+  // 1. Fetch Product from DB or fallback to MOCK_PRODUCTS
   let product = MOCK_PRODUCTS.find((p) => p.slug === slug);
-  let options = MOCK_OPTIONS;
 
   try {
     const supabase = await createClient();
     
-    // Fetch product details
+    // Fetch product details with joined category
     const { data: dbProduct } = await supabase
       .from('products')
-      .select('*')
+      .select('*, categories(id, slug, name_vi, name_en)')
       .eq('slug', slug)
       .eq('is_active', true)
       .single();
     
     if (dbProduct) {
       product = dbProduct;
-      
-      // Fetch options for the fetched product
-      const { data: dbOptions } = await supabase
-        .from('product_options')
-        .select('*')
-        .eq('product_id', dbProduct.id)
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true });
-      
-      if (dbOptions && dbOptions.length > 0) {
-        options = dbOptions;
-      } else {
-        // If product from DB has no custom options in db_options table, don't show mock toppings
-        options = [];
-      }
     }
   } catch (error) {
     console.error('Supabase query failed on product detail page, using mock fallbacks:', error);
@@ -233,6 +241,24 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   if (!product) {
     notFound();
   }
+
+  // 2. Check if product belongs to SANDWICH category (Toppings ONLY available for sandwiches)
+  const categorySlug = (product as Record<string, any>)?.categories?.slug || (product as Record<string, any>)?.category_slug;
+  const categoryId = (product as Record<string, any>)?.category_id;
+  const productNameVi = ((product as Record<string, any>)?.name_vi || '').toLowerCase();
+  const productNameEn = ((product as Record<string, any>)?.name_en || '').toLowerCase();
+
+  const isSandwich =
+    categorySlug === 'sandwich' ||
+    categoryId === '1a111111-1111-1111-1111-111111111111' ||
+    productNameVi.includes('sandwich') ||
+    productNameEn.includes('sandwich') ||
+    productNameVi.includes('bánh mì') ||
+    productNameEn.includes('toast') ||
+    ['mr-egg', 'american-ham-cheese', 'bacon-double-cheese', 'avocado-holic', 'garlic-bacon-cheese-toast'].includes(slug);
+
+  // If sandwich, ALWAYS render exactly the 6 shared standard SANDWICH_TOPPINGS. For other categories (drinks, fries), empty array.
+  const options = isSandwich ? SANDWICH_TOPPINGS : [];
 
   // Parse nutrition if string or object
   const nutrition = typeof product.nutrition === 'string'
@@ -254,29 +280,29 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </div>
 
         {/* Product Page Detail Grid */}
-        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
           {/* Left Column: Image Card */}
-          <div className="lg:col-span-6 relative aspect-square w-full rounded-3xl overflow-hidden border border-[#E5E0D8] bg-neutral-100 shadow-sm">
+          <div className="w-full max-w-md mx-auto md:max-w-none relative aspect-square rounded-3xl overflow-hidden border border-[#E5E0D8] bg-neutral-100 shadow-sm">
             <Image
               src={product.image_url || '/images/hero-sandwich.jpg'}
               alt={isVi ? product.name_vi : product.name_en}
               fill
               priority
-              sizes="(max-width: 1024px) 100vw, 520px"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
               className="object-cover"
             />
           </div>
 
           {/* Right Column: Customizer Details */}
-          <div className="space-y-6 pt-1">
+          <div className="w-full space-y-6 pt-1">
             <div className="space-y-4">
-              <h1 className="text-3xl lg:text-4xl font-black text-[#1E1B18] leading-tight">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-[#1E1B18] leading-tight break-words">
                 {isVi ? product.name_vi : product.name_en}
               </h1>
               <p className="text-2xl font-black text-[#5C4B3E]">
                 {product.price.toLocaleString()} {tc('currency')}
               </p>
-              <p className="text-sm text-[#706860] leading-relaxed font-medium">
+              <p className="text-sm md:text-base text-[#706860] leading-relaxed font-medium">
                 {isVi ? product.description_vi : product.description_en}
               </p>
             </div>
