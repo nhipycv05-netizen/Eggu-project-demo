@@ -21,6 +21,7 @@
     "searchPlaceholder": "Search egg sandwiches..."
   },
   "home": {
+    "order": "Order",
     "hero": {
       "subtitle": "Korean Egg Sandwich",
       "title": "Made fresh. Made better.",
@@ -31,7 +32,7 @@
     "title": "Our Menu",
     "subtitle": "Handcrafted egg sandwiches, premium toasts, and beverages.",
     "all": "All",
-    "customize": "Customize",
+    "customize": "ORDER NOW",
     "addToCart": "Add to Cart",
     "newBadge": "NEW",
     "bestSellerBadge": "Best Seller",

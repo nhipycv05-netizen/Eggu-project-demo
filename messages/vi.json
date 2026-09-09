@@ -21,6 +21,7 @@
     "searchPlaceholder": "thanh tìm kiếm bánh"
   },
   "home": {
+    "order": "Đặt hàng",
     "hero": {
       "subtitle": "Bánh Mì Trứng Hàn Quốc",
       "title": "Chế biến tươi ngon. Trải nghiệm tuyệt vời.",
@@ -31,7 +32,7 @@
     "title": "Thực Đơn Của Chúng Tôi",
     "subtitle": "Bánh mì kẹp trứng chế biến thủ công, bánh mì nướng hảo hạng và đồ uống mát lạnh.",
     "all": "Tất Cả",
-    "customize": "Tùy Chỉnh",
+    "customize": "ĐẶT HÀNG",
     "addToCart": "Thêm Vào Giỏ",
     "newBadge": "MỚI",
     "bestSellerBadge": "Bán Chạy",
