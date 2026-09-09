@@ -91,6 +91,15 @@ export async function createOrder(
       return { success: false, error: 'Failed to verify products in database' };
     }
 
+    // Verify product availability
+    const outOfStockItem = dbProducts.find((p) => p.is_available === false);
+    if (outOfStockItem) {
+      return {
+        success: false,
+        error: `Món "${outOfStockItem.name_vi || outOfStockItem.name_en}" hiện đã hết hàng. Vui lòng chọn món khác.`,
+      };
+    }
+
     // 3. Fetch all product options in the cart from Supabase to verify prices
     const optionIds = cartItems.flatMap((item) => item.options.map((o) => o.id));
     let dbOptions: DBProductOption[] = [];

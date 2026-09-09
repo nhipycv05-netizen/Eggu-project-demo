@@ -20,6 +20,13 @@ export default function AdminDashboardPage() {
     setTimeout(() => {
       if (active) {
         setIsMounted(true);
+        if (typeof window !== 'undefined') {
+          const params = new URLSearchParams(window.location.search);
+          const tab = params.get('tab');
+          if (tab) {
+            setActiveTab(tab);
+          }
+        }
       }
     }, 0);
     return () => {
