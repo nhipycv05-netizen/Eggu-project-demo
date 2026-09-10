@@ -125,7 +125,15 @@ export default async function HomePage({ params }: HomePageProps) {
   }
 
   // Fetch stores for homepage
-  let stores: any[] = [];
+  let store: any = {
+    name_vi: 'EGGU - Sandwich trứng Hàn Quốc',
+    name_en: 'EGGU - Korean Egg Sandwich',
+    address_vi: '54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội',
+    address_en: '54 Nguyen Huu Huan, Hoan Kiem, Hanoi',
+    opening_hours_vi: '07:00 - 21:00',
+    opening_hours_en: '07:00 - 21:00',
+  };
+
   try {
     const supabase = await createClient();
     const { data: storeData } = await supabase
@@ -133,10 +141,10 @@ export default async function HomePage({ params }: HomePageProps) {
       .select('*')
       .eq('is_active', true)
       .order('created_at', { ascending: true })
-      .limit(2);
+      .limit(1);
 
     if (storeData && storeData.length > 0) {
-      stores = storeData;
+      store = storeData[0];
     }
   } catch (error) {
     console.error('Supabase query stores failed on homepage:', error);
@@ -270,13 +278,10 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* 4. Branch Info Section */}
       <section className="py-12 md:py-16 bg-[#F8F9FA] border-t border-[#E5E7EB]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
           <div className="text-center max-w-2xl mx-auto space-y-3">
-            <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block">
-              {isVi ? 'Ghé Thăm Cửa Hàng' : 'Visit Store'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#111111]">
-              {isVi ? 'Tìm Cửa Hàng Gần Bạn Nhất' : 'Find An EGGU Store'}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#E53935] uppercase">
+              {isVi ? 'GHÉ THĂM CỬA HÀNG' : 'VISIT OUR STORE'}
             </h2>
             <p className="text-sm md:text-base text-[#6B7280] font-medium">
               {isVi
@@ -285,41 +290,65 @@ export default async function HomePage({ params }: HomePageProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
-            {stores.length > 0 ? (
-              stores.map((store) => (
-                <div
-                  key={store.id}
-                  className="p-6 md:p-8 bg-white rounded-2xl border border-[#E5E7EB] space-y-4 shadow-xs hover:border-[#E53935]/40 transition-colors flex flex-col justify-between"
-                >
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-black text-[#111111]">
-                      {isVi ? store.name_vi : store.name_en}
-                    </h3>
-                    <div className="space-y-2 text-[#6B7280] text-sm font-semibold mt-3">
-                      <p className="flex items-center space-x-2">
-                        <MapPin className="w-4 h-4 text-[#E53935] shrink-0" />
-                        <span>{isVi ? store.address_vi : store.address_en}</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-stretch max-w-5xl mx-auto">
+            {/* Cột bên trái: Thẻ thông tin cửa hàng */}
+            <div className="p-6 sm:p-8 bg-white rounded-3xl border border-[#E5E7EB] shadow-xs flex flex-col justify-between space-y-6 hover:border-[#E53935]/40 transition-colors">
+              <div className="space-y-5">
+                <h3 className="text-xl sm:text-2xl font-black text-[#111111]">
+                  {isVi ? (store?.name_vi || 'EGGU - Sandwich trứng Hàn Quốc') : (store?.name_en || 'EGGU - Korean Egg Sandwich')}
+                </h3>
+
+                <div className="space-y-4 text-sm font-semibold text-[#6B7280]">
+                  <div className="flex items-start space-x-3">
+                    <MapPin className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-0.5">
+                        {isVi ? 'Địa chỉ' : 'Address'}
                       </p>
-                      <p className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4 text-[#E53935] shrink-0" />
-                        <span>{isVi ? store.opening_hours_vi : store.opening_hours_en}</span>
+                      <p className="text-[#111111] font-medium leading-relaxed">
+                        {isVi ? (store?.address_vi || '54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội') : (store?.address_en || '54 Nguyen Huu Huan, Hoan Kiem, Hanoi')}
                       </p>
                     </div>
                   </div>
-                  <Link
-                    href="/store"
-                    className="inline-block pt-2 text-xs font-black uppercase tracking-wider text-[#E53935] hover:text-[#D32F2F] transition-colors"
-                  >
-                    {isVi ? 'Xem bản đồ & Liên hệ' : 'View map & contact'} →
-                  </Link>
+
+                  <div className="flex items-start space-x-3">
+                    <Clock className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-0.5">
+                        {isVi ? 'Giờ mở cửa' : 'Opening Hours'}
+                      </p>
+                      <p className="text-[#111111] font-bold">
+                        {isVi ? (store?.opening_hours_vi || '07:00 - 21:00') : (store?.opening_hours_en || '07:00 - 21:00')}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              ))
-            ) : (
-              <div className="col-span-full p-8 bg-white rounded-2xl border border-[#E5E7EB] text-center text-neutral-400 font-bold">
-                {isVi ? 'Đang cập nhật chi nhánh...' : 'Updating store locations...'}
               </div>
-            )}
+
+              <div className="pt-4 border-t border-[#E5E7EB]">
+                <Link
+                  href="/store"
+                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 bg-[#E53935] hover:bg-[#D32F2F] text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl transition shadow-sm"
+                >
+                  <span>{isVi ? 'XEM BẢN ĐỒ & LIÊN HỆ' : 'VIEW MAP & CONTACT'}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Cột bên phải: Google Maps iframe */}
+            <div className="relative w-full min-h-[320px] lg:min-h-full rounded-3xl overflow-hidden border border-[#E5E7EB] shadow-xs bg-neutral-100">
+              <iframe
+                title="EGGU Store Location Map"
+                src="https://maps.google.com/maps?q=54%20Nguy%E1%BB%85n%20H%E1%BB%AFu%20Hu%C3%A2n%2C%20Ho%C3%A0n%20Ki%E1%BA%BFm%2C%20H%C3%A0%20N%E1%BB%99i&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                className="w-full h-full min-h-[320px] border-0"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
         </div>
       </section>
