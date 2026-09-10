@@ -352,28 +352,6 @@ export default async function HomePage({ params }: HomePageProps) {
           </div>
         </div>
       </section>
-
-      {/* 5. Last CTA Section */}
-      <section className="py-12 md:py-16 bg-[#111111] text-white text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight">
-            {isVi ? 'Sẵn sàng thưởng thức chiếc bánh mì tiếp theo?' : 'Ready for your next fresh egg sandwich?'}
-          </h2>
-          <p className="text-[#9CA3AF] text-sm md:text-base max-w-lg mx-auto font-medium">
-            {isVi
-              ? 'Đặt hàng ngay hôm nay để nhận giao hàng nhanh chóng, bơ sữa nóng hổi tận nhà.'
-              : 'Order today to experience our fresh butter-toasted gourmet sandwich delivered straight to your door.'}
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/menu"
-              className="inline-block px-8 py-4 bg-[#E53935] text-white font-black uppercase tracking-wider rounded-full hover:bg-[#D32F2F] transition-colors shadow-lg"
-            >
-              {tc('orderNow')}
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
