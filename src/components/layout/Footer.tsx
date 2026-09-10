@@ -46,18 +46,24 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
           {/* Brand Column */}
           <div className="space-y-4 sm:col-span-2 md:col-span-1">
             <Link href="/" className="inline-flex items-center space-x-2.5 group">
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white p-0.5 shadow-xs border border-[#333333] group-hover:scale-105 transition-transform">
+              <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white p-0.5 shadow-xs border border-[#333333] group-hover:scale-105 transition-transform flex items-center justify-center">
                 <Image
-                  src="/logo.png"
-                  alt="EGGU Logo"
+                  src="/images/logo-icon.png"
+                  alt="EGGU Mascot"
                   fill
                   sizes="40px"
-                  className="object-contain"
+                  className="object-contain p-0.5"
                 />
               </div>
-              <span className="text-xl font-black tracking-tight text-white group-hover:text-[#E53935] transition-colors">
-                Eggu
-              </span>
+              <div className="relative h-6 sm:h-7 w-16 flex items-center">
+                <Image
+                  src="/images/logo-text.png"
+                  alt="Eggu"
+                  fill
+                  sizes="64px"
+                  className="object-contain object-left group-hover:scale-105 transition-transform"
+                />
+              </div>
             </Link>
             <p className="text-sm text-[#9CA3AF] leading-relaxed max-w-sm font-medium">
               Bánh mì trứng Hàn Quốc tươi ngon hảo hạng. Chế biến nóng hổi mỗi ngày với bơ sữa Pháp và trứng thanh trùng cao cấp.
