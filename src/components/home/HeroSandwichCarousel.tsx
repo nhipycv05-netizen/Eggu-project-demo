@@ -216,7 +216,7 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
               <div className="max-w-md xl:max-w-lg">
                 {isVi ? (
                   <p className="text-sm sm:text-base md:text-[16px] leading-relaxed text-[#4B5563] font-medium">
-                    Sự kết hợp hoàn hảo giữa độ béo ngậy của trứng, vị đậm đà của sốt đặc chế<br className="hidden sm:inline" /> và chiếc bánh mì vàng ươm thơm lừng.
+                    Sự kết hợp hoàn hảo giữa độ béo ngậy của trứng, vị đậm đà<br className="hidden sm:inline" /> của sốt đặc chế và chiếc bánh mì vàng ươm thơm lừng.
                   </p>
                 ) : (
                   <p className="text-sm sm:text-base md:text-[16px] leading-relaxed text-[#4B5563] font-medium">
