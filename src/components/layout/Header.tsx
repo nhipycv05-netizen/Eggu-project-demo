@@ -88,17 +88,24 @@ export default function Header() {
           >
             <div className="relative h-11 w-11 sm:h-12 sm:w-12 max-h-12 rounded-xl overflow-hidden bg-white shadow-xs border border-[#E5E7EB] group-hover:border-[#E53935]/40 group-hover:scale-105 transition-all duration-200 flex items-center justify-center">
               <Image
-                src="/logo.png"
-                alt="EGGU Logo"
+                src="/images/logo-icon.png"
+                alt="EGGU Mascot"
                 fill
                 priority
                 sizes="(max-width: 640px) 44px, 48px"
-                className="object-contain p-0.5"
+                className="object-contain p-1"
               />
             </div>
-            <span className="text-xl font-black tracking-tight text-[#111111] group-hover:text-[#E53935] transition-colors">
-              Eggu
-            </span>
+            <div className="relative h-7 sm:h-8 w-16 sm:w-20 flex items-center">
+              <Image
+                src="/images/logo-text.png"
+                alt="Eggu"
+                fill
+                priority
+                sizes="(max-width: 640px) 64px, 80px"
+                className="object-contain object-left group-hover:scale-105 transition-transform duration-200"
+              />
+            </div>
           </Link>
         </div>
 
