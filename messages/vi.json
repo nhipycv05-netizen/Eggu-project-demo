@@ -75,8 +75,15 @@
   "news": {
     "title": "Tin Tức & Sự Kiện",
     "subtitle": "Cập nhật các chương trình khuyến mãi, khai trương chi nhánh mới và món mới từ EGGU.",
-    "readMore": "Đọc Chi Tiết",
-    "backToNews": "Quay Lại Tin Tức"
+    "readMore": "Xem Chi Tiết",
+    "backToNews": "Quay Lại Tin Tức",
+    "applicablePromotions": "Mã Ưu Đãi Áp Dụng",
+    "applicablePromotionsSub": "Nhận ngay các mã giảm giá hấp dẫn từ EGGU để đặt món với giá tốt nhất!",
+    "relatedArticles": "Bài Viết Liên Quan",
+    "emptyNews": "Chưa có bài viết nào được xuất bản.",
+    "copyCode": "Sao chép mã",
+    "copied": "Đã sao chép!",
+    "useNow": "Dùng ngay"
   },
   "contact": {
     "title": "Liên Hệ Với EGGU",

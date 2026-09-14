@@ -224,13 +224,10 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
     <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-12 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Title Header */}
-        <div className="text-center max-w-xl mx-auto space-y-3">
+        <div className="text-center max-w-xl mx-auto">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#111111]">
             {tm('title')}
           </h1>
-          <p className="text-sm md:text-base text-[#6B7280] font-medium leading-relaxed">
-            {tm('subtitle')}
-          </p>
         </div>
 
         {/* Categories Bar */}

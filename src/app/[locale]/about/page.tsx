@@ -14,16 +14,13 @@ export default async function AboutPage({ params }: AboutPageProps) {
     <div className="min-h-screen bg-[#F8F9FA] pt-24 md:pt-28 pb-12 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16">
         {/* Header Block */}
-        <div className="max-w-3xl space-y-4">
+        <div className="max-w-3xl space-y-2">
           <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block">
             {isVi ? 'Về Chúng Tôi' : 'Who We Are'}
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight text-[#111111] tracking-tight">
             {t('title')}
           </h1>
-          <p className="text-sm md:text-base leading-relaxed text-[#6B7280] font-medium">
-            {t('subtitle')}
-          </p>
         </div>
 
         {/* Big Editorial Image */}
