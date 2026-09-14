@@ -51,7 +51,7 @@ export default function Header() {
     setIsOpen(false);
   }, [pathname]);
 
-  // Exact 3 Navigation items
+  // Exact 3 Navigation items: Giới thiệu, Thực đơn, Liên hệ
   const navLinks = [
     { href: '/about', label: t('about') },
     { href: '/menu', label: t('menu') },

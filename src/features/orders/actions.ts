@@ -1,6 +1,7 @@
 'use server';
 
 import { createServiceRoleClient } from '@/lib/supabase/serviceRole';
+import { parsePromotionFromDb, isPromotionActiveAndValid } from '@/lib/promotions';
 import { z } from 'zod';
 
 // Order validation schema
@@ -66,9 +67,93 @@ const STANDARD_TOPPINGS: Record<string, { name_vi: string; name_en: string; pric
   'opt-boiled-egg': { name_vi: 'Boiled Egg / Trứng luộc', name_en: 'Boiled Egg / Trứng luộc', price: 10000 },
 };
 
+/**
+ * Fetch all active and date-valid promotions for checkout selection
+ */
+export async function getActivePromotions() {
+  try {
+    const supabase = createServiceRoleClient();
+    const { data: promos, error } = await supabase
+      .from('promotions')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
+
+    if (error || !promos) {
+      return [];
+    }
+
+    const parsed = promos.map((p) => parsePromotionFromDb(p));
+    return parsed.filter((p) => isPromotionActiveAndValid(p));
+  } catch (err) {
+    console.error('Error fetching active promotions:', err);
+    return [];
+  }
+}
+
+/**
+ * Validate promo code against active promotions in Supabase
+ */
+export async function validatePromoCode(code: string, subtotal: number) {
+  try {
+    if (!code || !code.trim()) {
+      return { valid: false, error: 'Vui lòng nhập mã giảm giá' };
+    }
+
+    const cleanCode = code.toUpperCase().trim();
+    const supabase = createServiceRoleClient();
+
+    const { data: promos, error } = await supabase
+      .from('promotions')
+      .select('*')
+      .eq('is_active', true);
+
+    if (error || !promos || promos.length === 0) {
+      return { valid: false, error: 'Mã không tồn tại hoặc đã hết hạn' };
+    }
+
+    const parsedPromos = promos.map((p) => parsePromotionFromDb(p));
+    const matchedPromo = parsedPromos.find(
+      (p) => p.code.toUpperCase() === cleanCode && isPromotionActiveAndValid(p)
+    );
+
+    if (!matchedPromo) {
+      return { valid: false, error: 'Mã không tồn tại hoặc đã hết hạn' };
+    }
+
+    if (matchedPromo.min_order_value && subtotal < matchedPromo.min_order_value) {
+      return {
+        valid: false,
+        error: `Đơn hàng chưa đạt giá trị tối thiểu ${Number(matchedPromo.min_order_value).toLocaleString('vi-VN')} VND`,
+        minOrderValue: matchedPromo.min_order_value,
+      };
+    }
+
+    let discountAmount = 0;
+    if (matchedPromo.discount_type === 'PERCENTAGE') {
+      discountAmount = Math.round((subtotal * matchedPromo.discount_value) / 100);
+    } else {
+      discountAmount = Math.min(subtotal, Number(matchedPromo.discount_value));
+    }
+
+    return {
+      valid: true,
+      code: matchedPromo.code,
+      discountType: matchedPromo.discount_type,
+      discountValue: matchedPromo.discount_value,
+      discountAmount,
+      minOrderValue: matchedPromo.min_order_value,
+    };
+  } catch (err) {
+    console.error('Error validating promo code:', err);
+    return { valid: false, error: 'Không thể kiểm tra mã lúc này' };
+  }
+}
+
 export async function createOrder(
   checkoutData: z.infer<typeof checkoutFormSchema>,
-  cartItems: ActionCartItem[]
+  cartItems: ActionCartItem[],
+  promoCode?: string
 ) {
   try {
     // 1. Validate Form Data
@@ -168,10 +253,25 @@ export async function createOrder(
       });
     }
 
-    const deliveryFee = 0;
-    const total = subtotal;
+    // 5. Verify & Calculate Discount
+    let discount = 0;
+    let promoPrefix = '';
 
-    // 5. Generate unique order number (EGGU-YYYYMMDD-XXXX)
+    if (promoCode && promoCode.trim()) {
+      const promoResult = await validatePromoCode(promoCode.trim(), subtotal);
+      if (promoResult.valid && promoResult.discountAmount) {
+        discount = promoResult.discountAmount;
+        promoPrefix = `[Mã giảm giá: ${promoResult.code} (-${discount.toLocaleString('vi-VN')} VND)]`;
+      }
+    }
+
+    const deliveryFee = 0;
+    const total = Math.max(0, subtotal - discount + deliveryFee);
+
+    // Combine custom note with promo details if any
+    const finalNote = [promoPrefix, validatedData.note?.trim()].filter(Boolean).join(' ') || null;
+
+    // 6. Generate unique order number (EGGU-YYYYMMDD-XXXX)
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -191,7 +291,7 @@ export async function createOrder(
     const nextSeq = String((count || 0) + 1).padStart(4, '0');
     const orderNumber = `${datePrefix}${nextSeq}`;
 
-    // 6. Insert Order Header
+    // 7. Insert Order Header
     const { data: insertedOrder, error: orderInsertError } = await supabase
       .from('orders')
       .insert({
@@ -200,7 +300,7 @@ export async function createOrder(
         phone: validatedData.phone,
         email: validatedData.email || null,
         address: validatedData.address,
-        note: validatedData.note || null,
+        note: finalNote,
         subtotal,
         delivery_fee: deliveryFee,
         total,
@@ -216,7 +316,7 @@ export async function createOrder(
       return { success: false, error: 'Failed to create order record' };
     }
 
-    // 7. Insert Order Items
+    // 8. Insert Order Items
     const itemsWithOrderId = orderItemsToInsert.map((item) => ({
       ...item,
       order_id: insertedOrder.id,
