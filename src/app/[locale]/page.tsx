@@ -279,15 +279,10 @@ export default async function HomePage({ params }: HomePageProps) {
       {/* 4. Branch Info Section */}
       <section className="py-12 md:py-16 bg-[#F8F9FA] border-t border-[#E5E7EB]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
+          <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#E53935] uppercase">
               {isVi ? 'GHÉ THĂM CỬA HÀNG' : 'VISIT OUR STORE'}
             </h2>
-            <p className="text-sm md:text-base text-[#6B7280] font-medium">
-              {isVi
-                ? 'Đến cửa hàng của chúng tôi để tận hưởng không gian ấm cúng và ngửi thấy mùi bơ tỏi nướng thơm lừng.'
-                : 'Come by our locations for a cozy dining atmosphere and the irresistible aroma of fresh butter-toasted buns.'}
-            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-stretch max-w-5xl mx-auto">

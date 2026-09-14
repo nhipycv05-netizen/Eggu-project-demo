@@ -75,8 +75,15 @@
   "news": {
     "title": "EGGU News & Events",
     "subtitle": "Stay updated with our latest campaigns, branch openings, and menu additions.",
-    "readMore": "Read Article",
-    "backToNews": "Back to News"
+    "readMore": "View Details",
+    "backToNews": "Back to News",
+    "applicablePromotions": "Active Promo Codes",
+    "applicablePromotionsSub": "Grab the latest exclusive discount codes from EGGU to enjoy your favorites for less!",
+    "relatedArticles": "Related Articles",
+    "emptyNews": "No published articles found.",
+    "copyCode": "Copy code",
+    "copied": "Copied!",
+    "useNow": "Order Now"
   },
   "contact": {
     "title": "Contact Us",

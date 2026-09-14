@@ -63,16 +63,13 @@ export default async function FaqPage({ params }: FaqPageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto space-y-12 md:space-y-16">
           {/* Title Header */}
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block">
               {isVi ? 'Hỏi Đáp' : 'FAQ'}
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#111111]">
               {t('title')}
             </h1>
-            <p className="text-sm md:text-base text-[#6B7280] font-medium leading-relaxed">
-              {t('subtitle')}
-            </p>
           </div>
 
           {/* FAQ Categories Accodions List */}

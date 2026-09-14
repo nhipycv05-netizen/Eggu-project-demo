@@ -129,3 +129,57 @@ export function isPromotionActiveAndValid(promo: Promotion, now = new Date()): b
 
   return true;
 }
+
+/**
+ * Fallback mock promotions for visual presentation when DB is empty or offline.
+ */
+export const MOCK_PROMOTIONS: Promotion[] = [
+  {
+    id: 'promo-mock-1',
+    code: 'EGGUHELLO',
+    title_vi: 'Ưu Đãi Bạn Mới',
+    title_en: 'New Member Gift',
+    description_vi: 'Giảm 15% cho toàn bộ thực đơn bánh mì kẹp trứng bơ sữa',
+    description_en: '15% off on all signature Korean egg sandwiches',
+    discount_type: 'PERCENTAGE',
+    discount_value: 15,
+    min_order_value: 50000,
+    start_at: new Date('2026-01-01').toISOString(),
+    end_at: new Date('2026-12-31').toISOString(),
+    start_date: new Date('2026-01-01').toISOString(),
+    end_date: new Date('2026-12-31').toISOString(),
+    is_active: true,
+  },
+  {
+    id: 'promo-mock-2',
+    code: 'FREESHIP20',
+    title_vi: 'Miễn Phí Giao Hàng',
+    title_en: 'Free Delivery Discount',
+    description_vi: 'Giảm 20.000đ trực tiếp vào phí vận chuyển đơn từ 99.000đ',
+    description_en: '20,000 VND discount on delivery fee for orders from 99,000 VND',
+    discount_type: 'FIXED',
+    discount_value: 20000,
+    min_order_value: 99000,
+    start_at: new Date('2026-01-01').toISOString(),
+    end_at: new Date('2026-12-31').toISOString(),
+    start_date: new Date('2026-01-01').toISOString(),
+    end_date: new Date('2026-12-31').toISOString(),
+    is_active: true,
+  },
+  {
+    id: 'promo-mock-3',
+    code: 'EGGUPARTY',
+    title_vi: 'Combo Tiệc Bánh Mì',
+    title_en: 'Toast Party Special',
+    description_vi: 'Giảm 25% cho đơn hàng tiệc gia đình hoặc nhóm từ 150.000đ',
+    description_en: '25% off for group and party orders from 150,000 VND',
+    discount_type: 'PERCENTAGE',
+    discount_value: 25,
+    min_order_value: 150000,
+    start_at: new Date('2026-01-01').toISOString(),
+    end_at: new Date('2026-12-31').toISOString(),
+    start_date: new Date('2026-01-01').toISOString(),
+    end_date: new Date('2026-12-31').toISOString(),
+    is_active: true,
+  },
+];

@@ -1,7 +1,7 @@
 'use server';
 
 import { createServiceRoleClient } from '@/lib/supabase/serviceRole';
-import { parsePromotionFromDb, isPromotionActiveAndValid } from '@/lib/promotions';
+import { parsePromotionFromDb, isPromotionActiveAndValid, MOCK_PROMOTIONS } from '@/lib/promotions';
 import { z } from 'zod';
 
 // Order validation schema
@@ -79,15 +79,16 @@ export async function getActivePromotions() {
       .eq('is_active', true)
       .order('created_at', { ascending: false });
 
-    if (error || !promos) {
-      return [];
+    if (error || !promos || promos.length === 0) {
+      return MOCK_PROMOTIONS;
     }
 
     const parsed = promos.map((p) => parsePromotionFromDb(p));
-    return parsed.filter((p) => isPromotionActiveAndValid(p));
+    const active = parsed.filter((p) => isPromotionActiveAndValid(p));
+    return active.length > 0 ? active : MOCK_PROMOTIONS;
   } catch (err) {
     console.error('Error fetching active promotions:', err);
-    return [];
+    return MOCK_PROMOTIONS;
   }
 }
 
