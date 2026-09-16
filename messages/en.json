@@ -19,7 +19,12 @@
     "news": "News",
     "contact": "Contact",
     "cart": "Cart",
-    "searchPlaceholder": "Search egg sandwiches..."
+    "searchPlaceholder": "Search egg sandwiches...",
+    "allCategories": "All",
+    "catSandwich": "Sandwich",
+    "catFriedFood": "Fried Food",
+    "catCoffeeDrinks": "Coffee & Drinks",
+    "catSmoothieJuice": "Smoothies & Juices"
   },
   "home": {
     "order": "Order",
