@@ -19,7 +19,12 @@
     "news": "Tin tức",
     "contact": "Liên hệ",
     "cart": "Giỏ hàng",
-    "searchPlaceholder": "thanh tìm kiếm bánh"
+    "searchPlaceholder": "thanh tìm kiếm bánh",
+    "allCategories": "Tất cả",
+    "catSandwich": "Sandwich",
+    "catFriedFood": "Món chiên",
+    "catCoffeeDrinks": "Cà phê & Đồ uống",
+    "catSmoothieJuice": "Sinh tố & Nước ép"
   },
   "home": {
     "order": "Đặt hàng",

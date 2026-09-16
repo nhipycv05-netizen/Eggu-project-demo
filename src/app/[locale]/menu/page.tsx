@@ -162,9 +162,21 @@ interface MenuPageProps {
   searchParams: Promise<{ category?: string; q?: string }>;
 }
 
+function normalizeCategorySlug(slug?: string): string {
+  if (!slug) return 'all';
+  const s = slug.toLowerCase().trim();
+  if (s === 'all' || s === 'tat-ca') return 'all';
+  if (s === 'sandwich' || s === 'banh-mi-sandwich') return 'sandwich';
+  if (s === 'fried-food' || s === 'mon-chien' || s === 'fried') return 'fried-food';
+  if (s === 'coffee-drinks' || s === 'ca-phe-do-uong' || s === 'coffee' || s === 'ca-phe') return 'coffee-drinks';
+  if (s === 'smoothie-fresh-juice' || s === 'sinh-to-nuoc-ep' || s === 'smoothie' || s === 'sinh-to') return 'smoothie-fresh-juice';
+  return s;
+}
+
 export default async function MenuPage({ params, searchParams }: MenuPageProps) {
   const { locale } = await params;
-  const { category: selectedCategorySlug = 'all', q = '' } = await searchParams;
+  const { category: rawCategorySlug = 'all', q = '' } = await searchParams;
+  const selectedCategorySlug = normalizeCategorySlug(rawCategorySlug);
   
   const tm = await getTranslations('menu');
   const tc = await getTranslations('common');
@@ -203,7 +215,7 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
   }
 
   // 2. Identify the active category record
-  const activeCategory = categories.find((c) => c.slug === selectedCategorySlug) || categories[0];
+  const activeCategory = categories.find((c) => c.slug === selectedCategorySlug || c.slug === rawCategorySlug) || categories[0];
 
   // 3. Filter products by category and query
   let filteredProducts = activeCategory.id === 'all'
@@ -233,7 +245,7 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
         {/* Categories Bar */}
         <div className="flex flex-wrap justify-center gap-2 border-b border-[#E5E7EB] pb-6">
           {categories.map((cat) => {
-            const isActive = cat.slug === selectedCategorySlug;
+            const isActive = cat.id === activeCategory.id;
             return (
               <Link
                 key={cat.id}

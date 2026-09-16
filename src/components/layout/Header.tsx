@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { ShoppingCart, Search, Menu, X } from 'lucide-react';
+import { ShoppingCart, Search, Menu, X, ChevronDown } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useCartStore } from '@/stores/cartStore';
 
@@ -59,6 +59,15 @@ export default function Header() {
     { href: '/contact', label: t('contact') },
   ];
 
+  // Menu Dropdown categories
+  const menuCategories = [
+    { href: '/menu', label: t('allCategories') || 'Tất cả', slug: 'all' },
+    { href: '/menu?category=sandwich', label: t('catSandwich') || 'Sandwich', slug: 'sandwich' },
+    { href: '/menu?category=fried-food', label: t('catFriedFood') || 'Món chiên', slug: 'fried-food' },
+    { href: '/menu?category=coffee-drinks', label: t('catCoffeeDrinks') || 'Cà phê & Đồ uống', slug: 'coffee-drinks' },
+    { href: '/menu?category=smoothie-fresh-juice', label: t('catSmoothieJuice') || 'Sinh tố & Nước ép', slug: 'smoothie-fresh-juice' },
+  ];
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -110,10 +119,49 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* 2. Navigation Menu (Centered - Exactly 3 items: Giới thiệu, Menu, Liên hệ) */}
-        <nav className="hidden md:flex items-center justify-center flex-1 space-x-1 lg:space-x-4">
+        {/* 2. Navigation Menu (Centered) */}
+        <nav className="hidden md:flex items-center justify-center flex-1 space-x-1 lg:space-x-2">
           {navLinks.map((link) => {
+            const isMenu = link.href === '/menu';
             const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+            if (isMenu) {
+              return (
+                <div key={link.href} className="relative group/menu py-2">
+                  <Link
+                    href={link.href}
+                    className={`relative inline-flex items-center gap-1.5 px-4 py-2 text-xs lg:text-sm font-extrabold uppercase tracking-wider rounded-full transition-all duration-200 ${
+                      isActive
+                        ? 'text-[#E53935] font-black'
+                        : 'text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA]'
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-gray-500 group-hover/menu:text-[#E53935] group-hover/menu:rotate-180 transition-all duration-200" />
+                    {isActive && (
+                      <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#E53935] rounded-full" />
+                    )}
+                  </Link>
+
+                  {/* Dropdown Menu on Hover */}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-56 opacity-0 invisible translate-y-2 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:visible group-hover/menu:translate-y-0 group-hover/menu:pointer-events-auto group-focus-within/menu:opacity-100 group-focus-within/menu:visible group-focus-within/menu:translate-y-0 group-focus-within/menu:pointer-events-auto transition-all duration-200 ease-out z-50">
+                    <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-1.5 backdrop-blur-md">
+                      {menuCategories.map((cat) => (
+                        <Link
+                          key={cat.href}
+                          href={cat.href}
+                          className="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-bold text-[#333333] hover:text-[#E53935] hover:bg-[#FFF5F5] transition-all duration-150 group/item"
+                        >
+                          <span>{cat.label}</span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#E53935] opacity-0 group-hover/item:opacity-100 transition-opacity" />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={link.href}
@@ -222,10 +270,46 @@ export default function Header() {
               </button>
             </form>
 
-            {/* 3 Nav Links */}
+            {/* Nav Links on Mobile */}
             <nav className="flex flex-col space-y-2 pt-2">
               {navLinks.map((link) => {
+                const isMenu = link.href === '/menu';
                 const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+
+                if (isMenu) {
+                  return (
+                    <div key={link.href} className="space-y-1">
+                      <Link
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className={`flex items-center justify-between px-4 py-3 rounded-2xl text-base font-extrabold uppercase tracking-wide transition-colors ${
+                          isActive
+                            ? 'bg-[#E53935] text-white shadow-xs'
+                            : 'text-[#111111] hover:bg-[#F8F9FA] hover:text-[#E53935]'
+                        }`}
+                      >
+                        <span>{link.label}</span>
+                        {isActive && <span className="w-2 h-2 rounded-full bg-white" />}
+                      </Link>
+
+                      {/* Mobile Subcategories */}
+                      <div className="pl-4 pr-2 py-1 space-y-1">
+                        {menuCategories.map((cat) => (
+                          <Link
+                            key={cat.href}
+                            href={cat.href}
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-[#4B5563] hover:text-[#E53935] hover:bg-[#FFF5F5] transition-colors"
+                          >
+                            <span>{cat.label}</span>
+                            <span className="text-gray-400 text-xs">→</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <Link
                     key={link.href}
@@ -262,3 +346,4 @@ export default function Header() {
     </header>
   );
 }
+
