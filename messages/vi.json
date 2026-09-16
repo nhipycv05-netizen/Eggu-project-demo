@@ -35,7 +35,7 @@
     }
   },
   "menu": {
-    "title": "Thực Đơn Của Chúng Tôi",
+    "title": "THỰC ĐƠN",
     "subtitle": "Bánh mì kẹp trứng chế biến thủ công, bánh mì nướng hảo hạng và đồ uống mát lạnh.",
     "all": "Tất Cả",
     "customize": "ĐẶT HÀNG",
@@ -58,15 +58,15 @@
     "totalPrice": "Tổng Giá Tiền"
   },
   "about": {
-    "title": "Câu Chuyện Thương Hiệu",
-    "subtitle": "Công thức tạo nên lớp trứng khuấy vàng óng bơ sữa mềm mịn.",
+    "title": "VỀ CHÚNG TÔI",
+    "subtitle": "Eggu · Sandwich trứng Hàn Quốc",
     "philosophy": "Triết Lý Của Chúng Tôi",
     "philosophyDesc": "Tại EGGU, chúng tôi tin rằng ẩm thực là một hành trình mang lại sự ấm áp. Mỗi chiếc bánh là một lời cam kết về chất lượng phục vụ.",
     "quality": "Chất Lượng Vượt Trội",
     "qualityDesc": "Chúng tôi chỉ chọn trứng tươi sạch đã thanh trùng, bơ lạt Pháp hảo hạng và bánh mì brioche mềm xốp nướng bơ tỏi."
   },
   "store": {
-    "title": "Hệ Thống Cửa Hàng",
+    "title": "HỆ THỐNG CỬA HÀNG",
     "subtitle": "Tìm chi nhánh EGGU gần bạn nhất.",
     "hours": "Giờ Mở Cửa",
     "phone": "Điện Thoại",
@@ -74,11 +74,11 @@
     "directions": "Chỉ Đường (Google Maps)"
   },
   "faq": {
-    "title": "Câu Hỏi Thường Gặp",
+    "title": "CÂU HỎI THƯỜNG GẶP",
     "subtitle": "Tất cả những thông tin bạn cần biết về đặt hàng, thanh toán COD và giao nhận."
   },
   "news": {
-    "title": "Tin Tức & Sự Kiện",
+    "title": "TIN TỨC & SỰ KIỆN",
     "subtitle": "Cập nhật các chương trình khuyến mãi, khai trương chi nhánh mới và món mới từ EGGU.",
     "readMore": "Xem Chi Tiết",
     "backToNews": "Quay Lại Tin Tức",
@@ -91,7 +91,7 @@
     "useNow": "Dùng ngay"
   },
   "contact": {
-    "title": "Liên Hệ Với EGGU",
+    "title": "LIÊN HỆ",
     "subtitle": "Gửi phản hồi hoặc kết nối trực tiếp với đội ngũ quản lý của chúng tôi.",
     "formTitle": "Gửi Tin Nhắn Cho Chúng Tôi",
     "name": "Họ và Tên",

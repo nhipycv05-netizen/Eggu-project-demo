@@ -85,10 +85,10 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pt-24 md:pt-28 pb-12 md:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16">
-        {/* Title Header */}
-        <div className="text-center max-w-2xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-[#111111]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
+        {/* Title Header (Minimalist Left-Aligned) */}
+        <div className="border-b border-[#e0352b]/20 pb-3 mb-6 text-left">
+          <h1 className="text-xl font-bold uppercase tracking-wider text-[#e0352b]">
             {t('title')}
           </h1>
         </div>

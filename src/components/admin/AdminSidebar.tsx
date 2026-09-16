@@ -12,6 +12,7 @@ import {
   FileText,
   Percent,
   LogOut,
+  Info,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -23,6 +24,7 @@ const MENU_ITEMS = [
   { id: 'orders', label: 'Đơn hàng', icon: ClipboardList },
   { id: 'products', label: 'Sản phẩm', icon: ShoppingBag },
   { id: 'categories', label: 'Danh mục', icon: Tags },
+  { id: 'about', label: 'Giới thiệu', icon: Info },
   { id: 'stores', label: 'Cửa hàng', icon: MapPin },
   { id: 'faqs', label: 'Hỏi đáp (FAQ)', icon: HelpCircle },
   { id: 'news', label: 'Tin tức & Blog', icon: FileText },

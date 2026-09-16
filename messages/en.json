@@ -35,7 +35,7 @@
     }
   },
   "menu": {
-    "title": "Our Menu",
+    "title": "OUR MENU",
     "subtitle": "Handcrafted egg sandwiches, premium toasts, and beverages.",
     "all": "All",
     "customize": "ORDER NOW",
@@ -58,15 +58,15 @@
     "totalPrice": "Total Price"
   },
   "about": {
-    "title": "Our Story",
-    "subtitle": "The recipe behind the fluffy golden scramble.",
+    "title": "ABOUT US",
+    "subtitle": "Eggu · Korean Egg Sandwich",
     "philosophy": "Our Philosophy",
     "philosophyDesc": "At EGGU, we believe food should be a warm, comforting ritual. Every toasted bun is a promise of quality.",
     "quality": "Uncompromising Quality",
     "qualityDesc": "We select only pasteurized organic eggs, premium French butter, and custom-baked soft brioche buns."
   },
   "store": {
-    "title": "Our Locations",
+    "title": "OUR LOCATIONS",
     "subtitle": "Find an EGGU branch near you.",
     "hours": "Opening Hours",
     "phone": "Phone",
@@ -74,11 +74,11 @@
     "directions": "Get Directions"
   },
   "faq": {
-    "title": "Frequently Asked Questions",
+    "title": "FREQUENTLY ASKED QUESTIONS",
     "subtitle": "Everything you need to know about EGGU ordering and delivery."
   },
   "news": {
-    "title": "EGGU News & Events",
+    "title": "NEWS & EVENTS",
     "subtitle": "Stay updated with our latest campaigns, branch openings, and menu additions.",
     "readMore": "View Details",
     "backToNews": "Back to News",
@@ -91,7 +91,7 @@
     "useNow": "Order Now"
   },
   "contact": {
-    "title": "Contact Us",
+    "title": "CONTACT US",
     "subtitle": "Get in touch with the EGGU team.",
     "formTitle": "Send Us A Message",
     "name": "Full Name",

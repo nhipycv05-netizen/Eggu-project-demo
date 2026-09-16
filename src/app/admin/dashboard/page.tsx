@@ -5,6 +5,7 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import OrdersTab from '@/components/admin/OrdersTab';
 import ProductsTab from '@/components/admin/ProductsTab';
 import CategoriesTab from '@/components/admin/CategoriesTab';
+import AboutTab from '@/components/admin/AboutTab';
 import StoresTab from '@/components/admin/StoresTab';
 import FaqsTab from '@/components/admin/FaqsTab';
 import NewsTab from '@/components/admin/NewsTab';
@@ -51,6 +52,8 @@ export default function AdminDashboardPage() {
         return <ProductsTab />;
       case 'categories':
         return <CategoriesTab />;
+      case 'about':
+        return <AboutTab />;
       case 'stores':
         return <StoresTab />;
       case 'faqs':
@@ -69,6 +72,7 @@ export default function AdminDashboardPage() {
     orders: 'Quản lý đơn hàng',
     products: 'Quản lý sản phẩm',
     categories: 'Quản lý danh mục',
+    about: 'Quản lý Giới thiệu',
     stores: 'Hệ thống cửa hàng',
     faqs: 'Hỏi đáp (FAQ)',
     news: 'Tin tức & Bài viết',
