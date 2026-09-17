@@ -56,7 +56,7 @@ export default async function StorePage({ params }: StorePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pt-24 md:pt-28 pb-12 md:pb-16">
+    <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-12 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
         {/* Title Header (Minimalist Left-Aligned) */}
         <div className="border-b border-[#e0352b]/20 pb-3 mb-6 text-left">

@@ -57,7 +57,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <html lang={locale} className={`${openSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-background text-foreground font-sans">
+      <body className="flex min-h-full flex-col text-foreground font-sans">
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main className="flex-grow">

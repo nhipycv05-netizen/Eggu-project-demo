@@ -153,12 +153,12 @@ export default async function HomePage({ params }: HomePageProps) {
   const isVi = locale === 'vi';
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F8F9FA]">
+    <div className="flex min-h-screen flex-col bg-transparent">
       {/* 1. Interactive Sandwich Carousel Hero */}
       <HeroSandwichCarousel locale={locale} />
 
       {/* Category Icons Row */}
-      <section className="py-8 bg-white border-y border-[#E5E7EB]">
+      <section className="py-8 bg-transparent border-y border-[#E5E7EB]/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6 text-center">
             {[
@@ -171,7 +171,7 @@ export default async function HomePage({ params }: HomePageProps) {
               <Link
                 key={String(label)}
                 href="/menu"
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-[#F8F9FA] hover:bg-white hover:border-[#E53935] border border-[#E5E7EB] transition-all duration-200 group shadow-xs"
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white hover:border-[#E53935] border border-[#E5E7EB] transition-all duration-200 group shadow-xs"
               >
                 <div className={`flex h-12 w-12 items-center justify-center rounded-full transition-transform group-hover:scale-110 ${index === 0 ? 'bg-[#E53935] text-white' : 'bg-white text-[#111111] border border-[#E5E7EB]'}`}>
                   <Icon className="h-5 w-5" />
@@ -183,10 +183,10 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
-      {/* 2. Featured Products Section */}
-      <section className="py-12 md:py-16 bg-[#F8F9FA]">
+      {/* 2. Featured Products Section (Bestseller) */}
+      <section className="py-12 md:py-16 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E5E7EB] pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E5E7EB]/80 pb-4">
             <div>
               <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block mb-1">
                 {isVi ? 'Món Nổi Bật' : 'Featured Products'}
@@ -223,7 +223,7 @@ export default async function HomePage({ params }: HomePageProps) {
       </section>
 
       {/* 3. Story Section */}
-      <section className="py-12 md:py-16 bg-white border-t border-[#E5E7EB]">
+      <section className="py-12 md:py-16 bg-transparent border-t border-[#E5E7EB]/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-6 space-y-6">
@@ -240,11 +240,11 @@ export default async function HomePage({ params }: HomePageProps) {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-4 bg-[#F8F9FA] rounded-2xl border border-[#E5E7EB]">
+                <div className="p-4 bg-white rounded-2xl border border-[#E5E7EB] shadow-xs">
                   <h4 className="font-black text-[#111111] text-sm mb-1">🥚 Farm-Fresh Eggs</h4>
                   <p className="text-xs text-[#6B7280]">Trứng thanh trùng sạch, đánh bông bơ lạt nguyên chất.</p>
                 </div>
-                <div className="p-4 bg-[#F8F9FA] rounded-2xl border border-[#E5E7EB]">
+                <div className="p-4 bg-white rounded-2xl border border-[#E5E7EB] shadow-xs">
                   <h4 className="font-black text-[#111111] text-sm mb-1">🍞 Butter Brioche</h4>
                   <p className="text-xs text-[#6B7280]">Bánh mì nướng bơ tỏi Pháp mềm xốp, thơm nồng.</p>
                 </div>
@@ -277,7 +277,7 @@ export default async function HomePage({ params }: HomePageProps) {
       </section>
 
       {/* 4. Branch Info Section */}
-      <section className="py-12 md:py-16 bg-[#F8F9FA] border-t border-[#E5E7EB]">
+      <section className="py-12 md:py-16 bg-transparent border-t border-[#E5E7EB]/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#E53935] uppercase">

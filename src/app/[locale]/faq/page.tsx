@@ -59,7 +59,7 @@ export default async function FaqPage({ params }: FaqPageProps) {
   const categories = Array.from(new Set(faqs.map((f) => f.category)));
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pt-24 md:pt-28 pb-12 md:pb-16">
+    <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-12 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto space-y-8 md:space-y-10">
           {/* Title Header (Minimalist Left-Aligned) */}

@@ -181,7 +181,7 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
   };
 
   return (
-    <section className="relative pt-24 md:pt-28 pb-12 md:pb-16 bg-gradient-to-b from-[#FFFDF7] via-[#FFF9EE]/70 to-[#F8F9FA] overflow-hidden">
+    <section className="relative pt-24 md:pt-28 pb-12 md:pb-16 bg-transparent overflow-hidden">
       {/* Subtle decorative background glow */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#FFC107]/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#E53935]/10 rounded-full blur-3xl pointer-events-none" />
