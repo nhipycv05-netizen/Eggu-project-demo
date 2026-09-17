@@ -41,7 +41,7 @@ export default function AboutClientView({ initialContent, locale }: AboutClientV
   }, []);
 
   return (
-    <div className="min-h-screen bg-white pt-24 md:pt-28 pb-16 md:pb-24 text-[#1E1B18] overflow-hidden relative">
+    <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-16 md:pb-24 text-[#1E1B18] overflow-hidden relative">
       
       {/* Abstract Background Wave Graphics */}
       <div className="absolute inset-0 pointer-events-none opacity-40 overflow-hidden z-0">

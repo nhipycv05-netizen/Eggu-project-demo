@@ -1,0 +1,34 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Element 1: Cute EGGU Toast Sandwich (Top-Left Stagger, size ~22px, subtle watermark opacity 10%) -->
+  <g transform="translate(40, 40) rotate(-8)" opacity="0.10">
+    <!-- Bread slice outline -->
+    <path d="M-10 -7 C-10 -11 -6 -12 0 -12 C6 -12 10 -11 10 -7 C12 -6 12 7 11 11 C10 12 -10 12 -11 11 C-12 7 -12 -6 -10 -7 Z" fill="#F59E0B" stroke="#B45309" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill-opacity="0.3"/>
+    <!-- Scrambled Egg Filling -->
+    <path d="M-7 0 C-6 -4 -1 -5 3 -2 C6 -5 8 0 7 4 C5 7 -5 7 -7 0 Z" fill="#FBBF24" stroke="#D97706" stroke-width="1" stroke-linecap="round" fill-opacity="0.9"/>
+    <!-- Cute Egg Yolk Dot -->
+    <circle cx="0" cy="1" r="2.2" fill="#E53935" fill-opacity="0.8"/>
+    <circle cx="-0.6" cy="0.3" r="0.6" fill="#FFFFFF" fill-opacity="0.9"/>
+  </g>
+
+  <!-- Element 2: Cute Egg with Mascot Smile (Bottom-Right Stagger, size ~20px, subtle watermark opacity 10%) -->
+  <g transform="translate(120, 120) rotate(12)" opacity="0.10">
+    <!-- Egg White Shape -->
+    <path d="M0 -10 C6 -10 10 -4 10 3 C10 8 5 11 0 11 C-5 11 -10 8 -10 3 C-10 -4 -6 -10 0 -10 Z" fill="#FFFFFF" stroke="#D97706" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill-opacity="0.5"/>
+    <!-- Golden Egg Yolk -->
+    <circle cx="0" cy="3" r="4.5" fill="#F59E0B" stroke="#D97706" stroke-width="1" fill-opacity="0.9"/>
+    <!-- Mascot eyes & smile -->
+    <circle cx="-1.5" cy="2.2" r="0.5" fill="#B45309"/>
+    <circle cx="1.5" cy="2.2" r="0.5" fill="#B45309"/>
+    <path d="M-1 3.8 Q0 4.8 1 3.8" stroke="#B45309" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Tiny delicate dots/sparkles (spaced out, subtle opacity 7%) -->
+  <g opacity="0.07">
+    <circle cx="120" cy="40" r="1.5" fill="#D97706"/>
+    <circle cx="40" cy="120" r="1.5" fill="#D97706"/>
+    <!-- Sparkle 1 -->
+    <path d="M40 117 L40 123 M37 120 L43 120" stroke="#F59E0B" stroke-width="0.75" stroke-linecap="round"/>
+    <!-- Sparkle 2 -->
+    <path d="M120 37 L120 43 M117 40 L123 40" stroke="#F59E0B" stroke-width="0.75" stroke-linecap="round"/>
+  </g>
+</svg>

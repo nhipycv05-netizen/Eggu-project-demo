@@ -34,7 +34,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-16 md:pb-24">
+    <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-16 md:pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
         {/* Title Header (Minimalist Left-Aligned) */}
         <div className="border-b border-[#e0352b]/20 pb-3 mb-6 text-left">
