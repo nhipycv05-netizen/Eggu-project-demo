@@ -4,10 +4,61 @@ import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 import ProductCard from '@/components/menu/ProductCard';
 import HeroSandwichCarousel from '@/components/home/HeroSandwichCarousel';
-import { ArrowRight, Clock, MapPin, ShoppingBag, Coffee, Croissant, IceCreamBowl, Salad } from 'lucide-react';
+import { ArrowRight, Clock, MapPin, Coffee, Drumstick, CupSoda } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
+// Custom Crisp Sandwich SVG Icon matching Lucide style
+function SandwichIcon({ className = 'h-5 w-5' }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M3 11v-1a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v1H3z" />
+      <path d="M3 17v1a4 4 0 0 0 4 4h10a4 4 0 0 0 4-4v-1H3z" />
+      <path d="M2 11h20a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z" />
+      <path d="M6 14h.01" />
+      <path d="M10 14h.01" />
+      <path d="M14 14h.01" />
+      <path d="M18 14h.01" />
+    </svg>
+  );
+}
+
+// 4 Homepage Categories with icons and menu links
+const HOME_CATEGORIES = [
+  {
+    slug: 'sandwich',
+    name_vi: 'Sandwich',
+    name_en: 'Sandwich',
+    icon: SandwichIcon,
+  },
+  {
+    slug: 'fried-food',
+    name_vi: 'Món chiên',
+    name_en: 'Fried Food',
+    icon: Drumstick,
+  },
+  {
+    slug: 'coffee-drinks',
+    name_vi: 'Cà phê & Đồ uống',
+    name_en: 'Coffee & Drinks',
+    icon: Coffee,
+  },
+  {
+    slug: 'smoothie-fresh-juice',
+    name_vi: 'Sinh tố & Nước ép',
+    name_en: 'Smoothie & Juice',
+    icon: CupSoda,
+  },
+];
 
 // Fallback mock products for visual demonstration when DB is not seeded yet
 const MOCK_FEATURED = [
@@ -48,18 +99,6 @@ const MOCK_FEATURED = [
     is_best_seller: true,
   },
   {
-    id: 'cfcccccc-cccc-cccc-cccc-cccccccccccc',
-    name_vi: 'Sweet Corn & Bacon',
-    name_en: 'Sweet Corn & Bacon',
-    slug: 'sweet-corn-bacon',
-    description_vi: 'Bắp ngọt giòn mọng nước kết hợp cùng thịt xông khói đậm đà và trứng bơ béo ngậy.',
-    description_en: 'Juicy golden corn kernels paired with crispy bacon, melted cheese and fluffy egg.',
-    price: 52000,
-    image_url: '/images/carousel/sandwich-corn-bacon.jpg',
-    is_new: true,
-    is_best_seller: false,
-  },
-  {
     id: 'dfdddddd-dddd-dddd-dddd-dddddddddddd',
     name_vi: 'Herb Grilled Chicken',
     name_en: 'Herb Grilled Chicken',
@@ -68,30 +107,6 @@ const MOCK_FEATURED = [
     description_en: 'Tender grilled herb chicken with signature fluffy scrambled eggs and melted cheese.',
     price: 59000,
     image_url: '/images/carousel/sandwich-chicken-herbs.jpg',
-    is_new: true,
-    is_best_seller: true,
-  },
-  {
-    id: 'bfbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-    name_vi: 'Bánh Mì Thịt Xông Khói & Phô Mai Kép',
-    name_en: 'Bacon Double Cheese',
-    slug: 'bacon-double-cheese',
-    description_vi: 'Nhân đôi thịt xông khói giòn rụm kẹp phô mai Cheddar kép và trứng khuấy mềm béo.',
-    description_en: 'Double crispy bacon, fluffy scrambled eggs, and double melted Cheddar cheese.',
-    price: 55000,
-    image_url: '/images/hero-sandwich.jpg',
-    is_new: false,
-    is_best_seller: true,
-  },
-  {
-    id: 'cfcccccc-cccc-cccc-cccc-cccccccccccc',
-    name_vi: 'Bơ Sáp Tươi Đặc Biệt',
-    name_en: 'Avocado Holic',
-    slug: 'avocado-holic',
-    description_vi: 'Bơ sáp tươi thái lát bùi béo kết hợp trứng khuấy mềm và sốt trứng đặc chế.',
-    description_en: 'Rich soft-scrambled eggs combined with fresh sliced creamy avocado and signature sauce.',
-    price: 59000,
-    image_url: '/images/hero-sandwich.jpg',
     is_new: true,
     is_best_seller: true,
   },
@@ -157,33 +172,32 @@ export default async function HomePage({ params }: HomePageProps) {
       {/* 1. Interactive Sandwich Carousel Hero */}
       <HeroSandwichCarousel locale={locale} />
 
-      {/* Category Icons Row */}
+      {/* 2. Category Navigation Cards Row */}
       <section className="py-8 bg-transparent border-y border-[#E5E7EB]/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6 text-center">
-            {[
-              ['Sandwich', ShoppingBag],
-              ['Topping', Salad],
-              ['Toast & Bread', Croissant],
-              ['Coffee & Tea', Coffee],
-              ['Fresh Drinks', IceCreamBowl],
-            ].map(([label, Icon], index) => (
-              <Link
-                key={String(label)}
-                href="/menu"
-                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white hover:border-[#E53935] border border-[#E5E7EB] transition-all duration-200 group shadow-xs"
-              >
-                <div className={`flex h-12 w-12 items-center justify-center rounded-full transition-transform group-hover:scale-110 ${index === 0 ? 'bg-[#E53935] text-white' : 'bg-white text-[#111111] border border-[#E5E7EB]'}`}>
-                  <Icon className="h-5 w-5" />
-                </div>
-                <span className="text-xs font-bold text-[#111111] group-hover:text-[#E53935] transition-colors">{label as string}</span>
-              </Link>
-            ))}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 text-center max-w-4xl mx-auto">
+            {HOME_CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <Link
+                  key={cat.slug}
+                  href={`/menu?category=${cat.slug}`}
+                  className="flex flex-col items-center gap-2.5 p-4 sm:p-5 rounded-2xl bg-white hover:border-[#E53935] border border-[#E5E7EB] transition-all duration-200 group shadow-xs hover:shadow-md hover:-translate-y-0.5 text-center"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#111111] border border-[#E5E7EB] group-hover:bg-[#E53935] group-hover:text-white group-hover:border-[#E53935] transition-all duration-200 group-hover:scale-110 shadow-xs">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-[#111111] group-hover:text-[#E53935] transition-colors">
+                    {isVi ? cat.name_vi : cat.name_en}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* 2. Featured Products Section (Bestseller) */}
+      {/* 3. Featured Products Section (Bestseller) */}
       <section className="py-12 md:py-16 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E5E7EB]/80 pb-4">
@@ -239,18 +253,7 @@ export default async function HomePage({ params }: HomePageProps) {
                   : 'At EGGU, we believe that the perfect morning begins with high-quality ingredients. Every single sandwich is crafted with precision: farm-fresh organic eggs, rich melted Cheddar cheese, and crispy bacon slices wrapped inside thick-sliced, garlic butter-toasted French Brioche bread.'}
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-4 bg-white rounded-2xl border border-[#E5E7EB] shadow-xs">
-                  <h4 className="font-black text-[#111111] text-sm mb-1">🥚 Farm-Fresh Eggs</h4>
-                  <p className="text-xs text-[#6B7280]">Trứng thanh trùng sạch, đánh bông bơ lạt nguyên chất.</p>
-                </div>
-                <div className="p-4 bg-white rounded-2xl border border-[#E5E7EB] shadow-xs">
-                  <h4 className="font-black text-[#111111] text-sm mb-1">🍞 Butter Brioche</h4>
-                  <p className="text-xs text-[#6B7280]">Bánh mì nướng bơ tỏi Pháp mềm xốp, thơm nồng.</p>
-                </div>
-              </div>
-
-              <div className="pt-2">
+              <div>
                 <Link
                   href="/about"
                   className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wider text-[#111111] hover:text-[#E53935] transition-colors"

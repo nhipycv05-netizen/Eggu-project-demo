@@ -82,10 +82,10 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white border-b border-gray-100 ${
         scrolled
-          ? 'bg-[#FFFDE7]/95 backdrop-blur-md shadow-xs border-b border-[#FFE8B3]'
-          : 'bg-[#FFFDE7]/90 backdrop-blur-md border-b border-[#FFE8B3]/70'
+          ? 'bg-white/95 backdrop-blur-md shadow-sm'
+          : 'bg-white shadow-xs'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
@@ -249,7 +249,7 @@ export default function Header() {
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-[#FFFDE7] z-40 border-t border-[#FFE8B3] p-6 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-200">
+        <div className="md:hidden fixed inset-0 top-16 bg-white z-40 border-t border-gray-100 p-6 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-200">
           <div className="space-y-6">
             {/* Search Bar for Mobile */}
             <form onSubmit={handleSearchSubmit} className="relative w-full">
