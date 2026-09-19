@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { MapPin, Phone, Clock } from 'lucide-react';
 
 interface FooterProps {
   store?: {
@@ -65,9 +65,6 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                 />
               </div>
             </Link>
-            <p className="text-sm text-[#9CA3AF] leading-relaxed max-w-sm font-medium">
-              Bánh mì trứng Hàn Quốc tươi ngon hảo hạng. Chế biến nóng hổi mỗi ngày với bơ sữa Pháp và trứng thanh trùng cao cấp.
-            </p>
           </div>
 
           {/* Quick Links Column */}
@@ -115,10 +112,6 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#E53935] shrink-0" />
                 <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-[#E53935] transition-colors">{phone}</a>
-              </p>
-              <p className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#E53935] shrink-0" />
-                <a href="mailto:hello@eggu.vn" className="hover:text-[#E53935] transition-colors">hello@eggu.vn</a>
               </p>
             </div>
           </div>

@@ -8,7 +8,6 @@ import { useTranslations } from 'next-intl';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
-  email: z.string().email({ message: 'Invalid email address' }).optional().or(z.literal('')),
   phone: z.string().min(10, { message: 'Phone must be at least 10 digits' }),
   message: z.string().min(10, { message: 'Message must be at least 10 characters' }),
 });
@@ -29,7 +28,6 @@ export default function ContactForm() {
     resolver: zodResolver(contactSchema),
     defaultValues: {
       name: '',
-      email: '',
       phone: '',
       message: '',
     },
@@ -73,25 +71,6 @@ export default function ContactForm() {
           />
           {errors.name && (
             <p className="text-red-500 text-xs font-semibold">{errors.name.message}</p>
-          )}
-        </div>
-
-        {/* Email */}
-        <div className="space-y-1.5">
-          <label htmlFor="email" className="text-xs font-black uppercase tracking-wider text-[#111111]">
-            {t('email')}
-          </label>
-          <input
-            id="email"
-            type="text"
-            disabled={isSubmitting}
-            {...register('email')}
-            className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
-              errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
-            }`}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-xs font-semibold">{errors.email.message}</p>
           )}
         </div>
 

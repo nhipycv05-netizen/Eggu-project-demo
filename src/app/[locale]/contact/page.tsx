@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import ContactForm from '@/components/contact/ContactForm';
-import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
+import { MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -162,24 +162,6 @@ export default async function ContactPage({ params }: ContactPageProps) {
                             className="text-[#E53935] font-bold hover:underline"
                           >
                             {store.phone}
-                          </a>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Email (Shown for first/main branch) */}
-                    {index === 0 && (
-                      <div className="flex items-start space-x-3">
-                        <Mail className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
-                            Email
-                          </p>
-                          <a
-                            href="mailto:hello@eggu.vn"
-                            className="text-[#111111] font-bold hover:text-[#E53935] transition-colors"
-                          >
-                            hello@eggu.vn
                           </a>
                         </div>
                       </div>
