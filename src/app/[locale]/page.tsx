@@ -197,25 +197,23 @@ export default async function HomePage({ params }: HomePageProps) {
         </div>
       </section>
 
-      {/* 3. Featured Products Section (Bestseller) */}
+      {/* 2. Featured Products Section (Bestseller) */}
       <section className="py-12 md:py-16 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E5E7EB]/80 pb-4">
-            <div>
-              <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block mb-1">
-                {isVi ? 'Món Nổi Bật' : 'Featured Products'}
-              </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#111111]">
-                {isVi ? 'Bestseller Được Yêu Thích' : 'Our Top Bestsellers'}
-              </h2>
+          {/* Tiêu đề chính độc lập căn giữa trên cùng */}
+          <div className="relative flex items-center justify-center mb-8 md:mb-10">
+            <h2 className="font-bold uppercase text-2xl md:text-3xl tracking-widest text-[#e0352b] text-center">
+              {isVi ? 'MÓN NỔI BẬT' : 'FEATURED PRODUCTS'}
+            </h2>
+            <div className="hidden sm:block absolute right-0">
+              <Link
+                href="/menu"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#111111] hover:text-[#e0352b] transition-colors"
+              >
+                <span>{isVi ? 'Xem toàn bộ thực đơn' : 'View All Menu'}</span>
+                <ArrowRight className="w-4 h-4 text-[#e0352b]" />
+              </Link>
             </div>
-            <Link
-              href="/menu"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#111111] hover:text-[#E53935] transition-colors"
-            >
-              <span>{isVi ? 'Xem toàn bộ thực đơn' : 'View All Menu'}</span>
-              <ArrowRight className="w-4 h-4 text-[#E53935]" />
-            </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
@@ -233,46 +231,66 @@ export default async function HomePage({ params }: HomePageProps) {
               />
             ))}
           </div>
+
+          <div className="sm:hidden text-center pt-2">
+            <Link
+              href="/menu"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#111111] hover:text-[#e0352b] transition-colors"
+            >
+              <span>{isVi ? 'Xem toàn bộ thực đơn' : 'View All Menu'}</span>
+              <ArrowRight className="w-4 h-4 text-[#e0352b]" />
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* 3. Story Section */}
       <section className="py-12 md:py-16 bg-transparent border-t border-[#E5E7EB]/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-6 space-y-6">
-              <span className="text-[#E53935] text-xs font-black uppercase tracking-widest block">
-                {isVi ? 'Câu Chuyện Thương Hiệu' : 'Our Ingredients'}
-              </span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#111111] leading-tight">
+          {/* Tiêu đề chính độc lập căn giữa trên cùng */}
+          <div className="text-center w-full mb-8 md:mb-10">
+            <h2 className="font-bold uppercase text-2xl md:text-3xl tracking-widest text-[#e0352b]">
+              {isVi ? 'CÂU CHUYỆN THƯƠNG HIỆU' : 'OUR STORY'}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+            {/* Cột trái: Hình ảnh (giữ nguyên w-full, khống chế chiều cao cân bằng với khối chữ) */}
+            <div className="w-full flex justify-center">
+              <div className="relative w-full h-[260px] sm:h-[280px] md:h-[300px] max-w-[460px] rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]">
+                <Image
+                  src="/images/story-sandwich.jpg"
+                  alt="EGGU Story"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Cột phải: Nội dung chữ */}
+            <div className="flex flex-col text-left">
+              {/* Dòng 1: Tiêu đề nổi bật / Điểm nhấn */}
+              <h3 className="font-bold italic text-base md:text-lg text-gray-900 mb-2.5 leading-snug">
                 {isVi ? 'Bí quyết tạo nên hương vị mềm béo tan chảy' : 'Fluffy, golden eggs cooked to perfection'}
-              </h2>
-              <p className="text-sm md:text-base text-[#6B7280] leading-relaxed font-medium">
+              </h3>
+
+              {/* Dòng 2: Đoạn mô tả */}
+              <p className="text-sm text-gray-700 leading-relaxed mb-5 whitespace-pre-line">
                 {isVi
                   ? 'Tại EGGU, chúng tôi tin rằng một bữa sáng hoàn hảo bắt đầu từ những nguyên liệu chất lượng tốt nhất. Mỗi ổ bánh mì kẹp trứng đều được chuẩn bị cẩn thận: những quả trứng tươi sạch từ trang trại, phô mai Cheddar béo ngậy, thịt xông khói giòn tan kẹp giữa lớp bánh mì Brioche thơm nồng bơ tỏi nướng nóng hổi.'
                   : 'At EGGU, we believe that the perfect morning begins with high-quality ingredients. Every single sandwich is crafted with precision: farm-fresh organic eggs, rich melted Cheddar cheese, and crispy bacon slices wrapped inside thick-sliced, garlic butter-toasted French Brioche bread.'}
               </p>
 
+              {/* Dòng 3: Nút chuyển tiếp */}
               <div>
                 <Link
                   href="/about"
-                  className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wider text-[#111111] hover:text-[#E53935] transition-colors"
+                  className="text-sm font-bold text-gray-900 hover:text-[#e0352b] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>{isVi ? 'Khám phá câu chuyện EGGU' : 'Discover EGGU Story'}</span>
-                  <ArrowRight className="w-4 h-4 text-[#E53935]" />
+                  <span>{isVi ? 'KHÁM PHÁ CÂU CHUYỆN EGGU' : 'DISCOVER EGGU STORY'}</span>
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 relative flex justify-center">
-              <div className="relative aspect-square w-full max-w-[480px] rounded-3xl overflow-hidden shadow-xl border border-[#E5E7EB]">
-                <Image
-                  src="/images/hero-sandwich.jpg"
-                  alt="EGGU Story"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 480px"
-                  className="object-cover"
-                />
               </div>
             </div>
           </div>
@@ -281,9 +299,10 @@ export default async function HomePage({ params }: HomePageProps) {
 
       {/* 4. Branch Info Section */}
       <section className="py-12 md:py-16 bg-transparent border-t border-[#E5E7EB]/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[#E53935] uppercase">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Tiêu đề chính độc lập căn giữa trên cùng */}
+          <div className="text-center w-full mb-8 md:mb-10">
+            <h2 className="font-bold uppercase text-2xl md:text-3xl tracking-widest text-[#e0352b]">
               {isVi ? 'GHÉ THĂM CỬA HÀNG' : 'VISIT OUR STORE'}
             </h2>
           </div>
@@ -292,7 +311,7 @@ export default async function HomePage({ params }: HomePageProps) {
             {/* Cột bên trái: Thẻ thông tin cửa hàng */}
             <div className="p-6 sm:p-8 bg-white rounded-3xl border border-[#E5E7EB] shadow-xs flex flex-col justify-between space-y-6 hover:border-[#E53935]/40 transition-colors">
               <div className="space-y-5">
-                <h3 className="text-xl sm:text-2xl font-black text-[#111111]">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#e0352b]">
                   {isVi ? (store?.name_vi || 'EGGU - Sandwich trứng Hàn Quốc') : (store?.name_en || 'EGGU - Korean Egg Sandwich')}
                 </h3>
 
