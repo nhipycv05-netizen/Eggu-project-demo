@@ -8,7 +8,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useCartStore } from '@/stores/cartStore';
 import { createOrder, getActivePromotions } from '@/features/orders/actions';
-import { ShoppingBag, Loader2, Tag, X, Check, TicketPercent } from 'lucide-react';
+import { ShoppingBag, Loader2, Tag, X, Check, TicketPercent, PhoneCall } from 'lucide-react';
 import { Promotion } from '@/types/promotion';
 
 interface CheckoutFormValues {
@@ -29,6 +29,8 @@ export default function CheckoutForm() {
   const [isMounted, setIsMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<CheckoutFormValues | null>(null);
 
   // Promotions state
   const [promotions, setPromotions] = useState<Promotion[]>([]);
@@ -148,7 +150,13 @@ export default function CheckoutForm() {
     );
   }
 
-  const onSubmit = async (data: CheckoutFormValues) => {
+  const onInitiateSubmit = (data: CheckoutFormValues) => {
+    setPendingFormData(data);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmOrder = async () => {
+    if (!pendingFormData) return;
     setIsSubmitting(true);
     setSubmitError(null);
 
@@ -162,11 +170,11 @@ export default function CheckoutForm() {
 
     const result = await createOrder(
       {
-        fullName: data.fullName,
-        phone: data.phone,
-        email: data.email,
-        address: data.address,
-        note: data.note,
+        fullName: pendingFormData.fullName,
+        phone: pendingFormData.phone,
+        email: pendingFormData.email,
+        address: pendingFormData.address,
+        note: pendingFormData.note,
       },
       actionItems,
       selectedPromo?.code
@@ -174,9 +182,10 @@ export default function CheckoutForm() {
 
     if (result.success && result.orderNumber) {
       clearCart();
+      setIsConfirmModalOpen(false);
       router.push(`/order-success?order=${result.orderNumber}`);
     } else {
-      setSubmitError(result.error || 'Failed to submit order');
+      setSubmitError(result.error || (isVi ? 'Đã có lỗi xảy ra khi tạo đơn hàng' : 'Failed to submit order'));
       setIsSubmitting(false);
     }
   };
@@ -185,7 +194,7 @@ export default function CheckoutForm() {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       {/* Checkout Form - Left 7 columns */}
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onInitiateSubmit)}
         className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6"
       >
         <h2 className="text-2xl font-black text-[#111111]">{t('title')}</h2>
@@ -502,6 +511,82 @@ export default function CheckoutForm() {
           </div>
         </div>
       </div>
+
+      {/* Phone Confirmation Modal */}
+      {isConfirmModalOpen && pendingFormData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div
+            className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-[#E5E7EB] space-y-5 animate-in zoom-in-95 duration-200"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirm-phone-modal-title"
+          >
+            {/* Header Icon & Title */}
+            <div className="text-center space-y-2">
+              <div className="w-14 h-14 bg-[#e0352b]/10 text-[#e0352b] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-xs">
+                <PhoneCall className="w-7 h-7" />
+              </div>
+              <h3 id="confirm-phone-modal-title" className="text-xl sm:text-2xl font-black text-[#111111]">
+                {t('confirmPhoneModal.title')}
+              </h3>
+              <p className="text-sm text-[#6B7280] font-medium leading-relaxed">
+                {t('confirmPhoneModal.message')}
+              </p>
+            </div>
+
+            {/* Prominent Phone Number Display */}
+            <div className="bg-[#FFF5F5] border-2 border-[#e0352b]/20 rounded-2xl p-4 text-center space-y-1">
+              <p className="text-[11px] uppercase font-black text-neutral-400 tracking-wider">
+                {t('phone')}
+              </p>
+              <div className="text-xl sm:text-2xl font-black text-[#e0352b] py-2 tracking-wide select-all">
+                {pendingFormData.phone}
+              </div>
+              <p className="text-xs font-semibold text-neutral-600 truncate">
+                {pendingFormData.fullName} • {pendingFormData.address}
+              </p>
+            </div>
+
+            {/* Submit Error inside modal if any */}
+            {submitError && (
+              <div className="p-3.5 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-semibold">
+                {submitError}
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <button
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => {
+                  setIsConfirmModalOpen(false);
+                  setSubmitError(null);
+                }}
+                className="w-full py-3.5 px-4 rounded-full border border-neutral-300 hover:bg-neutral-100 text-neutral-800 font-bold text-sm transition duration-150 order-2 sm:order-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {t('confirmPhoneModal.change')}
+              </button>
+
+              <button
+                type="button"
+                disabled={isSubmitting}
+                onClick={handleConfirmOrder}
+                className="w-full py-3.5 px-4 rounded-full bg-[#e0352b] hover:bg-[#c92e25] text-white font-black text-sm uppercase tracking-wider transition duration-150 shadow-md hover:shadow-lg flex items-center justify-center space-x-2 order-1 sm:order-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>{t('processing')}</span>
+                  </>
+                ) : (
+                  <span>{t('confirmPhoneModal.confirm')}</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
