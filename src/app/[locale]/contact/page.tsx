@@ -20,27 +20,29 @@ interface Store {
 
 const DEFAULT_STORE: Store = {
   id: 'default-office',
-  name_vi: 'EGGU Head Office',
-  name_en: 'EGGU Head Office',
+  name_vi: 'EGGU - Sandwich trứng Hàn Quốc',
+  name_en: 'EGGU - Korean Egg Sandwich',
   address_vi: '54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội',
   address_en: '54 Nguyen Huu Huan, Hoan Kiem, Hanoi',
   phone: '0356779899',
   opening_hours_vi: '07:00 - 21:00',
   opening_hours_en: '07:00 - 21:00',
-  google_maps_url: null,
+  google_maps_url: 'https://maps.google.com/maps?q=54+Nguyen+Huu+Huan,+Hoan+Kiem,+Hanoi&t=&z=16&ie=UTF8&iwloc=&output=embed',
   is_active: true,
 };
 
 function getMapEmbedUrl(url: string | null | undefined, address: string) {
-  if (!url) {
-    return null;
+  if (url) {
+    const iframeMatch = url.match(/src=["']([^"']+)["']/);
+    if (iframeMatch) {
+      return iframeMatch[1];
+    }
+    if (url.includes('output=embed') || url.includes('google.com/maps/embed')) {
+      return url;
+    }
   }
-  const iframeMatch = url.match(/src=["']([^"']+)["']/);
-  if (iframeMatch) {
-    return iframeMatch[1];
-  }
-  if (url.includes('google.com/maps/embed')) {
-    return url;
+  if (address && address.trim()) {
+    return `https://maps.google.com/maps?q=${encodeURIComponent(address.trim())}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
   }
   return null;
 }
@@ -78,7 +80,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
   const primaryStore = stores[0];
   const primaryAddress = isVi ? primaryStore.address_vi : primaryStore.address_en;
   const primaryDirectionsUrl =
-    primaryStore.google_maps_url && !primaryStore.google_maps_url.includes('<iframe')
+    primaryStore.google_maps_url &&
+    !primaryStore.google_maps_url.includes('<iframe') &&
+    !primaryStore.google_maps_url.includes('embed')
       ? primaryStore.google_maps_url
       : `https://maps.google.com/?q=${encodeURIComponent(primaryAddress)}`;
   const embedUrl = getMapEmbedUrl(primaryStore.google_maps_url, primaryAddress);
@@ -102,7 +106,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
               const storeHours = isVi ? store.opening_hours_vi : store.opening_hours_en;
               const storeName = isVi ? store.name_vi : store.name_en;
               const directionsUrl =
-                store.google_maps_url && !store.google_maps_url.includes('<iframe')
+                store.google_maps_url &&
+                !store.google_maps_url.includes('<iframe') &&
+                !store.google_maps_url.includes('embed')
                   ? store.google_maps_url
                   : `https://maps.google.com/?q=${encodeURIComponent(storeAddress)}`;
 
@@ -201,16 +207,18 @@ export default async function ContactPage({ params }: ContactPageProps) {
             })}
 
             {/* Google Map / Map view container */}
-            <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-[#E5E7EB] shadow-xs bg-neutral-100 flex flex-col justify-between">
+            <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-[#E5E7EB] shadow-xs bg-neutral-100 min-h-[350px]">
               {embedUrl ? (
                 <iframe
                   title="EGGU Location Map"
                   src={embedUrl}
                   width="100%"
                   height="100%"
+                  className="w-full h-full min-h-[350px] border-0"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-neutral-50 to-neutral-100 space-y-4">
