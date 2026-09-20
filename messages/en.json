@@ -139,6 +139,12 @@
       "emailInvalid": "Invalid email address format",
       "addressRequired": "Delivery address is required",
       "cartEmpty": "Cannot submit an empty cart"
+    },
+    "confirmPhoneModal": {
+      "title": "Confirm Delivery Phone Number",
+      "message": "Please double-check your phone number so we can contact you:",
+      "change": "Edit / Change",
+      "confirm": "Confirm & Place Order"
     }
   },
   "success": {

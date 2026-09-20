@@ -139,6 +139,12 @@
       "emailInvalid": "Email không đúng định dạng",
       "addressRequired": "Vui lòng nhập địa chỉ giao hàng chi tiết",
       "cartEmpty": "Không thể thanh toán với giỏ hàng trống"
+    },
+    "confirmPhoneModal": {
+      "title": "Xác nhận số điện thoại nhận hàng",
+      "message": "Vui lòng kiểm tra lại số điện thoại để tiệm có thể liên hệ với bạn:",
+      "change": "Kiểm tra lại",
+      "confirm": "Xác nhận đặt hàng"
     }
   },
   "success": {
