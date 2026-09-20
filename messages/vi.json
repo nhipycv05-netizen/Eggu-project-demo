@@ -99,7 +99,13 @@
     "phone": "Số Điện Thoại",
     "message": "Nội Dung Tin Nhắn",
     "submit": "Gửi Tin Nhắn",
-    "success": "Tin nhắn của bạn đã được gửi thành công! Chúng tôi sẽ phản hồi lại sớm nhất có thể."
+    "sending": "Đang gửi tin nhắn...",
+    "namePlaceholder": "Nhập họ và tên của bạn",
+    "emailPlaceholder": "example@email.com (không bắt buộc)",
+    "phonePlaceholder": "0912345678",
+    "messagePlaceholder": "Nhập nội dung bạn muốn gửi cho EGGU...",
+    "success": "Tin nhắn của bạn đã được gửi thành công! Chúng tôi sẽ phản hồi lại sớm nhất có thể.",
+    "error": "Có lỗi xảy ra khi gửi tin nhắn. Vui lòng kiểm tra lại thông tin và thử lại."
   },
   "cart": {
     "title": "Giỏ Hàng Của Bạn",

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -13,6 +14,7 @@ import {
   Percent,
   LogOut,
   Info,
+  MessageSquare,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -22,6 +24,7 @@ interface AdminSidebarProps {
 
 const MENU_ITEMS = [
   { id: 'orders', label: 'Đơn hàng', icon: ClipboardList },
+  { id: 'messages', label: 'Tin nhắn liên hệ', icon: MessageSquare },
   { id: 'products', label: 'Sản phẩm', icon: ShoppingBag },
   { id: 'categories', label: 'Danh mục', icon: Tags },
   { id: 'about', label: 'Giới thiệu', icon: Info },
@@ -34,6 +37,25 @@ const MENU_ITEMS = [
 export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
   const router = useRouter();
   const supabase = createClient();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch('/api/contact?status=UNREAD');
+        const data = await res.json();
+        if (data.success && data.stats) {
+          setUnreadCount(data.stats.unread || 0);
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 15000);
+    return () => clearInterval(interval);
+  }, [activeTab]);
 
   const handleLogout = async () => {
     try {
@@ -78,14 +100,27 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-xs font-bold transition duration-150 ${
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold transition duration-150 ${
                   isActive
                     ? 'bg-[#EAAA08] text-[#1E1B18]'
                     : 'text-neutral-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <Icon className="w-4.5 h-4.5" />
-                <span>{item.label}</span>
+                <div className="flex items-center space-x-3">
+                  <Icon className="w-4.5 h-4.5 shrink-0" />
+                  <span>{item.label}</span>
+                </div>
+                {item.id === 'messages' && unreadCount > 0 && (
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-black transition ${
+                      isActive
+                        ? 'bg-[#1E1B18] text-[#EAAA08]'
+                        : 'bg-red-500 text-white animate-pulse'
+                    }`}
+                  >
+                    {unreadCount}
+                  </span>
+                )}
               </button>
             );
           })}
