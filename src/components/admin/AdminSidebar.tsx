@@ -13,7 +13,6 @@ import {
   FileText,
   Percent,
   LogOut,
-  Info,
   MessageSquare,
 } from 'lucide-react';
 
@@ -27,7 +26,6 @@ const MENU_ITEMS = [
   { id: 'messages', label: 'Tin nhắn liên hệ', icon: MessageSquare },
   { id: 'products', label: 'Sản phẩm', icon: ShoppingBag },
   { id: 'categories', label: 'Danh mục', icon: Tags },
-  { id: 'about', label: 'Giới thiệu', icon: Info },
   { id: 'stores', label: 'Cửa hàng', icon: MapPin },
   { id: 'faqs', label: 'Hỏi đáp (FAQ)', icon: HelpCircle },
   { id: 'news', label: 'Tin tức & Blog', icon: FileText },

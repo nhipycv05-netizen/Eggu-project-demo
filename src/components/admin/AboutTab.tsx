@@ -268,7 +268,7 @@ export default function AboutTab() {
               type="text"
               value={content.subTitle}
               onChange={(e) => setContent({ ...content, subTitle: e.target.value })}
-              placeholder="Ví dụ: Eggu · Sandwich trứng Hàn Quốc"
+              placeholder="Ví dụ: Eggu - Sandwich trứng Hàn Quốc"
               className="w-full px-4 py-2.5 text-xs font-medium rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
             />
             <p className="text-[11px] text-neutral-400">Dòng phụ đề nhỏ định vị thương hiệu</p>
@@ -372,9 +372,9 @@ export default function AboutTab() {
                 </div>
               )}
 
-              {/* Overlapping dark card */}
-              <div className="absolute bottom-3 left-3 right-8 bg-[#54433a]/85 backdrop-blur-md text-white p-3.5 rounded-xl text-[11px] leading-relaxed shadow-lg border border-white/10">
-                <p className="line-clamp-4">{content.section1Text || 'Đoạn văn bản giới thiệu sẽ hiển thị ở đây...'}</p>
+              {/* Overlapping red glassmorphism card */}
+              <div className="absolute bottom-3 left-3 right-8 bg-[#e0352b]/85 backdrop-blur-md text-white p-3.5 rounded-xl text-[11px] leading-relaxed shadow-lg border border-white/20">
+                <p className="line-clamp-4 font-medium">{content.section1Text || 'Đoạn văn bản giới thiệu sẽ hiển thị ở đây...'}</p>
               </div>
             </div>
           </div>
@@ -432,7 +432,7 @@ export default function AboutTab() {
               <Sparkles className="w-4 h-4" />
             </span>
             <h2 className="text-sm font-black text-neutral-900 uppercase tracking-wide">
-              Phần 3: Cam Kết Chất Lượng & Hàng Bánh (2 Cột Song Song)
+              Phần 3: Tầm Nhìn Thương Hiệu (Ảnh Bên Trái - Chữ Bên Phải)
             </h2>
           </div>
           <span className="text-[11px] font-bold text-[#E53935] bg-[#FFF0F0] px-2 py-0.5 rounded-full">
@@ -441,40 +441,11 @@ export default function AboutTab() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left: Quality Text */}
-          <div className="lg:col-span-6 space-y-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-neutral-700 block">
-                Tiêu Đề Cam Kết (Tùy chọn)
-              </label>
-              <input
-                type="text"
-                value={content.section3Title || ''}
-                onChange={(e) => setContent({ ...content, section3Title: e.target.value })}
-                placeholder="Ví dụ: Cam Kết Nguyên Liệu Tươi Sạch 100%"
-                className="w-full px-3.5 py-2 text-xs font-bold rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-neutral-700 block">
-                Nội Dung Cam Kết (Cột Bên Trái)
-              </label>
-              <textarea
-                rows={5}
-                value={content.section3Text}
-                onChange={(e) => setContent({ ...content, section3Text: e.target.value })}
-                placeholder="Nhập nội dung cam kết nguyên liệu và tiêu chuẩn phục vụ..."
-                className="w-full p-3.5 text-xs leading-relaxed rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
-              />
-            </div>
-          </div>
-
-          {/* Right: Sandwich Image */}
-          <div className="lg:col-span-6 space-y-4">
+          {/* Left: Image (Cột Bên Trái) */}
+          <div className="lg:col-span-5 space-y-4">
             <div className="space-y-2">
               <label className="text-xs font-bold text-neutral-700 block">
-                Ảnh Khay Bánh / Hàng Bánh Sandwich (Cột Bên Phải)
+                Ảnh Tầm Nhìn (Khung Bên Trái)
               </label>
 
               <div className="flex items-center gap-2">
@@ -482,7 +453,7 @@ export default function AboutTab() {
                   type="text"
                   value={content.section3Image}
                   onChange={(e) => setContent({ ...content, section3Image: e.target.value })}
-                  placeholder="Nhập link ảnh (ví dụ: /images/carousel/sandwich-egg-scramble.jpg)"
+                  placeholder="Nhập link ảnh (ví dụ: /images/about-vision.jpg)"
                   className="flex-1 px-3.5 py-2 text-xs rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
                 />
 
@@ -510,7 +481,7 @@ export default function AboutTab() {
             </div>
 
             {/* Preview Box for Image */}
-            <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-neutral-200 border border-neutral-100 shadow-sm">
+            <div className="relative w-full max-w-[280px] mx-auto aspect-[4/5] rounded-2xl overflow-hidden bg-neutral-200 border border-neutral-100 shadow-sm">
               {content.section3Image ? (
                 <Image
                   src={content.section3Image}
@@ -526,6 +497,109 @@ export default function AboutTab() {
               )}
             </div>
           </div>
+
+          {/* Right: Text & Closing Statement (Cột Bên Phải) */}
+          <div className="lg:col-span-7 space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-neutral-700 block">
+                Tiêu Đề Tầm Nhìn (Tùy chọn)
+              </label>
+              <input
+                type="text"
+                value={content.section3Title || ''}
+                onChange={(e) => setContent({ ...content, section3Title: e.target.value })}
+                placeholder="Ví dụ: Tầm Nhìn Của Eggu"
+                className="w-full px-3.5 py-2 text-xs font-bold rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-neutral-700 block">
+                Nội Dung Văn Bản Tầm Nhìn (Cột Bên Phải)
+              </label>
+              <textarea
+                rows={5}
+                value={content.section3Text}
+                onChange={(e) => setContent({ ...content, section3Text: e.target.value })}
+                placeholder="Nhập nội dung văn bản tầm nhìn..."
+                className="w-full p-3.5 text-xs leading-relaxed rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-neutral-700 block">
+                Dòng Kết Thúc / Khẩu Hiệu
+              </label>
+              <input
+                type="text"
+                value={content.section3ClosingText || ''}
+                onChange={(e) => setContent({ ...content, section3ClosingText: e.target.value })}
+                placeholder="Eggu - nơi mỗi người đều có thể tìm thấy ổ bánh mỳ “đúng với mình”."
+                className="w-full px-3.5 py-2 text-xs font-medium italic rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
+              />
+              <p className="text-[11px] text-neutral-400">
+                Hiển thị nổi bật với đường viền đỏ thương hiệu ở cuối mục 3.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Block 4: Phần 4 - Giá trị cốt lõi (3 Thẻ Hình Vòm) */}
+      <section className="bg-white p-6 sm:p-7 rounded-2xl border border-neutral-200 shadow-xs space-y-5">
+        <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+          <div className="flex items-center space-x-2">
+            <span className="p-1.5 bg-[#FFF9E6] text-[#D97706] rounded-lg">
+              <Sparkles className="w-4 h-4" />
+            </span>
+            <h2 className="text-sm font-black text-neutral-900 uppercase tracking-wide">
+              Phần 4: Giá Trị Cốt Lõi (3 Thẻ Hình Vòm Arch Cards)
+            </h2>
+          </div>
+          <span className="text-[11px] font-bold text-[#E53935] bg-[#FFF0F0] px-2 py-0.5 rounded-full">
+            Khối 4
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {(content.section4Items || DEFAULT_ABOUT_CONTENT.section4Items || []).map((item, idx) => (
+            <div key={idx} className="bg-[#FAF8F5] p-4 rounded-xl border border-neutral-200 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black text-neutral-800">Thẻ {idx + 1}</span>
+                <span className="text-[10px] font-bold text-[#D97706] bg-[#FFF4E5] px-2 py-0.5 rounded">Hình vòm</span>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold text-neutral-600 block">
+                  Tiêu đề (Phía dưới)
+                </label>
+                <input
+                  type="text"
+                  value={item.title}
+                  onChange={(e) => {
+                    const newItems = [...(content.section4Items || DEFAULT_ABOUT_CONTENT.section4Items || [])];
+                    newItems[idx] = { ...newItems[idx], title: e.target.value };
+                    setContent({ ...content, section4Items: newItems });
+                  }}
+                  className="w-full px-3 py-1.5 text-xs font-bold rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold text-neutral-600 block">
+                  Nội dung mô tả (Bên trong vòm)
+                </label>
+                <textarea
+                  rows={4}
+                  value={item.description}
+                  onChange={(e) => {
+                    const newItems = [...(content.section4Items || DEFAULT_ABOUT_CONTENT.section4Items || [])];
+                    newItems[idx] = { ...newItems[idx], description: e.target.value };
+                    setContent({ ...content, section4Items: newItems });
+                  }}
+                  className="w-full p-2.5 text-xs leading-relaxed rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
