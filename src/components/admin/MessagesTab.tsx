@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ContactMessage, ContactMessageStatus } from '@/types/contact';
 import {
-  Mail,
   Phone,
   Search,
   Eye,
@@ -319,7 +318,7 @@ export default function MessagesTab() {
               Tổng tin nhắn
             </span>
             <div className="w-8 h-8 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-600">
-              <Mail className="w-4 h-4" />
+              <MessageSquare className="w-4 h-4" />
             </div>
           </div>
           <p className="text-2xl font-black text-neutral-900 mt-2">{stats.total}</p>
@@ -382,7 +381,7 @@ export default function MessagesTab() {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
           <input
             type="text"
-            placeholder="Tìm theo tên, SĐT, email, nội dung..."
+            placeholder="Tìm theo tên, SĐT, nội dung..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#EAAA08]/20 focus:border-[#EAAA08] font-medium"
@@ -428,7 +427,7 @@ export default function MessagesTab() {
         ) : messages.length === 0 ? (
           <div className="p-16 flex flex-col items-center justify-center text-center space-y-3">
             <div className="w-14 h-14 rounded-2xl bg-neutral-100 flex items-center justify-center text-neutral-400">
-              <Mail className="w-7 h-7" />
+              <MessageSquare className="w-7 h-7" />
             </div>
             <p className="text-sm font-bold text-neutral-700">Chưa có tin nhắn nào</p>
             <p className="text-xs text-neutral-400 max-w-sm">
@@ -472,24 +471,13 @@ export default function MessagesTab() {
                         isUnread ? 'bg-red-50/20 font-semibold' : ''
                       }`}
                     >
-                      {/* Name & Email */}
+                      {/* Name */}
                       <td className="py-4 px-6">
-                        <div className="flex items-start gap-2.5">
+                        <div className="flex items-center gap-2.5">
                           {isUnread && (
-                            <span className="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0" />
+                            <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
                           )}
-                          <div>
-                            <p className="text-xs font-bold text-neutral-900">{msg.name}</p>
-                            {msg.email ? (
-                              <p className="text-[11px] text-neutral-500 font-normal">
-                                {msg.email}
-                              </p>
-                            ) : (
-                              <span className="text-[10px] text-neutral-400 italic">
-                                Không có email
-                              </span>
-                            )}
-                          </div>
+                          <p className="text-xs font-bold text-neutral-900">{msg.name}</p>
                         </div>
                       </td>
 
@@ -607,82 +595,60 @@ export default function MessagesTab() {
             </div>
 
             {/* Sender Info Card */}
-            <div className="bg-neutral-50 p-5 rounded-2xl border border-neutral-200 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="bg-neutral-50 p-4 sm:p-5 rounded-2xl border border-neutral-200">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
                 {/* Name */}
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-xl bg-white border border-neutral-200 flex items-center justify-center text-neutral-600">
+                <div className="flex items-center space-x-3 p-3 bg-white rounded-xl border border-neutral-200">
+                  <div className="w-8 h-8 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-600 shrink-0">
                     <User className="w-4 h-4" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider block">
                       Họ và Tên
                     </span>
-                    <span className="font-bold text-neutral-900 text-sm">
+                    <span className="font-bold text-neutral-900 text-sm truncate block">
                       {selectedMessage.name}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Time */}
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-xl bg-white border border-neutral-200 flex items-center justify-center text-neutral-600">
-                    <Calendar className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider block">
-                      Thời Gian Gửi
-                    </span>
-                    <span className="font-bold text-neutral-900">
-                      {formatDateTime(selectedMessage.created_at)}
                     </span>
                   </div>
                 </div>
 
                 {/* Phone with call action */}
                 <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-neutral-200">
-                  <div className="flex items-center space-x-2.5">
-                    <Phone className="w-4 h-4 text-[#E53935]" />
-                    <div>
-                      <span className="text-[9px] text-neutral-400 font-bold uppercase block">
+                  <div className="flex items-center space-x-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center text-[#E53935] shrink-0">
+                      <Phone className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider block">
                         Số điện thoại
                       </span>
-                      <span className="font-bold text-neutral-900 text-xs">
+                      <span className="font-bold text-neutral-900 text-xs truncate block">
                         {selectedMessage.phone}
                       </span>
                     </div>
                   </div>
                   <a
                     href={`tel:${selectedMessage.phone.replace(/\s+/g, '')}`}
-                    className="px-3 py-1.5 bg-[#E53935] text-white rounded-lg text-xs font-bold hover:bg-[#D32F2F] transition flex items-center gap-1 shadow-xs"
+                    className="px-2.5 py-1.5 bg-[#E53935] text-white rounded-lg text-xs font-bold hover:bg-[#D32F2F] transition flex items-center gap-1 shadow-xs shrink-0"
                   >
                     <span>Gọi</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
 
-                {/* Email with mailto action */}
-                <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-neutral-200">
-                  <div className="flex items-center space-x-2.5 overflow-hidden">
-                    <Mail className="w-4 h-4 text-blue-600 shrink-0" />
-                    <div className="truncate">
-                      <span className="text-[9px] text-neutral-400 font-bold uppercase block">
-                        Email
-                      </span>
-                      <span className="font-bold text-neutral-900 text-xs truncate block">
-                        {selectedMessage.email || 'Không có'}
-                      </span>
-                    </div>
+                {/* Time */}
+                <div className="flex items-center space-x-3 p-3 bg-white rounded-xl border border-neutral-200">
+                  <div className="w-8 h-8 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-600 shrink-0">
+                    <Calendar className="w-4 h-4" />
                   </div>
-                  {selectedMessage.email && (
-                    <a
-                      href={`mailto:${selectedMessage.email}`}
-                      className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 transition flex items-center gap-1 shadow-xs shrink-0"
-                    >
-                      <span>Mail</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
+                  <div className="min-w-0">
+                    <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider block">
+                      Thời Gian Gửi
+                    </span>
+                    <span className="font-bold text-neutral-900 text-xs block">
+                      {formatDateTime(selectedMessage.created_at)}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
