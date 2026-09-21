@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import CartToast from '@/components/ui/CartToast';
 import { createClient } from '@/lib/supabase/server';
 
 interface LocaleLayoutProps {
@@ -64,6 +65,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             {children}
           </main>
           <Footer store={store} locale={locale} />
+          <CartToast />
         </NextIntlClientProvider>
       </body>
     </html>

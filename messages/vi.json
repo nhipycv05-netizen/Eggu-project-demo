@@ -57,6 +57,12 @@
     "addedToCart": "Đã thêm vào giỏ hàng!",
     "totalPrice": "Tổng Giá Tiền"
   },
+  "cartToast": {
+    "title": "Đã thêm vào giỏ hàng!",
+    "addedItem": "Đã thêm {name} vào giỏ hàng!",
+    "viewCart": "Xem giỏ hàng",
+    "success": "Thành công"
+  },
   "about": {
     "title": "VỀ CHÚNG TÔI",
     "subtitle": "Eggu · Sandwich trứng Hàn Quốc",

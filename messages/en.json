@@ -57,6 +57,12 @@
     "addedToCart": "Added to Cart!",
     "totalPrice": "Total Price"
   },
+  "cartToast": {
+    "title": "Added to Cart!",
+    "addedItem": "Added {name} to cart!",
+    "viewCart": "View Cart",
+    "success": "Success"
+  },
   "about": {
     "title": "ABOUT US",
     "subtitle": "Eggu · Korean Egg Sandwich",
