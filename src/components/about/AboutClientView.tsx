@@ -40,6 +40,47 @@ export default function AboutClientView({ initialContent, locale }: AboutClientV
     }
   }, []);
 
+  const defaultSection4Items = isVi
+    ? [
+        {
+          title: 'Tận tâm',
+          description:
+            'Phục vụ bánh mỳ không có nghĩa là phục vụ đại trà, mà thay vào đó từng ổ bánh mỳ sandwich trứng được cá nhân hóa theo sở thích từng cá nhân',
+        },
+        {
+          title: 'Trung thực',
+          description:
+            'Mỗi chiếc bánh mỳ sandwich trứng tại Eggu được làm ra với sự trân trọng khách hàng, trân trọng không chỉ thể hiện ở hình thức thành phẩm bắt mắt, chỉn chu mà còn xuất phát từ nguồn nguyên liệu tươi sạch, chất lượng.',
+        },
+        {
+          title: 'Sáng tạo',
+          description:
+            'Sáng tạo để tạo nên sự khác biệt có chủ đích, mỗi ý tưởng mới đều hướng đến một chiếc sandwich ngon hơn, tiện hơn và hợp gu hơn.',
+        },
+      ]
+    : [
+        {
+          title: 'Dedication',
+          description:
+            'Serving sandwiches does not mean mass service; instead, each egg sandwich is personalized to individual tastes.',
+        },
+        {
+          title: 'Honesty',
+          description:
+            'Each egg sandwich at Eggu is made with utmost respect for our customers, reflected not only in eye-catching, meticulous presentation but also originating from fresh, clean, high-quality ingredients.',
+        },
+        {
+          title: 'Creativity',
+          description:
+            'Innovating with purposeful distinction, where every new idea strives toward a tastier, more convenient, and more flavorful sandwich.',
+        },
+      ];
+
+  const section4Items =
+    content.section4Items && content.section4Items.length === 3
+      ? content.section4Items
+      : defaultSection4Items;
+
   return (
     <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-16 md:pb-24 text-[#1E1B18] overflow-hidden relative">
       
@@ -83,38 +124,62 @@ export default function AboutClientView({ initialContent, locale }: AboutClientV
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16 relative z-10 w-full">
         
         {/* ========================================================
-            TIÊU ĐỀ CHÍNH (CĂN TRÁI TỐI GIẢN KHUNG MAX-W-7XL)
+            TIÊU ĐỀ CHÍNH (CĂN TRÁI TỐI GIẢN KHUNG MAX-W-7XL) & DÒNG THƯƠNG HIỆU
             ======================================================== */}
-        <div className="border-b border-[#e0352b]/20 pb-3 mb-8 md:mb-10 text-left">
-          <h1 className="text-xl font-bold uppercase tracking-wider text-[#e0352b]">
-            {content.mainTitle || (isVi ? 'VỀ CHÚNG TÔI' : 'ABOUT US')}
-          </h1>
+        <div>
+          <div className="border-b border-[#e0352b]/20 pb-3 text-left">
+            <h1 className="text-xl font-bold uppercase tracking-wider text-[#e0352b]">
+              {content.mainTitle || (isVi ? 'VỀ CHÚNG TÔI' : 'ABOUT US')}
+            </h1>
+          </div>
+          <h2 className="text-center mx-auto font-bold italic text-2xl md:text-3xl text-[#e0352b] my-6">
+            {isVi
+              ? (content.subTitle && content.subTitle !== 'Eggu · Sandwich trứng Hàn Quốc' ? content.subTitle : 'Eggu - Sandwich trứng Hàn Quốc')
+              : (content.subTitle && content.subTitle !== 'Eggu · Sandwich trứng Hàn Quốc' ? content.subTitle : 'Eggu - Korean Egg Sandwich')}
+          </h2>
         </div>
 
         {/* ========================================================
-            KHỐI 1: ẢNH KHỞI NGUỒN & HỘP TỐI ĐÈ LÊN ẢNH
+            KHỐI 1: ẢNH KHỞI NGUỒN & HỘP CHỮ NỀN TỐI ĐẶT CẠNH CÂN XỨNG
             ======================================================== */}
         <div className="relative pt-2 pb-4">
-          <div className="flex flex-col md:flex-row items-center justify-end relative">
-            
-            {/* Founder / Origin Photo on the Right */}
-            <div className="w-full md:w-[70%] lg:w-[65%] relative aspect-[16/11] sm:aspect-[16/10] rounded-3xl overflow-hidden shadow-md bg-[#F5F2EC]">
+          {/* Tiêu đề mục 1: Triết lý kinh doanh */}
+          <h3 className="text-left mt-4 mb-4 text-lg md:text-xl font-semibold text-gray-800">
+            <span className="font-bold uppercase text-[#e0352b]">
+              {isVi ? '1. TRIẾT LÝ KINH DOANH' : '1. BUSINESS PHILOSOPHY'}
+            </span>
+            {' - '}
+            <span>
+              {isVi ? 'Đơn giản không có nghĩa là tầm thường' : 'Simple does not mean ordinary'}
+            </span>
+          </h3>
+
+          <div className="flex flex-col md:flex-row items-center relative w-full pt-2 pb-4">
+            {/* Khối chữ màu đen dạt sang phía lề trái, chỉ đè lấn sang mép trái ảnh khoảng 1/4 bề rộng thẻ */}
+            <div className="w-full md:w-[58%] lg:w-[55%] z-10 md:-mr-14 lg:md:-mr-16 order-2 md:order-1 mt-4 md:mt-0">
+              <div className="bg-[#e0352b]/85 backdrop-blur-md text-white rounded-2xl md:rounded-3xl p-5 sm:p-6 md:p-7 shadow-xl border border-white/20">
+                <p className="text-xs sm:text-sm md:text-base font-medium leading-relaxed text-white">
+                  {content.section1Text ||
+                    'Eggu ra đời từ một mong muốn đơn giản nhưng đầy tâm huyết: mang đến những bữa ăn nhanh, tiện lợi nhưng vẫn trọn vẹn dinh dưỡng và đậm đà hương vị cho tất cả mọi người.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Khung ảnh lệch hẳn sang nửa bên phải màn hình: bắt đầu từ giữa trang và kéo dài sát lề phải */}
+            <div className="w-full md:w-1/2 ml-auto h-72 md:h-80 relative rounded-2xl md:rounded-3xl overflow-hidden shadow-md bg-[#F5F2EC] order-1 md:order-2">
               <Image
-                src={content.section1Image || '/images/about-founder.png'}
+                src={
+                  content.section1Image && content.section1Image !== '/images/about-founder.png'
+                    ? content.section1Image
+                    : '/images/about-founder.jpg'
+                }
                 alt="Eggu Founder"
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 850px"
-                className="object-cover object-center"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover object-[center_60%]"
+                style={{ objectPosition: 'center 60%' }}
               />
-            </div>
-
-            {/* Overlapping Dark Gray Card on the Left */}
-            <div className="w-full md:w-[45%] lg:w-[42%] mt-4 md:mt-0 md:absolute md:left-0 md:bottom-8 bg-[#5C5450] text-white rounded-2xl p-6 sm:p-7 shadow-xl border border-white/10 z-20">
-              <p className="text-sm sm:text-base font-semibold leading-relaxed text-[#F5F5F5]">
-                {content.section1Text ||
-                  'Eggu ra đời từ một mong muốn đơn giản nhưng đầy tâm huyết: mang đến những bữa ăn nhanh, tiện lợi nhưng vẫn trọn vẹn dinh dưỡng và đậm đà hương vị cho tất cả mọi người.'}
-              </p>
             </div>
           </div>
         </div>
@@ -123,42 +188,135 @@ export default function AboutClientView({ initialContent, locale }: AboutClientV
             KHỐI 2: KHUNG BO GÓC TRẢI RỘNG XÁM NHẠT / BEIGE
             ======================================================== */}
         <div className="w-full">
-          <div className="w-full bg-[#E7D8CA] rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-12 border border-[#D4C3B3] shadow-xs">
-            <p className="text-sm sm:text-base md:text-lg leading-relaxed md:leading-loose text-[#2B2520] italic font-medium text-justify">
-              {content.section2Text ||
-                'Từ niềm tin rằng bữa ăn sáng hay một món ăn nhẹ giữa ngày không chỉ để lót bụng, mà còn là khoảnh khắc tiếp thêm năng lượng tích cực, Eggu chiêu đãi thực khách các món sandwich nướng kèm phô mai thơm lừng ôm trọn lớp trứng xốp mềm ngập tràn hương vị, thêm vào đó là sự hấp dẫn của rất nhiều loại topping đa dạng như thịt xông khói, dăm bông, cá ngừ,... Đây chính là lời chào ngọt ngào nhất Eggu gửi tới bạn.'}
-            </p>
+          {/* Tiêu đề mục 2: Sứ mệnh */}
+          <h3 className="text-left mt-10 md:mt-12 mb-4 text-lg md:text-xl font-semibold text-gray-900">
+            <span className="text-[#e0352b] font-bold uppercase mr-2">
+              {isVi ? '2. SỨ MỆNH' : '2. MISSION'}
+            </span>
+            <span>
+              {isVi ? '- Làm mới món quen, phục vụ gu riêng' : '- Refreshing the familiar, catering to your taste'}
+            </span>
+          </h3>
+
+          {/* Khối trích dẫn sứ mệnh (Blockquote thanh lịch, trải dài ngang 1-2 dòng) */}
+          <div className="w-full bg-[#FAF8F5]/80 rounded-2xl md:rounded-3xl p-6 sm:p-8 md:py-8 md:px-12 border border-[#EAE4DC]/90 shadow-xs">
+            <div className="max-w-5xl lg:max-w-6xl mx-auto relative px-8 sm:px-12 md:px-16 py-1">
+              {/* Dấu ngoặc kép mở đầu trên bên trái */}
+              <span className="text-3xl sm:text-4xl md:text-5xl font-serif text-black font-bold select-none absolute -top-3 left-0 sm:left-1 md:left-2 leading-none">
+                “
+              </span>
+
+              {/* Đoạn văn trích dẫn */}
+              <blockquote className="italic text-gray-800 text-sm md:text-base lg:text-[17px] leading-relaxed md:leading-loose text-center font-medium px-2 sm:px-4">
+                {content.section2Text && !content.section2Text.includes('Từ niềm tin rằng')
+                  ? content.section2Text
+                  : (isVi
+                      ? 'Chúng tôi tạo ra những ổ bánh mỳ độc đáo, sáng tạo, tiện lợi và mang cá tính riêng - phục vụ đúng khẩu vị, đúng lúc, đúng cách mà mỗi thực khách muốn trong nhịp sống hiện đại.'
+                      : 'We create unique, creative, convenient, and distinctive sandwiches - served just to your taste, just in time, and just the way every diner desires in modern life.')}
+              </blockquote>
+
+              {/* Dấu ngoặc kép đóng cuối dưới bên phải */}
+              <span className="text-3xl sm:text-4xl md:text-5xl font-serif text-black font-bold select-none absolute -bottom-4 right-0 sm:right-1 md:right-2 leading-none">
+                ”
+              </span>
+            </div>
           </div>
         </div>
 
         {/* ========================================================
-            KHỐI 3: 2 CỘT SONG SONG (TRÁI: VĂN BẢN | PHẢI: ẢNH HÀNG BÁNH)
+            KHỐI 3: TIÊU ĐỀ MỤC 3 & 2 CỘT SONG SONG (TRÁI: VĂN BẢN | PHẢI: ẢNH HÀNG BÁNH)
             ======================================================== */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 lg:gap-16 items-center pt-2">
-          {/* Cột Trái: Nội dung cam kết chất lượng */}
-          <div className="md:col-span-6 space-y-4">
-            {content.section3Title && (
-              <h3 className="text-lg sm:text-xl font-black text-[#1E1B18]">
-                {content.section3Title}
-              </h3>
-            )}
-            <p className="text-sm sm:text-base leading-relaxed text-[#2B2520] font-medium text-justify">
-              {content.section3Text ||
-                'Với nguồn nguyên liệu tươi mới từ 100% trứng gà sạch đạt chuẩn, rau củ tươi trong ngày và các loại thịt, phô mai cao cấp, cùng với đó là công thức đặc biệt tạo nên nước sốt độc quyền giúp hương vị thêm phần trọn vẹn. Eggu sẽ mang đến cho bạn trải nghiệm ẩm thực không chỉ mãn nhãn mà còn tràn đầy hương vị!'}
-            </p>
-          </div>
+        <div className="w-full">
+          {/* Tiêu đề mục 3: Tầm nhìn */}
+          <h3 className="text-left mt-10 md:mt-12 mb-4 text-lg md:text-xl font-semibold text-gray-900">
+            <span className="text-[#e0352b] font-bold uppercase mr-2">
+              {isVi ? '3. TẦM NHÌN' : '3. VISION'}
+            </span>
+            <span>
+              {isVi
+                ? '- Trở thành thương hiệu bánh mỳ trứng số 1 trong lòng thế hệ trẻ Việt Nam'
+                : '- Becoming the #1 egg sandwich brand in the hearts of Vietnam’s young generation'}
+            </span>
+          </h3>
 
-          {/* Cột Phải: Ảnh khay bánh sandwich EGGU */}
-          <div className="md:col-span-6">
-            <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden shadow-md bg-[#FAF8F5]">
-              <Image
-                src={content.section3Image || '/images/about-sandwiches.png'}
-                alt="Eggu Fresh Sandwiches"
-                fill
-                sizes="(max-width: 1024px) 100vw, 650px"
-                className="object-cover object-center"
-              />
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 lg:gap-14 items-center pt-2">
+            {/* Cột Trái: Khung ảnh tỷ lệ dọc thanh thoát */}
+            <div className="md:col-span-6 lg:md:col-span-5 flex justify-center md:justify-start">
+              <div className="relative w-full max-w-sm md:max-w-md aspect-[4/5] sm:aspect-[3/4] md:h-[400px] lg:h-[440px] rounded-2xl md:rounded-3xl overflow-hidden shadow-lg bg-[#FAF8F5] border border-black/5">
+                <Image
+                  src={
+                    content.section3Image && content.section3Image !== '/images/about-sandwiches.png'
+                      ? content.section3Image
+                      : '/images/about-vision.jpg'
+                  }
+                  alt="Eggu Vision"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 500px"
+                  className="object-cover object-center"
+                />
+              </div>
             </div>
+
+            {/* Cột Phải: Khối chữ căn chỉnh chiều cao ngang hàng với ảnh */}
+            <div className="md:col-span-6 lg:md:col-span-7 flex flex-col justify-center space-y-4 sm:space-y-5 text-left">
+              {content.section3Title && (
+                <h4 className="text-lg sm:text-xl font-bold text-[#1E1B18]">
+                  {content.section3Title}
+                </h4>
+              )}
+
+              {/* Đoạn văn bản chính */}
+              <p className="text-base sm:text-lg leading-relaxed md:leading-loose text-[#2B2520] font-normal text-justify">
+                {content.section3Text && !content.section3Text.includes('Với nguồn nguyên liệu')
+                  ? content.section3Text
+                  : (isVi
+                      ? 'Với tâm huyết và lòng hiếu khách, trong tương lai chúng tôi tham vọng trở thành thương hiệu bánh mỳ sandwich trứng số 1 trong lòng thế hệ trẻ Việt Nam và đồng thời dẫn đầu về trải nghiệm cá nhân hóa, tiện lợi và giúp mỗi khách hàng thể hiện gu trong ăn uống.'
+                      : 'With dedication and hospitality, in the future we aspire to become the #1 egg sandwich brand in the hearts of Vietnam’s young generation, while leading the way in personalized, convenient experiences that allow every customer to express their personal taste.')}
+              </p>
+
+              {/* Dòng kết thúc */}
+              <div className="pt-2 border-l-4 border-[#e0352b] pl-4">
+                <p className="text-base sm:text-lg font-bold italic text-gray-900 leading-relaxed">
+                  {content.section3ClosingText ||
+                    (isVi
+                      ? 'Eggu - nơi mỗi người đều có thể tìm thấy ổ bánh mỳ “đúng với mình”.'
+                      : 'Eggu - where everyone can find a sandwich that is truly “right for them”.')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ========================================================
+            KHỐI 4: TIÊU ĐỀ MỤC 4 & 3 THẺ GIÁ TRỊ HÌNH VÒM (ARCH CARDS)
+            ======================================================== */}
+        <div className="w-full">
+          {/* Tiêu đề mục 4: Giá trị cốt lõi */}
+          <h3 className="text-left mt-10 md:mt-12 mb-4 text-lg md:text-xl font-semibold text-gray-900">
+            <span className="text-[#e0352b] font-bold uppercase">
+              {isVi ? '4. GIÁ TRỊ CỐT LÕI' : '4. CORE VALUES'}
+            </span>
+          </h3>
+
+          {/* Bố cục 3 thẻ giá trị (3 Columns Grid) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+            {section4Items.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-[#F9E2AF] rounded-t-full rounded-b-2xl md:rounded-b-3xl px-6 sm:px-8 pt-16 sm:pt-20 pb-8 sm:pb-10 flex flex-col justify-between items-center text-center shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 border border-[#edd193] min-h-[340px] md:min-h-[380px]"
+              >
+                {/* Đoạn mô tả */}
+                <p className="text-gray-800 text-sm sm:text-base leading-relaxed font-normal text-center my-auto">
+                  {item.description}
+                </p>
+
+                {/* Tiêu đề lớn phía dưới */}
+                <h4 className="font-bold text-xl md:text-2xl text-gray-900 mt-8 tracking-tight">
+                  {item.title}
+                </h4>
+              </div>
+            ))}
           </div>
         </div>
 
