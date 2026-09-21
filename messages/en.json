@@ -122,16 +122,38 @@
     "checkout": "Proceed to Checkout",
     "continue": "Continue Shopping",
     "remove": "Remove",
-    "note": "Instructions"
+    "note": "Instructions",
+    "fulfillmentModal": {
+      "title": "Choose Receiving Method",
+      "subtitle": "Please choose how you would like to receive your EGGU order:",
+      "deliveryTitle": "Doorstep Delivery (Delivery)",
+      "deliveryDesc": "Deliver directly to your specified address",
+      "deliveryBadge": "Delivery",
+      "pickupTitle": "Store Pickup (Takeaway / Pickup)",
+      "pickupDesc": "Pick up directly at our store (54 Nguyen Huu Huan, Hoan Kiem)",
+      "pickupBadge": "Pickup",
+      "close": "Close"
+    }
   },
   "checkout": {
-    "title": "Checkout Details",
+    "title": "Delivery Information",
+    "titlePickup": "Store Pickup Information",
     "subtitle": "Provide your delivery information below. Payment is Cash on Delivery (COD) only.",
-    "fullName": "Full Name",
-    "phone": "Phone Number",
+    "subtitlePickup": "Provide your contact information below. Payment directly upon pickup at store (COD).",
+    "fulfillmentMethod": "Fulfillment Method",
+    "deliveryOption": "Doorstep Delivery (Delivery)",
+    "pickupOption": "Store Pickup (Takeaway / Pickup)",
+    "pickupAddressTitle": "Store Pickup Location",
+    "pickupAddress": "Nhận tại: EGGU - 54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội",
+    "pickupAddressNote": "We will have your freshly made sandwich ready for you!",
+    "fullName": "Recipient's Full Name",
+    "phone": "Contact Phone Number",
     "email": "Email Address (Optional)",
-    "address": "Delivery Address",
-    "note": "Special Note / Instructions for Driver",
+    "address": "Detailed Delivery Address",
+    "note": "Delivery Note / Instructions for Driver",
+    "pickupNote": "NOTE FOR STORE (OPTIONAL)",
+    "deliveryNotePlaceholder": "e.g., Deliver to 3rd floor, call 5 mins ahead...",
+    "pickupNotePlaceholder": "e.g., Extra chili, sauce on the side...",
     "placeOrder": "Place Order (COD)",
     "processing": "Processing Order...",
     "vouchersTitle": "Available Coupons",
@@ -153,8 +175,9 @@
       "cartEmpty": "Cannot submit an empty cart"
     },
     "confirmPhoneModal": {
-      "title": "Confirm Delivery Phone Number",
+      "title": "Confirm Contact Phone Number",
       "message": "Please double-check your phone number so we can contact you:",
+      "methodLabel": "Fulfillment",
       "change": "Edit / Change",
       "confirm": "Confirm & Place Order"
     }

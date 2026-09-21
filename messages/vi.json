@@ -122,16 +122,38 @@
     "checkout": "Tiến Hành Thanh Toán",
     "continue": "Tiếp Tục Mua Sắm",
     "remove": "Xóa",
-    "note": "Ghi chú"
+    "note": "Ghi chú",
+    "fulfillmentModal": {
+      "title": "Chọn hình thức nhận hàng",
+      "subtitle": "Vui lòng chọn phương thức nhận món bạn mong muốn:",
+      "deliveryTitle": "Giao hàng tận nơi (Delivery)",
+      "deliveryDesc": "Giao món tận nơi đến địa chỉ của bạn",
+      "deliveryBadge": "Giao tận nơi",
+      "pickupTitle": "Lấy tại quán (Takeaway / Pickup)",
+      "pickupDesc": "Lấy trực tiếp tại cửa hàng (54 Nguyễn Hữu Huân, Hoàn Kiếm)",
+      "pickupBadge": "Lấy tại quán",
+      "close": "Đóng"
+    }
   },
   "checkout": {
     "title": "Thông Tin Giao Hàng",
+    "titlePickup": "Thông Tin Nhận Món Tại Quán",
     "subtitle": "Vui lòng nhập đầy đủ địa chỉ giao nhận. Phương thức duy nhất là Thanh toán khi nhận hàng (COD).",
+    "subtitlePickup": "Vui lòng nhập thông tin người nhận. Thanh toán trực tiếp khi nhận món tại tiệm (COD).",
+    "fulfillmentMethod": "Hình thức nhận hàng",
+    "deliveryOption": "Giao hàng tận nơi (Delivery)",
+    "pickupOption": "Lấy tại quán (Takeaway / Pickup)",
+    "pickupAddressTitle": "Địa điểm nhận món tại tiệm",
+    "pickupAddress": "Nhận tại: EGGU - 54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội",
+    "pickupAddressNote": "Tiệm sẽ chuẩn bị sẵn sàng món nóng hổi chờ bạn ghé nhận nhé!",
     "fullName": "Họ và Tên người nhận",
     "phone": "Số Điện Thoại liên hệ",
     "email": "Địa Chỉ Email (Không bắt buộc)",
     "address": "Địa Chỉ Giao Hàng chi tiết",
     "note": "Ghi chú giao hàng / Lời nhắn cho tài xế",
+    "pickupNote": "GHI CHÚ CHO TIỆM (TÙY CHỌN)",
+    "deliveryNotePlaceholder": "Ví dụ: Giao lên tầng 3, gọi trước khi đến 5 phút...",
+    "pickupNotePlaceholder": "Ví dụ: Cần nhiều ớt, sốt ngọt để riêng...",
     "placeOrder": "Đặt Hàng Ngay (COD)",
     "processing": "Đang xử lý đơn hàng...",
     "vouchersTitle": "Mã Giảm Giá Khả Dụng",
@@ -155,6 +177,7 @@
     "confirmPhoneModal": {
       "title": "Xác nhận số điện thoại nhận hàng",
       "message": "Vui lòng kiểm tra lại số điện thoại để tiệm có thể liên hệ với bạn:",
+      "methodLabel": "Hình thức nhận",
       "change": "Kiểm tra lại",
       "confirm": "Xác nhận đặt hàng"
     }

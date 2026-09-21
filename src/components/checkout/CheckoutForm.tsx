@@ -6,10 +6,54 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/stores/cartStore';
 import { createOrder, getActivePromotions } from '@/features/orders/actions';
-import { ShoppingBag, Loader2, Tag, X, Check, TicketPercent, PhoneCall } from 'lucide-react';
+import { ShoppingBag, Loader2, Tag, X, Check, TicketPercent, PhoneCall, Bike, Store, Zap, Clock } from 'lucide-react';
 import { Promotion } from '@/types/promotion';
+
+const STORE_PICKUP_ADDRESS = 'Nhận tại: EGGU - 54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội';
+
+const generatePickupTimeSlots = (): string[] => {
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  // Start at least 15 mins from now, rounded up to next 15-min mark
+  let startMinutesTotal = currentHour * 60 + currentMinute + 15;
+  const remainder = startMinutesTotal % 15;
+  if (remainder !== 0) {
+    startMinutesTotal += 15 - remainder;
+  }
+
+  // Store opening hours: 07:00 (420m) to 21:00 (1260m)
+  const openTimeMinutes = 7 * 60;
+  const closeTimeMinutes = 21 * 60;
+
+  if (startMinutesTotal < openTimeMinutes) {
+    startMinutesTotal = openTimeMinutes + 15;
+  }
+
+  const slots: string[] = [];
+  for (let m = startMinutesTotal; m <= closeTimeMinutes; m += 15) {
+    const hh = String(Math.floor(m / 60)).padStart(2, '0');
+    const mm = String(m % 60).padStart(2, '0');
+    slots.push(`${hh}:${mm}`);
+  }
+
+  // Fallback if store is near/past closing time today
+  if (slots.length < 3) {
+    const defaultSlots: string[] = [];
+    for (let m = 7 * 60 + 30; m <= 21 * 60; m += 15) {
+      const hh = String(Math.floor(m / 60)).padStart(2, '0');
+      const mm = String(m % 60).padStart(2, '0');
+      defaultSlots.push(`${hh}:${mm}`);
+    }
+    return defaultSlots;
+  }
+
+  return slots;
+};
 
 interface CheckoutFormValues {
   fullName: string;
@@ -25,7 +69,17 @@ export default function CheckoutForm() {
   const locale = useLocale();
   const isVi = locale === 'vi';
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { items, clearCart } = useCartStore();
+
+  const initialDeliveryType = searchParams.get('type') === 'pickup' ? 'pickup' : 'delivery';
+  const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>(initialDeliveryType);
+
+  // Pickup timing state
+  const timeSlots = useMemo(() => generatePickupTimeSlots(), []);
+  const [pickupTimingMode, setPickupTimingMode] = useState<'NOW' | 'SCHEDULED'>('NOW');
+  const [scheduledTime, setScheduledTime] = useState<string>(timeSlots[0] || '11:30');
+
   const [isMounted, setIsMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -42,14 +96,20 @@ export default function CheckoutForm() {
       fullName: z.string().min(2, { message: t('errors.nameRequired') }),
       phone: z.string().min(10, { message: t('errors.phoneRequired') }),
       email: z.string().email({ message: t('errors.emailInvalid') }).optional().or(z.literal('')),
-      address: z.string().min(5, { message: t('errors.addressRequired') }),
+      address:
+        deliveryType === 'pickup'
+          ? z.string()
+          : z.string().min(5, { message: t('errors.addressRequired') }),
       note: z.string().optional(),
     });
-  }, [t]);
+  }, [t, deliveryType]);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    getValues,
+    clearErrors,
     formState: { errors },
   } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
@@ -57,10 +117,43 @@ export default function CheckoutForm() {
       fullName: '',
       phone: '',
       email: '',
-      address: '',
+      address: initialDeliveryType === 'pickup' ? STORE_PICKUP_ADDRESS : '',
       note: '',
     },
   });
+
+  // Keep deliveryType in sync if query param changes
+  useEffect(() => {
+    const typeParam = searchParams.get('type');
+    if (typeParam === 'pickup') {
+      setDeliveryType('pickup');
+      setValue('address', STORE_PICKUP_ADDRESS);
+      clearErrors('address');
+    } else if (typeParam === 'delivery') {
+      setDeliveryType('delivery');
+      if (getValues('address') === STORE_PICKUP_ADDRESS) {
+        setValue('address', '');
+      }
+    }
+  }, [searchParams, setValue, getValues, clearErrors]);
+
+  const handleSelectType = (type: 'delivery' | 'pickup') => {
+    setDeliveryType(type);
+    if (typeof window !== 'undefined') {
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set('type', type);
+      window.history.replaceState(null, '', newUrl.toString());
+    }
+
+    if (type === 'pickup') {
+      setValue('address', STORE_PICKUP_ADDRESS);
+      clearErrors('address');
+    } else {
+      if (getValues('address') === STORE_PICKUP_ADDRESS) {
+        setValue('address', '');
+      }
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -151,7 +244,22 @@ export default function CheckoutForm() {
   }
 
   const onInitiateSubmit = (data: CheckoutFormValues) => {
-    setPendingFormData(data);
+    let finalNote = data.note?.trim() || '';
+    if (deliveryType === 'pickup') {
+      const timingLabel =
+        pickupTimingMode === 'NOW'
+          ? 'Lấy ngay (10-15 phút)'
+          : scheduledTime || '11:30';
+      const timingTag = `[Thời gian nhận: ${timingLabel}]`;
+      finalNote = finalNote ? `${timingTag} ${finalNote}` : timingTag;
+    }
+
+    const finalData = {
+      ...data,
+      address: deliveryType === 'pickup' ? STORE_PICKUP_ADDRESS : data.address,
+      note: finalNote,
+    };
+    setPendingFormData(finalData);
     setIsConfirmModalOpen(true);
   };
 
@@ -197,10 +305,48 @@ export default function CheckoutForm() {
         onSubmit={handleSubmit(onInitiateSubmit)}
         className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6"
       >
-        <h2 className="text-2xl font-black text-[#111111]">{t('title')}</h2>
-        <p className="text-sm text-[#6B7280] font-medium leading-relaxed">
-          {t('subtitle')}
-        </p>
+        <div className="space-y-1">
+          <h2 className="text-2xl font-black text-[#111111]">
+            {deliveryType === 'pickup' ? t('titlePickup') : t('title')}
+          </h2>
+          <p className="text-sm text-[#6B7280] font-medium leading-relaxed">
+            {deliveryType === 'pickup' ? t('subtitlePickup') : t('subtitle')}
+          </p>
+        </div>
+
+        {/* Fulfillment Method Switcher Tabs */}
+        <div className="space-y-2">
+          <label className="text-xs font-black uppercase tracking-wider text-[#111111] block">
+            {t('fulfillmentMethod')}
+          </label>
+          <div className="grid grid-cols-2 gap-2.5 p-1.5 bg-[#F8F9FA] rounded-2xl border border-[#E5E7EB]">
+            <button
+              type="button"
+              onClick={() => handleSelectType('delivery')}
+              className={`py-3 px-3 sm:px-4 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all duration-150 cursor-pointer ${
+                deliveryType === 'delivery'
+                  ? 'bg-white text-[#E53935] shadow-xs border border-[#E53935]/20 ring-1 ring-[#E53935]/15'
+                  : 'text-[#6B7280] hover:text-[#111111]'
+              }`}
+            >
+              <Bike className={`w-4 h-4 shrink-0 ${deliveryType === 'delivery' ? 'text-[#E53935]' : 'text-neutral-400'}`} />
+              <span className="truncate">{t('deliveryOption')}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleSelectType('pickup')}
+              className={`py-3 px-3 sm:px-4 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all duration-150 cursor-pointer ${
+                deliveryType === 'pickup'
+                  ? 'bg-white text-[#B45309] shadow-xs border border-[#EAAA08]/40 ring-1 ring-[#EAAA08]/20'
+                  : 'text-[#6B7280] hover:text-[#111111]'
+              }`}
+            >
+              <Store className={`w-4 h-4 shrink-0 ${deliveryType === 'pickup' ? 'text-[#B45309]' : 'text-neutral-400'}`} />
+              <span className="truncate">{t('pickupOption')}</span>
+            </button>
+          </div>
+        </div>
 
         {submitError && (
           <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-sm font-semibold">
@@ -266,35 +412,168 @@ export default function CheckoutForm() {
             )}
           </div>
 
-          {/* Delivery Address */}
-          <div className="space-y-1">
-            <label htmlFor="address" className="text-xs font-black uppercase tracking-wider text-[#111111]">
-              {t('address')} *
-            </label>
-            <input
-              id="address"
-              type="text"
-              disabled={isSubmitting}
-              {...register('address')}
-              className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
-                errors.address ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
-              }`}
-            />
-            {errors.address && (
-              <p className="text-red-500 text-xs font-semibold">{errors.address.message}</p>
-            )}
-          </div>
+          {/* Delivery Address (if Delivery) or Fixed Store Address Card (if Pickup) */}
+          {deliveryType === 'delivery' ? (
+            <div className="space-y-1 animate-in fade-in duration-150">
+              <label htmlFor="address" className="text-xs font-black uppercase tracking-wider text-[#111111]">
+                {t('address')} *
+              </label>
+              <input
+                id="address"
+                type="text"
+                disabled={isSubmitting}
+                {...register('address')}
+                placeholder={isVi ? 'Số nhà, tên đường, phường/xã, quận/huyện...' : 'Street address, ward, district...'}
+                className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+                  errors.address ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
+                }`}
+              />
+              {errors.address && (
+                <p className="text-red-500 text-xs font-semibold">{errors.address.message}</p>
+              )}
+            </div>
+          ) : (
+            <div className="p-4 sm:p-5 bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/30 to-[#FFFBEB] border-2 border-[#EAAA08]/50 rounded-2xl space-y-2 shadow-xs animate-in fade-in duration-200">
+              <div className="flex items-center space-x-2 text-[#B45309]">
+                <div className="w-8 h-8 rounded-xl bg-[#EAAA08]/25 flex items-center justify-center shrink-0">
+                  <Store className="w-4 h-4 text-[#B45309]" />
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider">
+                  {t('pickupAddressTitle')}
+                </span>
+              </div>
+              <p className="text-sm sm:text-base font-black text-[#111111] leading-snug">
+                {STORE_PICKUP_ADDRESS}
+              </p>
+              <p className="text-xs font-semibold text-[#B45309]/90">
+                {t('pickupAddressNote')}
+              </p>
+            </div>
+          )}
 
-          {/* Special Delivery Note */}
+          {/* Pickup Timing Selection (Only for Pickup) */}
+          {deliveryType === 'pickup' && (
+            <div className="space-y-2 pt-1 animate-in fade-in duration-200">
+              <label className="text-xs font-black uppercase tracking-wider text-[#111111] block">
+                THỜI GIAN NHẬN MÓN *
+              </label>
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                {/* Option 1: Lấy ngay */}
+                <button
+                  type="button"
+                  onClick={() => setPickupTimingMode('NOW')}
+                  className={`p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all duration-150 cursor-pointer ${
+                    pickupTimingMode === 'NOW'
+                      ? 'border-[#EAAA08] bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/40 to-[#FFFBEB] shadow-xs ring-1 ring-[#EAAA08]/40'
+                      : 'border-[#E5E7EB] bg-[#F8F9FA] hover:border-neutral-300'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2">
+                    <div
+                      className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                        pickupTimingMode === 'NOW'
+                          ? 'bg-[#EAAA08] text-[#1E1B18]'
+                          : 'bg-neutral-200 text-neutral-600'
+                      }`}
+                    >
+                      <Zap className="w-4 h-4 fill-current" />
+                    </div>
+                    <span
+                      className={`text-sm font-black ${
+                        pickupTimingMode === 'NOW' ? 'text-[#1E1B18]' : 'text-neutral-700'
+                      }`}
+                    >
+                      Lấy ngay
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-neutral-500 font-medium mt-1.5 leading-normal">
+                    Quán chuẩn bị trong 10 - 15 phút
+                  </p>
+                </button>
+
+                {/* Option 2: Đặt giờ dự kiến */}
+                <button
+                  type="button"
+                  onClick={() => setPickupTimingMode('SCHEDULED')}
+                  className={`p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all duration-150 cursor-pointer ${
+                    pickupTimingMode === 'SCHEDULED'
+                      ? 'border-[#EAAA08] bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/40 to-[#FFFBEB] shadow-xs ring-1 ring-[#EAAA08]/40'
+                      : 'border-[#E5E7EB] bg-[#F8F9FA] hover:border-neutral-300'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2">
+                    <div
+                      className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                        pickupTimingMode === 'SCHEDULED'
+                          ? 'bg-[#EAAA08] text-[#1E1B18]'
+                          : 'bg-neutral-200 text-neutral-600'
+                      }`}
+                    >
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <span
+                      className={`text-sm font-black ${
+                        pickupTimingMode === 'SCHEDULED' ? 'text-[#1E1B18]' : 'text-neutral-700'
+                      }`}
+                    >
+                      Đặt giờ dự kiến
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-neutral-500 font-medium mt-1.5 leading-normal">
+                    Chọn giờ ghé lấy bánh
+                  </p>
+                </button>
+              </div>
+
+              {/* Flexible Time Picker dropdown if SCHEDULED */}
+              {pickupTimingMode === 'SCHEDULED' && (
+                <div className="p-3.5 bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/20 to-[#FFFBEB] border border-[#EAAA08]/50 rounded-2xl space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="scheduledPickupTime" className="text-xs font-black text-[#1E1B18]">
+                      Khung giờ bạn dự kiến ghé lấy *
+                    </label>
+                    <span className="text-[10px] font-bold text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded">
+                      Mỗi 15 phút
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <select
+                      id="scheduledPickupTime"
+                      value={scheduledTime}
+                      onChange={(e) => setScheduledTime(e.target.value)}
+                      className="w-full p-3 pr-10 border border-[#EAAA08]/60 rounded-xl text-sm font-black text-neutral-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#EAAA08]/30 focus:border-[#EAAA08] cursor-pointer shadow-xs"
+                    >
+                      {timeSlots.map((time) => (
+                        <option key={time} value={time}>
+                          {time} (Hôm nay)
+                        </option>
+                      ))}
+                    </select>
+                    <Clock className="w-4 h-4 text-[#B45309] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                  <p className="text-[11px] text-neutral-500 font-medium">
+                    Tiệm mở cửa từ 07:00 đến 21:00. Vui lòng ghé đúng giờ để bánh luôn nóng giòn nhé!
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Special Delivery Note / Pickup Note */}
           <div className="space-y-1">
             <label htmlFor="note" className="text-xs font-black uppercase tracking-wider text-[#111111]">
-              {t('note')}
+              {deliveryType === 'pickup' ? 'GHI CHÚ CHO TIỆM (TÙY CHỌN)' : t('note')}
             </label>
             <textarea
               id="note"
               disabled={isSubmitting}
               {...register('note')}
               rows={3}
+              placeholder={
+                deliveryType === 'pickup'
+                  ? (isVi ? 'Ví dụ: Cần nhiều ớt, sốt ngọt để riêng...' : 'e.g., Extra chili, sauce on the side...')
+                  : t('deliveryNotePlaceholder')
+              }
               className="w-full p-4 border border-[#E5E7EB] bg-[#F8F9FA] rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 resize-none text-[#111111] font-medium"
             />
           </div>
@@ -536,15 +815,39 @@ export default function CheckoutForm() {
 
             {/* Prominent Phone Number Display */}
             <div className="bg-[#FFF5F5] border-2 border-[#e0352b]/20 rounded-2xl p-4 text-center space-y-1">
+              <div className="inline-flex items-center space-x-1.5 text-xs font-black px-3 py-1 rounded-full bg-[#e0352b]/10 text-[#e0352b] mb-1">
+                {deliveryType === 'pickup' ? (
+                  <>
+                    <Store className="w-3.5 h-3.5" />
+                    <span>{t('pickupOption')}</span>
+                    <span className="ml-1 text-[10px] font-bold bg-[#e0352b]/20 px-1.5 py-0.5 rounded">
+                      {pickupTimingMode === 'NOW' ? '⚡ Lấy ngay' : `🕒 ${scheduledTime}`}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Bike className="w-3.5 h-3.5" />
+                    <span>{t('deliveryOption')}</span>
+                  </>
+                )}
+              </div>
               <p className="text-[11px] uppercase font-black text-neutral-400 tracking-wider">
                 {t('phone')}
               </p>
-              <div className="text-xl sm:text-2xl font-black text-[#e0352b] py-2 tracking-wide select-all">
+              <div className="text-xl sm:text-2xl font-black text-[#e0352b] py-1 tracking-wide select-all">
                 {pendingFormData.phone}
               </div>
-              <p className="text-xs font-semibold text-neutral-600 truncate">
-                {pendingFormData.fullName} • {pendingFormData.address}
+              <p className="text-xs font-bold text-neutral-700 truncate">
+                {pendingFormData.fullName}
               </p>
+              <p className="text-[11px] font-semibold text-neutral-500 leading-snug">
+                {pendingFormData.address}
+              </p>
+              {deliveryType === 'pickup' && (
+                <p className="text-[11px] font-bold text-amber-800 pt-0.5">
+                  Thời gian nhận: {pickupTimingMode === 'NOW' ? 'Lấy ngay (10 - 15 phút)' : scheduledTime}
+                </p>
+              )}
             </div>
 
             {/* Submit Error inside modal if any */}

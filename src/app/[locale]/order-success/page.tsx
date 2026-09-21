@@ -77,8 +77,14 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
     ? `${t('discount')} (${promoCode})`
     : t('discount');
 
+  const pickupTimeMatch = orderDetails.note?.match(/\[(?:Thời gian nhận|Pickup time):\s*([^\]]+)\]/i);
+  const pickupTime = pickupTimeMatch ? pickupTimeMatch[1] : null;
+
   const customerNote = orderDetails.note
-    ? orderDetails.note.replace(/\[(?:Mã giảm giá|Promo Code):[^\]]+\]\s*/gi, '').trim()
+    ? orderDetails.note
+        .replace(/\[(?:Mã giảm giá|Promo Code):[^\]]+\]\s*/gi, '')
+        .replace(/\[(?:Thời gian nhận|Pickup time):[^\]]+\]\s*/gi, '')
+        .trim()
     : null;
 
   return (
@@ -121,7 +127,9 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
               {/* Delivery address info */}
               <div className="border-t border-[#E5E0D8] pt-4 space-y-1">
                 <span className="text-xs uppercase text-[#706860] font-black tracking-wider block">
-                  Deliver to
+                  {orderDetails.address?.startsWith('Nhận tại:')
+                    ? (isVi ? 'Hình thức nhận món' : 'Receiving Method')
+                    : (isVi ? 'Giao hàng đến' : 'Deliver to')}
                 </span>
                 <p className="text-[#1E1B18] text-sm leading-relaxed font-bold">
                   {orderDetails.customer_name} ({orderDetails.phone})
@@ -129,6 +137,12 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
                 <p className="text-[#706860] text-xs font-semibold leading-relaxed">
                   {orderDetails.address}
                 </p>
+                {orderDetails.address?.startsWith('Nhận tại:') && pickupTime && (
+                  <p className="text-xs text-amber-800 font-bold pt-1 flex items-center gap-1">
+                    <span>⏰ Thời gian nhận:</span>
+                    <span className="font-extrabold">{pickupTime}</span>
+                  </p>
+                )}
                 {customerNote && (
                   <p className="text-xs text-amber-700 italic pt-1">
                     Ghi chú: {customerNote}

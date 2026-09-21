@@ -66,6 +66,32 @@ const isOrderArchived = (status: string) =>
 const isOrderActive = (status: string) =>
   !isOrderArchived(status);
 
+export const isPickupOrder = (order: Order): boolean => {
+  if (!order.address) return false;
+  const addr = order.address.toLowerCase();
+  return (
+    addr.includes('nhận tại') ||
+    addr.includes('lấy tại quán') ||
+    addr.includes('54 nguyễn hữu huân')
+  );
+};
+
+export const getOrderPickupTime = (note: string | null): string | null => {
+  if (!note) return null;
+  const match = note.match(/\[(?:Thời gian nhận|Pickup time):\s*([^\]]+)\]/i);
+  return match ? match[1] : null;
+};
+
+export const getCleanOrderNote = (note: string | null): string | null => {
+  if (!note) return null;
+  return (
+    note
+      .replace(/\[(?:Mã giảm giá|Promo Code):[^\]]+\]\s*/gi, '')
+      .replace(/\[(?:Thời gian nhận|Pickup time):[^\]]+\]\s*/gi, '')
+      .trim() || null
+  );
+};
+
 export default function OrdersTab() {
   const supabase = createClient();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -73,6 +99,7 @@ export default function OrdersTab() {
   const [mainTab, setMainTab] = useState<'ACTIVE' | 'ARCHIVED'>('ACTIVE');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [fulfillmentFilter, setFulfillmentFilter] = useState<'ALL' | 'DELIVERY' | 'PICKUP'>('ALL');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
@@ -275,14 +302,28 @@ export default function OrdersTab() {
       }
     }
 
-    // 3. Search query filter
+    // 3. Fulfillment method filter
+    let matchesFulfillment = true;
+    if (fulfillmentFilter === 'PICKUP') {
+      matchesFulfillment = isPickupOrder(order);
+    } else if (fulfillmentFilter === 'DELIVERY') {
+      matchesFulfillment = !isPickupOrder(order);
+    }
+
+    // 4. Search query filter
     const matchesSearch =
       order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.phone.includes(searchTerm);
 
-    return matchesStatus && matchesSearch;
+    return matchesStatus && matchesFulfillment && matchesSearch;
   });
+
+  const tabOrders = orders.filter((o) =>
+    mainTab === 'ACTIVE' ? isOrderActive(o.order_status) : isOrderArchived(o.order_status)
+  );
+  const deliveryOrdersCount = tabOrders.filter((o) => !isPickupOrder(o)).length;
+  const pickupOrdersCount = tabOrders.filter((o) => isPickupOrder(o)).length;
 
   const activeOrdersCount = orders.filter((o) => isOrderActive(o.order_status)).length;
   const archivedOrdersCount = orders.filter((o) => isOrderArchived(o.order_status)).length;
@@ -523,8 +564,8 @@ export default function OrdersTab() {
             >
               <option value="ALL">
                 {mainTab === 'ACTIVE'
-                  ? `Tất cả đang xử lý (${activeOrdersCount})`
-                  : `Tất cả lưu trữ (${archivedOrdersCount})`}
+                  ? `Tất cả trạng thái (${activeOrdersCount})`
+                  : `Tất cả trạng thái (${archivedOrdersCount})`}
               </option>
               {(mainTab === 'ACTIVE' ? ACTIVE_STATUS_OPTIONS : ARCHIVED_STATUS_OPTIONS).map(
                 (opt) => (
@@ -533,6 +574,19 @@ export default function OrdersTab() {
                   </option>
                 )
               )}
+            </select>
+          </div>
+
+          {/* Fulfillment method selector */}
+          <div className="relative">
+            <select
+              value={fulfillmentFilter}
+              onChange={(e) => setFulfillmentFilter(e.target.value as 'ALL' | 'DELIVERY' | 'PICKUP')}
+              className="w-full sm:w-auto px-3 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#EAAA08]/20 focus:border-[#EAAA08] bg-white font-bold text-neutral-700 cursor-pointer"
+            >
+              <option value="ALL">Tất cả hình thức ({tabOrders.length})</option>
+              <option value="DELIVERY">🛵 Giao hàng ({deliveryOrdersCount})</option>
+              <option value="PICKUP">🏪 Lấy tại quán ({pickupOrdersCount})</option>
             </select>
           </div>
         </div>
@@ -577,8 +631,29 @@ export default function OrdersTab() {
                             selectedOrder?.id === order.id ? 'bg-neutral-50' : ''
                           }`}
                         >
-                          <td className="p-4 font-extrabold text-neutral-900">
-                            {order.order_number}
+                          <td className="p-4 space-y-1.5">
+                            <div className="font-extrabold text-neutral-900">
+                              {order.order_number}
+                            </div>
+                            {isPickupOrder(order) ? (
+                              <div className="flex flex-col gap-1 items-start">
+                                <span className="bg-amber-100 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded inline-flex items-center gap-1 border border-amber-200/60">
+                                  <span>🏪</span>
+                                  <span>Lấy tại quán</span>
+                                </span>
+                                {getOrderPickupTime(order.note) && (
+                                  <span className="text-[10px] font-black text-amber-900 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200/60 inline-flex items-center gap-1">
+                                    <span>⏰</span>
+                                    <span>{getOrderPickupTime(order.note)}</span>
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="bg-blue-100 text-blue-800 text-[11px] font-semibold px-2 py-0.5 rounded inline-flex items-center gap-1 border border-blue-200/60">
+                                <span>🛵</span>
+                                <span>Giao hàng</span>
+                              </span>
+                            )}
                           </td>
                           <td className="p-4 text-neutral-600 font-medium whitespace-nowrap">
                             <div className="flex items-center gap-1.5">
@@ -660,15 +735,56 @@ export default function OrdersTab() {
                   <p className="text-neutral-900 font-bold">
                     {selectedOrder.customer_name} ({selectedOrder.phone})
                   </p>
-                  <p className="text-neutral-500 font-medium leading-relaxed">
-                    {selectedOrder.address}
-                  </p>
                   {selectedOrder.email && (
-                    <p className="text-neutral-500">Email: {selectedOrder.email}</p>
+                    <p className="text-neutral-500 text-xs">Email: {selectedOrder.email}</p>
                   )}
-                  {selectedOrder.note && (
-                    <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-amber-800 italic mt-2">
-                      Ghi chú: {selectedOrder.note}
+                </div>
+
+                {/* Fulfillment Method / Hình thức nhận hàng */}
+                <div className="space-y-2 border-t border-neutral-100 pt-4">
+                  <span className="text-[10px] text-neutral-400 uppercase font-black">
+                    Hình thức nhận hàng
+                  </span>
+                  {isPickupOrder(selectedOrder) ? (
+                    <div className="p-3 bg-amber-50/90 border border-amber-200 rounded-xl space-y-2">
+                      <div className="flex items-center gap-1.5 font-bold text-xs text-amber-900">
+                        <span>🏪</span>
+                        <span>Lấy tại quán</span>
+                        <span className="ml-auto text-[10px] font-bold bg-amber-200/70 text-amber-800 px-2 py-0.5 rounded">
+                          Pickup
+                        </span>
+                      </div>
+
+                      {/* Prominent Pickup Time Display */}
+                      <div className="flex items-center justify-between text-xs font-bold bg-white px-3 py-2 rounded-lg border border-amber-200/80 shadow-2xs">
+                        <span className="text-neutral-500 font-semibold text-[11px]">Thời gian nhận:</span>
+                        <span className="text-amber-950 font-black flex items-center gap-1">
+                          <span>⏰</span>
+                          <span>{getOrderPickupTime(selectedOrder.note) || 'Lấy ngay (10-15 phút)'}</span>
+                        </span>
+                      </div>
+
+                      <p className="text-[11px] text-amber-800 font-medium">
+                        Khách nhận tại EGGU - 54 Nguyễn Hữu Huân
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="p-3 bg-blue-50/90 border border-blue-200 rounded-xl space-y-1">
+                      <div className="flex items-center gap-1.5 font-bold text-xs text-blue-900">
+                        <span>🛵</span>
+                        <span>Giao hàng tận nơi</span>
+                        <span className="ml-auto text-[10px] font-bold bg-blue-200/70 text-blue-800 px-2 py-0.5 rounded">
+                          Delivery
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-blue-800 font-medium leading-relaxed">
+                        Địa chỉ: <span className="font-bold">{selectedOrder.address}</span>
+                      </p>
+                    </div>
+                  )}
+                  {getCleanOrderNote(selectedOrder.note) && (
+                    <div className="bg-amber-50/60 border border-amber-200/70 p-2.5 rounded-lg text-amber-800 italic mt-2">
+                      Ghi chú: {getCleanOrderNote(selectedOrder.note)}
                     </div>
                   )}
                 </div>

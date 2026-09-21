@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useCartStore, getOptionsHash } from '@/stores/cartStore';
 import { Plus, Minus, Trash2, ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
+import DeliveryTypeModal from './DeliveryTypeModal';
 
 interface CartManagerProps {
   locale: string;
@@ -15,9 +16,11 @@ export default function CartManager({ locale }: CartManagerProps) {
   const t = useTranslations('cart');
   const tc = useTranslations('common');
   const isVi = locale === 'vi';
+  const router = useRouter();
 
   const { items, updateQuantity, removeItem } = useCartStore();
   const [isMounted, setIsMounted] = useState(false);
+  const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -193,14 +196,25 @@ export default function CartManager({ locale }: CartManagerProps) {
         </div>
 
         {/* Checkout Button */}
-        <Link
-          href="/checkout"
-          className="w-full py-4 bg-[#E53935] text-white text-center font-black uppercase tracking-widest rounded-full shadow-md hover:shadow-lg hover:bg-[#D32F2F] transition duration-150 flex items-center justify-center space-x-2"
+        <button
+          type="button"
+          onClick={() => setIsDeliveryModalOpen(true)}
+          className="w-full py-4 bg-[#E53935] text-white text-center font-black uppercase tracking-widest rounded-full shadow-md hover:shadow-lg hover:bg-[#D32F2F] transition duration-150 flex items-center justify-center space-x-2 cursor-pointer"
         >
           <span>{t('checkout')}</span>
           <ArrowRight className="w-4 h-4" />
-        </Link>
+        </button>
       </div>
+
+      {/* Delivery Type Selection Modal */}
+      <DeliveryTypeModal
+        isOpen={isDeliveryModalOpen}
+        onClose={() => setIsDeliveryModalOpen(false)}
+        onSelect={(type) => {
+          setIsDeliveryModalOpen(false);
+          router.push(`/checkout?type=${type}`);
+        }}
+      />
     </div>
   );
 }
