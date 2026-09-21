@@ -49,8 +49,12 @@ export default function ProductCard({
 
   return (
     <div className="bg-white rounded-2xl overflow-hidden border border-[#E5E7EB] hover:border-[#E53935]/40 group hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full">
-      {/* Product Thumbnail */}
-      <div className="relative aspect-square overflow-hidden bg-neutral-100">
+      {/* Product Thumbnail (Links to product detail page) */}
+      <Link
+        href={`/menu/${product.slug}`}
+        aria-label={isVi ? product.name_vi : product.name_en}
+        className="relative aspect-square overflow-hidden bg-neutral-100 block"
+      >
         <SafeImage
           src={product.image_url || '/images/hero-sandwich.jpg'}
           alt={isVi ? product.name_vi : product.name_en}
@@ -62,7 +66,7 @@ export default function ProductCard({
         />
 
         {/* Badges overlay */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
           {isSoldOut ? (
             <span className="bg-[#1E1B18]/90 backdrop-blur-xs text-white font-black text-[9px] uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-md">
               {soldOutBadge}
@@ -82,7 +86,7 @@ export default function ProductCard({
             </>
           )}
         </div>
-      </div>
+      </Link>
 
       {/* Product Content Details */}
       <div className="p-4 md:p-5 flex-grow flex flex-col justify-between space-y-4">
@@ -113,7 +117,7 @@ export default function ProductCard({
           ) : (
             <Link
               href={`/menu/${product.slug}`}
-              className="w-full sm:w-auto px-4 py-2 bg-[#E53935] text-white text-center text-xs font-black uppercase tracking-wider rounded-full hover:bg-[#D32F2F] transition-all shrink-0 shadow-xs"
+              className="w-full sm:w-auto px-4 py-2 bg-[#E53935] text-white text-center text-xs font-black uppercase tracking-wider rounded-full hover:bg-[#D32F2F] hover:shadow-md transition-all shrink-0 shadow-xs flex items-center justify-center cursor-pointer"
             >
               {actionText}
             </Link>

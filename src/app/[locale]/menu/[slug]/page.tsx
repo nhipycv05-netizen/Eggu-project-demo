@@ -283,36 +283,40 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </div>
 
         {/* Product Page Detail Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           {/* Left Column: Image Card */}
-          <div className="w-full max-w-md mx-auto md:max-w-none relative aspect-square rounded-3xl overflow-hidden border border-[#E5E0D8] bg-neutral-100 shadow-sm">
-            <Image
-              src={product.image_url || '/images/hero-sandwich.jpg'}
-              alt={isVi ? product.name_vi : product.name_en}
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-              className={`object-cover ${isSoldOut ? 'opacity-75 grayscale-[30%]' : ''}`}
-            />
-            {isSoldOut && (
-              <div className="absolute top-4 left-4 z-10">
-                <span className="bg-[#1E1B18]/90 backdrop-blur-xs text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md">
-                  {isVi ? 'HẾT MÓN' : 'SOLD OUT'}
-                </span>
+          <div className="lg:col-span-5 w-full flex justify-center">
+            <div className="w-full max-w-sm sm:max-w-md relative aspect-square h-[340px] sm:h-[380px] md:h-[400px] max-h-[400px] rounded-3xl overflow-hidden border border-[#E5E0D8] bg-white shadow-sm p-6 flex items-center justify-center">
+              <div className="relative w-full h-full">
+                <Image
+                  src={product.image_url || '/images/hero-sandwich.jpg'}
+                  alt={isVi ? product.name_vi : product.name_en}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 400px"
+                  className={`object-contain transition-transform duration-300 hover:scale-105 ${isSoldOut ? 'opacity-75 grayscale-[30%]' : ''}`}
+                />
               </div>
-            )}
+              {isSoldOut && (
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="bg-[#1E1B18]/90 backdrop-blur-xs text-white font-black text-xs uppercase tracking-wider px-3.5 py-1.5 rounded-full shadow-md">
+                    {isVi ? 'HẾT MÓN' : 'SOLD OUT'}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right Column: Customizer Details */}
-          <div className="w-full space-y-6 pt-1">
-            <div className="space-y-4">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-[#1E1B18] leading-tight break-words">
+          <div className="lg:col-span-7 w-full space-y-4 pt-0">
+            <div className="mb-3 space-y-1.5">
+              <h1 className="text-2xl md:text-3xl font-bold text-[#1E1B18] leading-tight break-words">
                 {isVi ? product.name_vi : product.name_en}
               </h1>
-              <p className="text-2xl font-black text-[#5C4B3E]">
+              <p className="text-xl font-bold text-[#e0352b]">
                 {product.price.toLocaleString()} {tc('currency')}
               </p>
-              <p className="text-sm md:text-base text-[#706860] leading-relaxed font-medium">
+              <p className="text-xs sm:text-sm text-[#706860] leading-relaxed font-medium">
                 {isVi ? product.description_vi : product.description_en}
               </p>
             </div>
@@ -331,15 +335,15 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               locale={locale}
             />
 
-            {/* Accordion Content Information */}
-            <div className="border-t border-[#E5E0D8] pt-6 space-y-4 text-xs font-semibold">
+            {/* Accordion Content Information (Compact) */}
+            <div className="border-t border-[#E5E0D8] pt-4 space-y-2.5 text-xs font-medium">
               {/* Ingredients details */}
               {(product.ingredients_vi || product.ingredients_en) && (
-                <div className="space-y-1">
-                  <h4 className="text-neutral-500 uppercase tracking-widest font-black text-[10px]">
+                <div className="space-y-0.5">
+                  <h4 className="text-neutral-500 uppercase tracking-widest font-bold text-[10px]">
                     {tp('ingredients')}
                   </h4>
-                  <p className="text-[#1E1B18] text-sm font-medium">
+                  <p className="text-[#1E1B18] text-xs font-medium leading-relaxed">
                     {isVi ? product.ingredients_vi : product.ingredients_en}
                   </p>
                 </div>
@@ -347,11 +351,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
               {/* Allergen details */}
               {(product.allergy_info_vi || product.allergy_info_en) && (
-                <div className="space-y-1 pt-2">
-                  <h4 className="text-red-500 uppercase tracking-widest font-black text-[10px]">
+                <div className="space-y-0.5 pt-1">
+                  <h4 className="text-red-500 uppercase tracking-widest font-bold text-[10px]">
                     {tp('allergy')}
                   </h4>
-                  <p className="text-[#1E1B18] text-sm font-medium">
+                  <p className="text-[#1E1B18] text-xs font-medium leading-relaxed">
                     {isVi ? product.allergy_info_vi : product.allergy_info_en}
                   </p>
                 </div>
@@ -359,15 +363,15 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
               {/* Nutrition details */}
               {nutrition && (
-                <div className="space-y-2 pt-2">
-                  <h4 className="text-neutral-500 uppercase tracking-widest font-black text-[10px]">
+                <div className="space-y-1.5 pt-1">
+                  <h4 className="text-neutral-500 uppercase tracking-widest font-bold text-[10px]">
                     {tp('nutrition')}
                   </h4>
-                  <div className="grid grid-cols-4 gap-2 bg-[#FAF8F5] p-3 rounded-lg border border-[#E5E0D8]">
+                  <div className="grid grid-cols-4 gap-2 bg-[#FAF8F5] p-2 rounded-xl border border-[#E5E0D8]">
                     {Object.entries(nutrition).map(([key, val]) => (
                       <div key={key} className="text-center">
-                        <span className="text-[10px] text-[#706860] uppercase font-bold">{key}</span>
-                        <p className="text-[#1E1B18] font-bold text-sm">{val as string}</p>
+                        <span className="text-[9px] text-[#706860] uppercase font-bold">{key}</span>
+                        <p className="text-[#1E1B18] font-bold text-xs">{val as string}</p>
                       </div>
                     ))}
                   </div>

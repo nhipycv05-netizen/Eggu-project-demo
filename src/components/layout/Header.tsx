@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
@@ -20,6 +20,7 @@ export default function Header() {
   // Zustand cart items
   const cartItems = useCartStore((state) => state.items);
   const [isMounted, setIsMounted] = useState(false);
+  const [isBumping, setIsBumping] = useState(false);
 
   // Prevent hydration mismatches by counting only after mount
   useEffect(() => {
@@ -32,6 +33,18 @@ export default function Header() {
   const cartCount = isMounted
     ? cartItems.reduce((acc, item) => acc + item.quantity, 0)
     : 0;
+
+  const prevCountRef = useRef(cartCount);
+
+  // Bounce/bump animation whenever cart count increases
+  useEffect(() => {
+    if (isMounted && cartCount > prevCountRef.current) {
+      setIsBumping(true);
+      const timer = setTimeout(() => setIsBumping(false), 500);
+      return () => clearTimeout(timer);
+    }
+    prevCountRef.current = cartCount;
+  }, [cartCount, isMounted]);
 
   // Handle scroll shadow/border styling
   useEffect(() => {
@@ -209,11 +222,15 @@ export default function Header() {
           <Link
             href="/cart"
             aria-label={t('cart')}
-            className="relative p-2 text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA] rounded-full transition-colors duration-200"
+            className={`relative p-2 text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA] rounded-full transition-all duration-300 ${
+              isBumping ? 'scale-115 text-[#E53935]' : ''
+            }`}
           >
-            <ShoppingCart className="w-5 h-5" />
+            <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isBumping ? 'rotate-12' : ''}`} />
             {cartCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-[#E53935] text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-xs animate-in zoom-in-50">
+              <span className={`absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-[#E53935] text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-xs transition-transform duration-300 ${
+                isBumping ? 'scale-125 ring-2 ring-[#E53935]/40' : ''
+              }`}>
                 {cartCount > 99 ? '99+' : cartCount}
               </span>
             )}
@@ -226,11 +243,15 @@ export default function Header() {
           <Link
             href="/cart"
             aria-label={t('cart')}
-            className="relative p-2 text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA] rounded-full transition-colors"
+            className={`relative p-2 text-[#111111] hover:text-[#E53935] hover:bg-[#F8F9FA] rounded-full transition-all duration-300 ${
+              isBumping ? 'scale-115 text-[#E53935]' : ''
+            }`}
           >
-            <ShoppingCart className="w-5 h-5" />
+            <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isBumping ? 'rotate-12' : ''}`} />
             {cartCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-[#E53935] text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-xs">
+              <span className={`absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 bg-[#E53935] text-white font-black text-[9px] rounded-full flex items-center justify-center shadow-xs transition-transform duration-300 ${
+                isBumping ? 'scale-125 ring-2 ring-[#E53935]/40' : ''
+              }`}>
                 {cartCount > 99 ? '99+' : cartCount}
               </span>
             )}
