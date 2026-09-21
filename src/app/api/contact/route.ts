@@ -132,7 +132,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, phone, message } = body;
+    const { name, phone, message } = body;
 
     // Validation
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
@@ -156,14 +156,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const cleanEmail = email && typeof email === 'string' && email.trim().length > 0
-      ? email.trim()
-      : null;
-
     const newMessage: ContactMessage = {
       id: crypto.randomUUID(),
       name: name.trim(),
-      email: cleanEmail,
+      email: null,
       phone: phone.trim(),
       message: message.trim(),
       status: 'UNREAD',

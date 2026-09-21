@@ -9,11 +9,6 @@ import { CheckCircle2, AlertCircle, Loader2, Send } from 'lucide-react';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Họ và tên phải có ít nhất 2 ký tự' }),
-  email: z
-    .string()
-    .email({ message: 'Địa chỉ email không hợp lệ' })
-    .optional()
-    .or(z.literal('')),
   phone: z
     .string()
     .min(8, { message: 'Số điện thoại phải có ít nhất 8 chữ số' })
@@ -38,7 +33,6 @@ export default function ContactForm() {
     resolver: zodResolver(contactSchema),
     defaultValues: {
       name: '',
-      email: '',
       phone: '',
       message: '',
     },
@@ -113,25 +107,6 @@ export default function ContactForm() {
           )}
         </div>
 
-        {/* Email Address */}
-        <div className="space-y-1.5">
-          <label htmlFor="email" className="text-xs font-black uppercase tracking-wider text-[#111111]">
-            {t('email')}
-          </label>
-          <input
-            id="email"
-            type="email"
-            disabled={isSubmitting}
-            placeholder={t('emailPlaceholder')}
-            {...register('email')}
-            className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
-              errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
-            }`}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-xs font-semibold">{errors.email.message}</p>
-          )}
-        </div>
 
         {/* Phone */}
         <div className="space-y-1.5">
