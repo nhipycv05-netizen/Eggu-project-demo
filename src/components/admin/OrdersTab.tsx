@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Eye, Search, Filter, Loader2, Trash2, AlertTriangle, CheckCircle2, X, Clock } from 'lucide-react';
+import { Eye, Search, Filter, Loader2, Trash2, AlertTriangle, CheckCircle2, X, Clock, ShoppingBag, XCircle, Archive } from 'lucide-react';
 
 interface OrderItem {
   id: string;
@@ -42,10 +42,35 @@ const STATUS_OPTIONS = [
   { value: 'CANCELLED', label: 'Đã hủy', color: 'bg-red-100 text-red-800 border-red-200' },
 ];
 
+const ACTIVE_STATUS_OPTIONS = [
+  { value: 'NEW', label: 'Mới' },
+  { value: 'CONFIRMED', label: 'Đã xác nhận' },
+  { value: 'PREPARING', label: 'Đang chuẩn bị' },
+  { value: 'DELIVERING', label: 'Đang giao hàng' },
+];
+
+const ARCHIVED_STATUS_OPTIONS = [
+  { value: 'COMPLETED', label: 'Hoàn thành' },
+  { value: 'CANCELLED', label: 'Đã hủy' },
+];
+
+const isOrderCompleted = (status: string) =>
+  status === 'COMPLETED' || status?.toLowerCase() === 'hoàn thành' || status?.toLowerCase() === 'completed';
+
+const isOrderCancelled = (status: string) =>
+  status === 'CANCELLED' || status === 'Đã hủy' || status?.toLowerCase() === 'đã hủy' || status?.toLowerCase() === 'cancelled';
+
+const isOrderArchived = (status: string) =>
+  isOrderCompleted(status) || isOrderCancelled(status);
+
+const isOrderActive = (status: string) =>
+  !isOrderArchived(status);
+
 export default function OrdersTab() {
   const supabase = createClient();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mainTab, setMainTab] = useState<'ACTIVE' | 'ARCHIVED'>('ACTIVE');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -157,6 +182,12 @@ export default function OrdersTab() {
       if (selectedOrder && selectedOrder.id === orderId) {
         setSelectedOrder((prev) => (prev ? { ...prev, ...updates } : null));
       }
+
+      if (newStatus === 'COMPLETED') {
+        showToast('Đơn hàng đã hoàn thành và được chuyển vào mục Lưu trữ!');
+      } else {
+        showToast('Cập nhật trạng thái đơn hàng thành công');
+      }
     } catch (err) {
       console.error('Lỗi khi cập trạng thái đơn hàng:', err);
       alert('Cập nhật trạng thái thất bại');
@@ -224,38 +255,261 @@ export default function OrdersTab() {
 
   // Filter & Search Logic
   const filteredOrders = orders.filter((order) => {
+    // 1. Tab filter (Đang xử lý vs Lưu trữ)
+    const matchesTab =
+      mainTab === 'ACTIVE'
+        ? isOrderActive(order.order_status)
+        : isOrderArchived(order.order_status);
+
+    if (!matchesTab) return false;
+
+    // 2. Status dropdown filter
+    let matchesStatus = true;
+    if (statusFilter !== 'ALL') {
+      if (statusFilter === 'COMPLETED') {
+        matchesStatus = isOrderCompleted(order.order_status);
+      } else if (statusFilter === 'CANCELLED') {
+        matchesStatus = isOrderCancelled(order.order_status);
+      } else {
+        matchesStatus = order.order_status === statusFilter;
+      }
+    }
+
+    // 3. Search query filter
     const matchesSearch =
       order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.phone.includes(searchTerm);
 
-    const matchesStatus = statusFilter === 'ALL' || order.order_status === statusFilter;
-
-    return matchesSearch && matchesStatus;
+    return matchesStatus && matchesSearch;
   });
+
+  const activeOrdersCount = orders.filter((o) => isOrderActive(o.order_status)).length;
+  const archivedOrdersCount = orders.filter((o) => isOrderArchived(o.order_status)).length;
+
+  // Calculate statistics from all orders
+  const stats = {
+    total: orders.length,
+    new: orders.filter(
+      (o) =>
+        o.order_status === 'NEW' ||
+        o.order_status?.toLowerCase() === 'mới' ||
+        o.order_status?.toLowerCase() === 'new'
+    ).length,
+    completed: orders.filter((o) => isOrderCompleted(o.order_status)).length,
+    today: orders.filter((o) => {
+      if (!o.created_at) return false;
+      try {
+        const d = new Date(o.created_at);
+        if (isNaN(d.getTime())) return false;
+        const now = new Date();
+        return (
+          d.getDate() === now.getDate() &&
+          d.getMonth() === now.getMonth() &&
+          d.getFullYear() === now.getFullYear()
+        );
+      } catch {
+        return false;
+      }
+    }).length,
+    cancelled: orders.filter((o) => isOrderCancelled(o.order_status)).length,
+  };
 
   return (
     <div className="space-y-6 relative">
       {/* Header section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-black text-[#1E1B18]">Quản Lý Đơn Hàng</h2>
           <p className="text-xs text-neutral-500 font-semibold uppercase tracking-wider">
             Theo dõi đơn hàng theo thời gian thực
           </p>
         </div>
+      </div>
 
-        {/* Filters and search inputs */}
-        <div className="flex flex-wrap gap-3">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        {/* Card 1: Tổng đơn hàng */}
+        <div
+          onClick={() => {
+            setMainTab('ACTIVE');
+            setStatusFilter('ALL');
+          }}
+          className={`p-5 rounded-2xl border shadow-xs transition cursor-pointer ${
+            mainTab === 'ACTIVE' && statusFilter === 'ALL'
+              ? 'bg-neutral-50/80 border-neutral-300 ring-2 ring-neutral-800'
+              : 'bg-white border-neutral-200 hover:border-neutral-300'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
+              TỔNG ĐƠN HÀNG
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-600">
+              <ShoppingBag className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-neutral-900 mt-2">{stats.total}</p>
+          <p className="text-[11px] text-neutral-400 font-medium mt-1">Tất cả đơn trong hệ thống</p>
+        </div>
+
+        {/* Card 2: Đơn mới / Chờ xác nhận */}
+        <div
+          onClick={() => {
+            setMainTab('ACTIVE');
+            setStatusFilter('NEW');
+          }}
+          className={`p-5 rounded-2xl border shadow-xs transition cursor-pointer ${
+            mainTab === 'ACTIVE' && statusFilter === 'NEW'
+              ? 'bg-red-50/40 border-red-300 ring-2 ring-red-500'
+              : stats.new > 0
+              ? 'bg-red-50/20 border-red-200 hover:border-red-300'
+              : 'bg-white border-neutral-200 hover:border-neutral-300'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-red-600 uppercase tracking-wider">
+              ĐƠN MỚI
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center text-red-600">
+              <AlertTriangle className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-red-600 mt-2">{stats.new}</p>
+          <p className="text-[11px] text-red-500 font-medium mt-1">Cần xác nhận & xử lý</p>
+        </div>
+
+        {/* Card 3: Hoàn thành (Bấm chuyển sang Lưu trữ) */}
+        <div
+          onClick={() => {
+            setMainTab('ARCHIVED');
+            setStatusFilter('COMPLETED');
+          }}
+          className={`p-5 rounded-2xl border shadow-xs transition cursor-pointer ${
+            mainTab === 'ARCHIVED' && (statusFilter === 'COMPLETED' || statusFilter === 'ALL')
+              ? 'bg-green-50/40 border-green-300 ring-2 ring-green-600'
+              : 'bg-white border-neutral-200 hover:border-neutral-300'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
+              HOÀN THÀNH
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-neutral-900 mt-2">{stats.completed}</p>
+          <p className="text-[11px] text-neutral-400 font-medium mt-1">Đơn đã giao thành công (Bấm để xem)</p>
+        </div>
+
+        {/* Card 4: Hôm nay */}
+        <div className="bg-white p-5 rounded-2xl border border-neutral-200 shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
+              HÔM NAY
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center text-[#EAAA08]">
+              <Clock className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-neutral-900 mt-2">{stats.today}</p>
+          <p className="text-[11px] text-neutral-400 font-medium mt-1">Đơn phát sinh trong ngày</p>
+        </div>
+
+        {/* Card 5: Đã hủy */}
+        <div
+          onClick={() => {
+            setMainTab('ARCHIVED');
+            setStatusFilter('CANCELLED');
+          }}
+          className={`p-5 rounded-2xl border shadow-xs transition cursor-pointer col-span-2 sm:col-span-1 ${
+            mainTab === 'ARCHIVED' && statusFilter === 'CANCELLED'
+              ? 'bg-neutral-100 border-neutral-300 ring-2 ring-neutral-600'
+              : 'bg-white border-neutral-200 hover:border-neutral-300'
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-neutral-400 uppercase tracking-wider">
+              ĐÃ HỦY
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-neutral-100 flex items-center justify-center text-neutral-500">
+              <XCircle className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-neutral-900 mt-2">{stats.cancelled}</p>
+          <p className="text-[11px] text-neutral-400 font-medium mt-1">Đơn bị hủy bỏ</p>
+        </div>
+      </div>
+
+      {/* Navigation Tabs & Search Controls */}
+      <div className="bg-white p-4 rounded-2xl border border-neutral-200 shadow-xs flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+        {/* Tab Switcher: Đang xử lý vs Lưu trữ */}
+        <div className="flex items-center gap-1.5 p-1 bg-neutral-100 rounded-xl border border-neutral-200 self-start">
+          <button
+            type="button"
+            onClick={() => {
+              setMainTab('ACTIVE');
+              setStatusFilter('ALL');
+            }}
+            className={`px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+              mainTab === 'ACTIVE'
+                ? 'bg-white text-neutral-900 shadow-xs'
+                : 'text-neutral-500 hover:text-neutral-800'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5 text-[#EAAA08]" />
+            <span>Đang xử lý</span>
+            <span
+              className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
+                mainTab === 'ACTIVE'
+                  ? stats.new > 0
+                    ? 'bg-red-500 text-white'
+                    : 'bg-neutral-900 text-white'
+                  : 'bg-neutral-200 text-neutral-600'
+              }`}
+            >
+              {activeOrdersCount}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setMainTab('ARCHIVED');
+              setStatusFilter('ALL');
+            }}
+            className={`px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
+              mainTab === 'ARCHIVED'
+                ? 'bg-white text-neutral-900 shadow-xs'
+                : 'text-neutral-500 hover:text-neutral-800'
+            }`}
+          >
+            <Archive className="w-3.5 h-3.5 text-neutral-500" />
+            <span>Lưu trữ</span>
+            <span
+              className={`px-1.5 py-0.5 rounded-full text-[10px] font-black ${
+                mainTab === 'ARCHIVED'
+                  ? 'bg-neutral-900 text-white'
+                  : 'bg-neutral-200 text-neutral-600'
+              }`}
+            >
+              {archivedOrdersCount}
+            </span>
+          </button>
+        </div>
+
+        {/* Search & Filter Controls */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           {/* Search bar */}
-          <div className="relative">
+          <div className="relative w-full sm:w-72">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <input
               type="text"
               placeholder="Tìm mã đơn, tên khách, SĐT..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-[#EAAA08] bg-white font-medium text-neutral-800 min-w-[240px]"
+              className="w-full pl-10 pr-4 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#EAAA08]/20 focus:border-[#EAAA08] bg-white font-medium text-neutral-800"
             />
           </div>
 
@@ -265,14 +519,20 @@ export default function OrdersTab() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-[#EAAA08] bg-white font-bold text-neutral-700 appearance-none"
+              className="w-full sm:w-auto pl-10 pr-8 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#EAAA08]/20 focus:border-[#EAAA08] bg-white font-bold text-neutral-700 appearance-none cursor-pointer"
             >
-              <option value="ALL">Tất cả trạng thái</option>
-              {STATUS_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
+              <option value="ALL">
+                {mainTab === 'ACTIVE'
+                  ? `Tất cả đang xử lý (${activeOrdersCount})`
+                  : `Tất cả lưu trữ (${archivedOrdersCount})`}
+              </option>
+              {(mainTab === 'ACTIVE' ? ACTIVE_STATUS_OPTIONS : ARCHIVED_STATUS_OPTIONS).map(
+                (opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                )
+              )}
             </select>
           </div>
         </div>
@@ -301,8 +561,10 @@ export default function OrdersTab() {
                 <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                   {filteredOrders.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="p-8 text-center text-neutral-400 font-bold">
-                        Không tìm thấy đơn hàng nào phù hợp với bộ lọc.
+                      <td colSpan={6} className="p-12 text-center text-neutral-400 font-bold">
+                        {mainTab === 'ACTIVE'
+                          ? 'Hiện không có đơn hàng nào đang cần xử lý.'
+                          : 'Chưa có đơn hàng nào trong mục lưu trữ.'}
                       </td>
                     </tr>
                   ) : (

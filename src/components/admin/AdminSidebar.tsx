@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -38,6 +38,50 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
   const router = useRouter();
   const supabase = createClient();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [newOrdersCount, setNewOrdersCount] = useState(0);
+
+  const fetchNewOrdersCount = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('id, order_status');
+
+      if (!error && data) {
+        const count = data.filter(
+          (o) =>
+            o.order_status === 'NEW' ||
+            o.order_status?.toLowerCase() === 'mới' ||
+            o.order_status?.toLowerCase() === 'new'
+        ).length;
+        setNewOrdersCount(count);
+      }
+    } catch (err) {
+      console.error('Lỗi khi đếm đơn hàng mới:', err);
+    }
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchNewOrdersCount();
+
+    // Subscribe to realtime changes on orders table
+    const channel = supabase
+      .channel('admin-sidebar-orders-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'orders' },
+        () => {
+          fetchNewOrdersCount();
+        }
+      )
+      .subscribe();
+
+    const interval = setInterval(fetchNewOrdersCount, 15000);
+
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(interval);
+    };
+  }, [fetchNewOrdersCount, supabase, activeTab]);
 
   useEffect(() => {
     const fetchUnread = async () => {
@@ -110,9 +154,18 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
                   <Icon className="w-4.5 h-4.5 shrink-0" />
                   <span>{item.label}</span>
                 </div>
+                {item.id === 'orders' && newOrdersCount > 0 && (
+                  <span
+                    className={`bg-[#e0352b] text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[20px] text-center ml-auto shadow-xs transition ${
+                      isActive ? 'ring-2 ring-[#1E1B18]/20' : 'animate-pulse'
+                    }`}
+                  >
+                    {newOrdersCount}
+                  </span>
+                )}
                 {item.id === 'messages' && unreadCount > 0 && (
                   <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-black transition ${
+                    className={`px-2 py-0.5 rounded-full text-[10px] font-black transition ml-auto ${
                       isActive
                         ? 'bg-[#1E1B18] text-[#EAAA08]'
                         : 'bg-red-500 text-white animate-pulse'
