@@ -4,59 +4,41 @@ import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 import ProductCard from '@/components/menu/ProductCard';
 import HeroSandwichCarousel from '@/components/home/HeroSandwichCarousel';
-import { ArrowRight, Clock, MapPin, Coffee, Drumstick, CupSoda } from 'lucide-react';
+import { ArrowRight, Clock, MapPin } from 'lucide-react';
+import {
+  SandwichColorIcon,
+  FriesColorIcon,
+  CoffeeColorIcon,
+  DessertColorIcon,
+} from '@/components/home/CategoryIcons';
 
 export const dynamic = 'force-dynamic';
 
-// Custom Crisp Sandwich SVG Icon matching Lucide style
-function SandwichIcon({ className = 'h-5 w-5' }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M3 11v-1a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v1H3z" />
-      <path d="M3 17v1a4 4 0 0 0 4 4h10a4 4 0 0 0 4-4v-1H3z" />
-      <path d="M2 11h20a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1z" />
-      <path d="M6 14h.01" />
-      <path d="M10 14h.01" />
-      <path d="M14 14h.01" />
-      <path d="M18 14h.01" />
-    </svg>
-  );
-}
-
-// 4 Homepage Categories with icons and menu links
+// 4 Homepage Categories with cute colored icons and menu links
 const HOME_CATEGORIES = [
   {
     slug: 'sandwich',
     name_vi: 'Sandwich',
     name_en: 'Sandwich',
-    icon: SandwichIcon,
+    icon: SandwichColorIcon,
   },
   {
     slug: 'fried-food',
     name_vi: 'Món chiên',
     name_en: 'Fried Food',
-    icon: Drumstick,
+    icon: FriesColorIcon,
   },
   {
     slug: 'coffee-drinks',
     name_vi: 'Cà phê & Đồ uống',
     name_en: 'Coffee & Drinks',
-    icon: Coffee,
+    icon: CoffeeColorIcon,
   },
   {
     slug: 'smoothie-fresh-juice',
     name_vi: 'Sinh tố & Nước ép',
     name_en: 'Smoothie & Juice',
-    icon: CupSoda,
+    icon: DessertColorIcon,
   },
 ];
 
@@ -172,22 +154,22 @@ export default async function HomePage({ params }: HomePageProps) {
       {/* 1. Interactive Sandwich Carousel Hero */}
       <HeroSandwichCarousel locale={locale} />
 
-      {/* 2. Category Navigation Cards Row */}
-      <section className="py-8 bg-transparent border-y border-[#E5E7EB]/70">
+      {/* 2. Category Navigation Bar (Circular Icons, Seamless Background) */}
+      <section className="py-8 md:py-10 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 text-center max-w-4xl mx-auto">
+          <div className="flex items-start justify-center gap-8 md:gap-14 max-w-4xl mx-auto overflow-x-auto no-scrollbar py-2 px-2">
             {HOME_CATEGORIES.map((cat) => {
               const Icon = cat.icon;
               return (
                 <Link
                   key={cat.slug}
                   href={`/menu?category=${cat.slug}`}
-                  className="flex flex-col items-center gap-2.5 p-4 sm:p-5 rounded-2xl bg-white hover:border-[#E53935] border border-[#E5E7EB] transition-all duration-200 group shadow-xs hover:shadow-md hover:-translate-y-0.5 text-center"
+                  className="flex flex-col items-center group cursor-pointer transition-transform duration-200 hover:scale-105 shrink-0"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#111111] border border-[#E5E7EB] group-hover:bg-[#E53935] group-hover:text-white group-hover:border-[#E53935] transition-all duration-200 group-hover:scale-110 shadow-xs">
-                    <Icon className="h-5 w-5" />
+                  <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-[#fdd871] flex items-center justify-center shadow-xs group-hover:shadow-md transition-all duration-200">
+                    <Icon className="w-9 h-9 sm:w-10 sm:h-10 transform group-hover:scale-110 transition-transform duration-200" />
                   </div>
-                  <span className="text-xs sm:text-sm font-bold text-[#111111] group-hover:text-[#E53935] transition-colors">
+                  <span className="mt-3 font-bold text-xs md:text-sm text-[#452817] group-hover:text-[#e0352b] transition-colors text-center whitespace-nowrap">
                     {isVi ? cat.name_vi : cat.name_en}
                   </span>
                 </Link>
