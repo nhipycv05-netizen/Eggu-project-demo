@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import ProductCard from '@/components/menu/ProductCard';
+import CategoryHorizontalSection from '@/components/menu/CategoryHorizontalSection';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 
@@ -262,7 +263,7 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
           })}
         </div>
 
-        {/* Product Grid */}
+        {/* Product Display: Horizontal Scroll when "All" tab is selected, Grid when specific category is filtered */}
         {filteredProducts.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-[#E5E7EB] max-w-md mx-auto p-8 space-y-4 shadow-xs">
             <span className="text-4xl block">🍳</span>
@@ -274,8 +275,31 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
               Reset Filters
             </Link>
           </div>
+        ) : activeCategory.id === 'all' ? (
+          <div className="space-y-4">
+            {categories
+              .filter((cat) => cat.id !== 'all')
+              .map((cat) => {
+                const categoryProducts = filteredProducts.filter((p) => p.category_id === cat.id);
+                if (categoryProducts.length === 0) return null;
+                return (
+                  <CategoryHorizontalSection
+                    key={cat.id}
+                    category={cat}
+                    products={categoryProducts}
+                    locale={locale}
+                    buttonLabel={tm('customize')}
+                    currencyLabel={tc('currency')}
+                    newBadgeLabel={tm('newBadge')}
+                    bestSellerBadgeLabel={tm('bestSellerBadge')}
+                    soldOutBadgeLabel={tm('soldOutBadge')}
+                    soldOutBtnLabel={tm('soldOutBtn')}
+                  />
+                );
+              })}
+          </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 md:gap-4 max-w-7xl mx-auto px-4 my-6">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
