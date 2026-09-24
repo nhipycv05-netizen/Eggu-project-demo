@@ -50,7 +50,10 @@ export default function ProductCard({
   const description = isVi ? product.description_vi : product.description_en;
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-[#e0352b]/40 group hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full shadow-xs">
+    <div
+      id={`product-${product.slug}`}
+      className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-[#e0352b]/40 group hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full shadow-xs"
+    >
       {/* Product Thumbnail (Links to product detail page) */}
       <Link
         href={`/menu/${product.slug}`}
