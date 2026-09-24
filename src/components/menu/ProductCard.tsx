@@ -1,5 +1,6 @@
 import { Link } from '@/i18n/navigation';
 import SafeImage from '@/components/ui/SafeImage';
+import { Plus } from 'lucide-react';
 
 export interface ProductCardItem {
   id: string;
@@ -49,7 +50,7 @@ export default function ProductCard({
   const description = isVi ? product.description_vi : product.description_en;
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-[#E53935]/40 group hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full shadow-xs">
+    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-[#e0352b]/40 group hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full shadow-xs">
       {/* Product Thumbnail (Links to product detail page) */}
       <Link
         href={`/menu/${product.slug}`}
@@ -75,7 +76,7 @@ export default function ProductCard({
           ) : (
             <>
               {product.is_new && (
-                <span className="bg-[#E53935] text-white font-bold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs">
+                <span className="bg-[#e0352b] text-white font-bold text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs">
                   {newBadge}
                 </span>
               )}
@@ -92,7 +93,7 @@ export default function ProductCard({
       {/* Product Content Details */}
       <div className="p-3 md:p-3.5 flex-grow flex flex-col justify-between space-y-3">
         <div>
-          <Link href={`/menu/${product.slug}`} className="block group-hover:text-[#E53935] transition-colors">
+          <Link href={`/menu/${product.slug}`} className="block group-hover:text-[#e0352b] transition-colors">
             <h3 className="text-base sm:text-lg font-black text-[#111111] line-clamp-2 leading-snug" title={isVi ? product.name_vi : product.name_en}>
               {isVi ? product.name_vi : product.name_en}
             </h3>
@@ -105,7 +106,7 @@ export default function ProductCard({
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-[#E5E7EB] gap-2">
-          <span className="text-sm sm:text-base font-black text-[#E53935] shrink-0">
+          <span className="text-xs md:text-sm font-bold text-[#e0352b] shrink-0">
             {product.price.toLocaleString()} {currencyLabel}
           </span>
           {isSoldOut ? (
@@ -113,16 +114,20 @@ export default function ProductCard({
               type="button"
               disabled
               aria-disabled="true"
-              className="px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-300 text-gray-500 cursor-not-allowed text-center text-xs font-black uppercase tracking-wider rounded-full shrink-0 select-none shadow-none"
+              aria-label={actionText}
+              title={actionText}
+              className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center bg-gray-200 text-gray-400 cursor-not-allowed shrink-0 select-none shadow-none"
             >
-              {actionText}
+              <Plus className="w-4 h-4 md:w-4.5 md:h-4.5 stroke-[2.5px]" aria-hidden="true" />
             </button>
           ) : (
             <Link
               href={`/menu/${product.slug}`}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#E53935] text-white text-center text-xs font-black uppercase tracking-wider rounded-full hover:bg-[#D32F2F] hover:shadow-md transition-all shrink-0 shadow-xs flex items-center justify-center cursor-pointer"
+              aria-label={actionText}
+              title={actionText}
+              className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center bg-[#e0352b] hover:bg-red-700 text-white shadow-xs transition-colors shrink-0"
             >
-              {actionText}
+              <Plus className="w-4 h-4 md:w-4.5 md:h-4.5 stroke-[2.5px]" aria-hidden="true" />
             </Link>
           )}
         </div>
