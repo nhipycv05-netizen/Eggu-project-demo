@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
-import { ShoppingCart, Search, Menu, X, ChevronDown } from 'lucide-react';
+import { ShoppingCart, Menu, X, ChevronDown } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useCartStore } from '@/stores/cartStore';
+import SearchBar from '@/components/menu/SearchBar';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -15,7 +16,6 @@ export default function Header() {
   
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   
   // Zustand cart items
   const cartItems = useCartStore((state) => state.items);
@@ -81,17 +81,7 @@ export default function Header() {
     { href: '/menu?category=smoothie-fresh-juice', label: t('catSmoothieJuice') || 'Sinh tố & Nước ép', slug: 'smoothie-fresh-juice' },
   ];
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/menu?q=${encodeURIComponent(searchQuery.trim())}`);
-    } else {
-      router.push('/menu');
-    }
-    setIsOpen(false);
-  };
-
-  const searchPlaceholder = t('searchPlaceholder') || 'thanh tìm kiếm bánh';
+  const searchPlaceholder = t('searchPlaceholder') || 'Thanh tìm kiếm bánh';
 
   return (
     <header
@@ -196,24 +186,12 @@ export default function Header() {
 
         {/* 3. Right Side Group: Search Bar -> Language Switcher -> Cart Icon */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Search Bar (Pill shape, placeholder, search icon on right) */}
-          <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={searchPlaceholder}
-              aria-label={searchPlaceholder}
-              className="w-44 lg:w-56 pl-4 pr-9 py-1.5 text-xs lg:text-sm bg-[#F8F9FA] hover:bg-white focus:bg-white text-[#111111] placeholder:text-[#9CA3AF] rounded-full border border-[#E5E7EB] shadow-xs focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition-all duration-200"
-            />
-            <button
-              type="submit"
-              aria-label="Search"
-              className="absolute right-2.5 p-1 text-[#6B7280] hover:text-[#E53935] transition-colors"
-            >
-              <Search className="w-3.5 h-3.5" />
-            </button>
-          </form>
+          {/* Search Bar (Pill shape, live autocomplete suggestions, quick clear) */}
+          <SearchBar
+            placeholder={searchPlaceholder}
+            className="w-48 lg:w-64"
+            dropdownClassName="right-0 w-80 sm:w-96"
+          />
 
           {/* Language Switcher (Globe + VI/EN) */}
           <LanguageSwitcher />
@@ -273,23 +251,12 @@ export default function Header() {
         <div className="md:hidden fixed inset-0 top-16 bg-white z-40 border-t border-gray-100 p-6 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-200">
           <div className="space-y-6">
             {/* Search Bar for Mobile */}
-            <form onSubmit={handleSearchSubmit} className="relative w-full">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={searchPlaceholder}
-                aria-label={searchPlaceholder}
-                className="w-full pl-4 pr-10 py-2.5 text-sm bg-[#F8F9FA] text-[#111111] placeholder:text-[#9CA3AF] rounded-full border border-[#E5E7EB] shadow-xs focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935]"
-              />
-              <button
-                type="submit"
-                aria-label="Search"
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#6B7280] hover:text-[#E53935]"
-              >
-                <Search className="w-4 h-4" />
-              </button>
-            </form>
+            <SearchBar
+              placeholder={searchPlaceholder}
+              className="w-full"
+              dropdownClassName="left-0 right-0 w-full"
+              onClose={() => setIsOpen(false)}
+            />
 
             {/* Nav Links on Mobile */}
             <nav className="flex flex-col space-y-2 pt-2">
