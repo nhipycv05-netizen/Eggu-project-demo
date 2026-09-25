@@ -35,7 +35,7 @@ export default function CartToast() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-auto sm:max-w-md pointer-events-auto"
+          className="fixed bottom-20 sm:bottom-20 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-auto sm:max-w-md pointer-events-auto"
         >
           <div className="relative overflow-hidden rounded-2xl bg-white/95 backdrop-blur-md p-3.5 sm:p-4 shadow-2xl shadow-black/15 border border-gray-100 ring-1 ring-black/5 flex items-center gap-3.5">
             {/* Product Thumbnail */}

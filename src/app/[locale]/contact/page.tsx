@@ -1,7 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import ContactForm from '@/components/contact/ContactForm';
-import { MapPin, Phone, Clock, ExternalLink } from 'lucide-react';
+import { MapPin, Phone, Clock, ExternalLink, MessageCircle } from 'lucide-react';
+import { CONTACT_CONFIG } from '@/constants/contact';
+import ZaloIcon from '@/components/ui/ZaloIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -88,19 +89,19 @@ export default async function ContactPage({ params }: ContactPageProps) {
   const embedUrl = getMapEmbedUrl(primaryStore.google_maps_url, primaryAddress);
 
   return (
-    <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-12 md:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
-        {/* Title Header (Minimalist Left-Aligned) */}
+    <div className="min-h-screen bg-transparent pt-20 md:pt-24 pb-12 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 space-y-8 md:space-y-10">
+        {/* Title Header */}
         <div className="border-b border-[#e0352b]/20 pb-3 mb-6 text-left">
           <h1 className="text-xl font-bold uppercase tracking-wider text-[#e0352b]">
             {t('title')}
           </h1>
         </div>
 
-        {/* Content Details Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* Left Column: Store Details & Map */}
-          <div className="lg:col-span-6 space-y-6">
+        {/* 2-Column Balanced Grid: Store Details (Left) & Map + Direct Contact (Right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+          {/* Cột trái: Giữ nguyên thẻ card trắng chứa thông tin cửa hàng */}
+          <div className="flex flex-col space-y-6">
             {stores.map((store, index) => {
               const storeAddress = isVi ? store.address_vi : store.address_en;
               const storeHours = isVi ? store.opening_hours_vi : store.opening_hours_en;
@@ -115,67 +116,109 @@ export default async function ContactPage({ params }: ContactPageProps) {
               return (
                 <div
                   key={store.id || index}
-                  className="bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6"
+                  className="bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E7EB] shadow-xs flex flex-col justify-between space-y-6 h-full"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <h2 className="text-xl sm:text-2xl font-black text-[#111111]">
-                      {storeName}
-                    </h2>
-                    {stores.length > 1 && (
-                      <span className="px-2.5 py-1 bg-neutral-100 text-neutral-600 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0">
-                        {isVi ? `Chi nhánh ${index + 1}` : `Branch ${index + 1}`}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="space-y-4 text-sm font-semibold text-[#6B7280]">
-                    {/* Address */}
-                    <div className="flex items-start space-x-3">
-                      <MapPin className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
-                          {ts('address')}
-                        </p>
-                        <p className="text-[#111111] font-medium leading-relaxed">
-                          {storeAddress}
-                        </p>
-                      </div>
+                  <div>
+                    <div className="flex items-start justify-between gap-4 mb-5">
+                      <h2 className="text-xl sm:text-2xl font-black text-[#111111]">
+                        {storeName}
+                      </h2>
+                      {stores.length > 1 && (
+                        <span className="px-2.5 py-1 bg-neutral-100 text-neutral-600 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0">
+                          {isVi ? `Chi nhánh ${index + 1}` : `Branch ${index + 1}`}
+                        </span>
+                      )}
                     </div>
 
-                    {/* Opening Hours */}
-                    <div className="flex items-start space-x-3">
-                      <Clock className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
-                          {ts('hours')}
-                        </p>
-                        <p className="text-[#111111] font-bold">
-                          {storeHours}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Hotline */}
-                    {store.phone && (
+                    <div className="space-y-4 text-sm font-semibold text-[#6B7280]">
+                      {/* Địa chỉ */}
                       <div className="flex items-start space-x-3">
-                        <Phone className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
+                        <MapPin className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
                         <div>
                           <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
-                            {ts('phone')}
+                            {ts('address')}
+                          </p>
+                          <p className="text-[#111111] font-medium leading-relaxed">
+                            {storeAddress}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Giờ mở cửa */}
+                      <div className="flex items-start space-x-3">
+                        <Clock className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
+                            {ts('hours')}
+                          </p>
+                          <p className="text-[#111111] font-bold">
+                            {storeHours}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Hotline */}
+                      {store.phone && (
+                        <div className="flex items-start space-x-3">
+                          <Phone className="w-5 h-5 text-[#E53935] shrink-0 mt-0.5" />
+                          <div>
+                            <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
+                              {ts('phone')}
+                            </p>
+                            <a
+                              href={`tel:${store.phone.replace(/\s+/g, '')}`}
+                              className="text-[#E53935] font-bold hover:underline"
+                            >
+                              {store.phone}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Facebook Fanpage */}
+                      <div className="flex items-start space-x-3">
+                        <svg className="w-5 h-5 text-[#1877F2] shrink-0 mt-0.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                          <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                        </svg>
+                        <div>
+                          <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
+                            {isVi ? 'Fanpage Facebook' : 'Facebook Fanpage'}
                           </p>
                           <a
-                            href={`tel:${store.phone.replace(/\s+/g, '')}`}
-                            className="text-[#E53935] font-bold hover:underline"
+                            href={CONTACT_CONFIG.facebookUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#111111] font-bold hover:text-[#e0352b] transition-colors inline-flex items-center gap-1.5"
                           >
-                            {store.phone}
+                            <span>{CONTACT_CONFIG.facebookName}</span>
+                            <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
                           </a>
                         </div>
                       </div>
-                    )}
+
+                      {/* Zalo hỗ trợ */}
+                      <div className="flex items-start space-x-3">
+                        <ZaloIcon className="w-5 h-5 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
+                            {isVi ? 'Zalo hỗ trợ' : 'Zalo Support'}
+                          </p>
+                          <a
+                            href={CONTACT_CONFIG.zaloUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#0068FF] font-bold hover:underline inline-flex items-center gap-1.5"
+                          >
+                            <span>{isVi ? 'Nhắn tin qua Zalo' : 'Chat via Zalo'}</span>
+                            <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Directions Action */}
-                  <div className="pt-2">
+                  <div className="pt-4 border-t border-neutral-100">
                     <a
                       href={directionsUrl}
                       target="_blank"
@@ -189,16 +232,19 @@ export default async function ContactPage({ params }: ContactPageProps) {
                 </div>
               );
             })}
+          </div>
 
-            {/* Google Map / Map view container */}
-            <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-[#E5E7EB] shadow-xs bg-neutral-100 min-h-[350px]">
+          {/* Cột phải: Xếp theo chiều dọc (flex flex-col gap-3.5) */}
+          <div className="flex flex-col justify-between gap-3.5 h-full">
+            {/* Phía trên: Khung bản đồ Google Maps (chiều cao h-64 / h-72 hoặc flex-1, bo góc rounded-2xl) */}
+            <div className="relative w-full flex-1 min-h-[260px] h-64 lg:h-auto rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-xs bg-neutral-100">
               {embedUrl ? (
                 <iframe
                   title="EGGU Location Map"
                   src={embedUrl}
                   width="100%"
                   height="100%"
-                  className="w-full h-full min-h-[350px] border-0"
+                  className="w-full h-full min-h-[260px] border-0"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
@@ -229,15 +275,64 @@ export default async function ContactPage({ params }: ContactPageProps) {
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Right Column: Contact Message Form */}
-          <div className="lg:col-span-6">
-            <ContactForm />
+            {/* Phía dưới bản đồ: Thanh banner Zalo hỗ trợ */}
+            <a
+              href={CONTACT_CONFIG.zaloUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-4 bg-gradient-to-r from-blue-50/80 via-white to-white rounded-2xl border border-[#0068FF]/20 hover:border-[#0068FF] shadow-xs hover:shadow-md transition-all group cursor-pointer shrink-0"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center space-x-3 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#0068FF] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform shrink-0">
+                    <ZaloIcon className="w-6 h-6" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-base sm:text-lg font-black text-[#111111] group-hover:text-[#0068FF] transition-colors truncate">
+                      {isVi ? 'Zalo Hỗ Trợ' : 'Zalo Support'}
+                    </p>
+                    <p className="text-xs text-neutral-500 font-medium truncate">
+                      {isVi ? 'Tư vấn & giải đáp nhanh chóng' : 'Quick consultation & support'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-100/70 text-[#0068FF] text-xs font-bold group-hover:bg-[#0068FF] group-hover:text-white transition-colors shrink-0">
+                  <span>{isVi ? 'Nhắn tin Zalo ngay' : 'Chat via Zalo'}</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </a>
+
+            {/* Hàng 2 nút Facebook / Messenger: Chia dạng 2 cột */}
+            <div className="grid grid-cols-2 gap-2.5 shrink-0">
+              <a
+                href={CONTACT_CONFIG.messengerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-3 px-3 bg-[#0084FF] hover:bg-[#0073e6] text-white rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4 shrink-0" />
+                <span className="truncate">{isVi ? 'Nhắn Tin Messenger' : 'Chat via Messenger'}</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-80 shrink-0" />
+              </a>
+
+              <a
+                href={CONTACT_CONFIG.facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-3 px-3 bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+              >
+                <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                </svg>
+                <span className="truncate">{isVi ? 'Ghé Thăm Fanpage' : 'Visit Fanpage'}</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-80 shrink-0" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
