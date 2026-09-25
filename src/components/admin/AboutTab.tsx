@@ -545,7 +545,7 @@ export default function AboutTab() {
         </div>
       </section>
 
-      {/* Block 4: Phần 4 - Giá trị cốt lõi (3 Thẻ Hình Vòm) */}
+      {/* Block 4: Phần 4 - Giá trị cốt lõi (3 Thẻ Card Tối Giản) */}
       <section className="bg-white p-6 sm:p-7 rounded-2xl border border-neutral-200 shadow-xs space-y-5">
         <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
           <div className="flex items-center space-x-2">
@@ -553,7 +553,7 @@ export default function AboutTab() {
               <Sparkles className="w-4 h-4" />
             </span>
             <h2 className="text-sm font-black text-neutral-900 uppercase tracking-wide">
-              Phần 4: Giá Trị Cốt Lõi (3 Thẻ Hình Vòm Arch Cards)
+              Phần 4: Giá Trị Cốt Lõi (3 Thẻ Card Tối Giản)
             </h2>
           </div>
           <span className="text-[11px] font-bold text-[#E53935] bg-[#FFF0F0] px-2 py-0.5 rounded-full">
@@ -566,11 +566,11 @@ export default function AboutTab() {
             <div key={idx} className="bg-[#FAF8F5] p-4 rounded-xl border border-neutral-200 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-black text-neutral-800">Thẻ {idx + 1}</span>
-                <span className="text-[10px] font-bold text-[#D97706] bg-[#FFF4E5] px-2 py-0.5 rounded">Hình vòm</span>
+                <span className="text-[10px] font-bold text-[#D97706] bg-[#FFF4E5] px-2 py-0.5 rounded">Thẻ Card</span>
               </div>
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-neutral-600 block">
-                  Tiêu đề (Phía dưới)
+                  Tiêu đề
                 </label>
                 <input
                   type="text"
@@ -585,7 +585,7 @@ export default function AboutTab() {
               </div>
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-neutral-600 block">
-                  Nội dung mô tả (Bên trong vòm)
+                  Nội dung mô tả
                 </label>
                 <textarea
                   rows={4}

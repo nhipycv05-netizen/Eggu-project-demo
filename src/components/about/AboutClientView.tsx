@@ -289,7 +289,7 @@ export default function AboutClientView({ initialContent, locale }: AboutClientV
         </div>
 
         {/* ========================================================
-            KHỐI 4: TIÊU ĐỀ MỤC 4 & 3 THẺ GIÁ TRỊ HÌNH VÒM (ARCH CARDS)
+            KHỐI 4: TIÊU ĐỀ MỤC 4 & 3 THẺ GIÁ TRỊ CỐT LÕI (MINIMALIST CARDS)
             ======================================================== */}
         <div className="w-full">
           {/* Tiêu đề mục 4: Giá trị cốt lõi */}
@@ -301,22 +301,26 @@ export default function AboutClientView({ initialContent, locale }: AboutClientV
 
           {/* Bố cục 3 thẻ giá trị (3 Columns Grid) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-            {section4Items.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-[#F9E2AF] rounded-t-full rounded-b-2xl md:rounded-b-3xl px-6 sm:px-8 pt-16 sm:pt-20 pb-8 sm:pb-10 flex flex-col justify-between items-center text-center shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 border border-[#edd193] min-h-[340px] md:min-h-[380px]"
-              >
-                {/* Đoạn mô tả */}
-                <p className="text-gray-800 text-sm sm:text-base leading-relaxed font-normal text-center my-auto">
-                  {item.description}
-                </p>
+            {section4Items.map((item, idx) => {
+              const cleanTitle = item.title.replace(/^\d+\.\s*/, '');
 
-                {/* Tiêu đề lớn phía dưới */}
-                <h4 className="font-bold text-xl md:text-2xl text-gray-900 mt-8 tracking-tight">
-                  {item.title}
-                </h4>
-              </div>
-            ))}
+              return (
+                <div
+                  key={idx}
+                  className="bg-[#FAF8F5]/80 rounded-[28px] border border-[#EAE4DC]/90 p-8 flex flex-col items-center shadow-xs hover:shadow-md transition-all duration-300 h-full group"
+                >
+                  {/* Tiêu đề căn giữa thẻ */}
+                  <h4 className="text-xl font-bold text-gray-900 mb-4 tracking-tight text-center w-full">
+                    {cleanTitle}
+                  </h4>
+
+                  {/* Đoạn mô tả */}
+                  <p className="text-sm text-gray-600 leading-relaxed font-normal text-left">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
 

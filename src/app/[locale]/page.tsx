@@ -257,12 +257,19 @@ export default async function HomePage({ params }: HomePageProps) {
                 {isVi ? 'Bí quyết tạo nên hương vị mềm béo tan chảy' : 'Fluffy, golden eggs cooked to perfection'}
               </h3>
 
-              {/* Dòng 2: Đoạn mô tả */}
-              <p className="text-sm text-gray-700 leading-relaxed mb-5 whitespace-pre-line">
-                {isVi
-                  ? 'Tại EGGU, chúng tôi tin rằng một bữa sáng hoàn hảo bắt đầu từ những nguyên liệu chất lượng tốt nhất. Mỗi ổ bánh mì kẹp trứng đều được chuẩn bị cẩn thận: những quả trứng tươi sạch từ trang trại, phô mai Cheddar béo ngậy, thịt xông khói giòn tan kẹp giữa lớp bánh mì Brioche thơm nồng bơ tỏi nướng nóng hổi.'
-                  : 'At EGGU, we believe that the perfect morning begins with high-quality ingredients. Every single sandwich is crafted with precision: farm-fresh organic eggs, rich melted Cheddar cheese, and crispy bacon slices wrapped inside thick-sliced, garlic butter-toasted French Brioche bread.'}
-              </p>
+              {/* Dòng 2: Đoạn mô tả (ngắt thành 2 đoạn riêng biệt) */}
+              <div className="space-y-3 mb-5 text-sm md:text-base text-gray-600 leading-relaxed">
+                <p>
+                  {isVi
+                    ? 'Tại Eggu, chúng tôi mang đến những chiếc sandwich trứng ngon, tiện lợi và phù hợp với gu riêng, được tạo nên từ sự chỉn chu, sáng tạo và thấu hiểu khách hàng.'
+                    : 'At Eggu, we deliver delicious, convenient, and tailored egg sandwiches crafted with precision, creativity, and a deep understanding of our customers.'}
+                </p>
+                <p>
+                  {isVi
+                    ? 'Eggu – nơi mỗi người đều có thể tìm thấy hương vị “đúng với mình”.'
+                    : 'Eggu – where everyone can find a flavor that truly feels “right for them”.'}
+                </p>
+              </div>
 
               {/* Dòng 3: Nút chuyển tiếp */}
               <div>
@@ -326,8 +333,8 @@ export default async function HomePage({ params }: HomePageProps) {
 
               <div className="pt-4 border-t border-[#E5E7EB]">
                 <Link
-                  href="/store"
-                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 bg-[#E53935] hover:bg-[#D32F2F] text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl transition shadow-sm"
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 bg-[#e0352b] hover:bg-red-700 text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-full transition shadow-sm cursor-pointer"
                 >
                   <span>{isVi ? 'XEM BẢN ĐỒ & LIÊN HỆ' : 'VIEW MAP & CONTACT'}</span>
                   <ArrowRight className="w-4 h-4" />
