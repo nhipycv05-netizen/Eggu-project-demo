@@ -8,6 +8,7 @@ import { ShoppingCart, Menu, X, ChevronDown } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useCartStore } from '@/stores/cartStore';
 import SearchBar from '@/components/menu/SearchBar';
+import TopAnnouncementBar from './TopAnnouncementBar';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -84,14 +85,19 @@ export default function Header() {
   const searchPlaceholder = t('searchPlaceholder') || 'Thanh tìm kiếm bánh';
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white border-b border-gray-100 ${
-        scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-sm'
-          : 'bg-white shadow-xs'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+      {/* Top Announcement Bar */}
+      <TopAnnouncementBar />
+
+      {/* Main Navbar */}
+      <div
+        className={`transition-all duration-300 bg-white border-b border-gray-100 ${
+          scrolled
+            ? 'bg-white/95 backdrop-blur-md shadow-sm'
+            : 'bg-white shadow-xs'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* 1. Logo (Far Left) */}
         <div className="flex-shrink-0">
           <Link
@@ -245,10 +251,11 @@ export default function Header() {
           </button>
         </div>
       </div>
+    </div>
 
       {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-white z-40 border-t border-gray-100 p-6 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-top-4 duration-200">
+        <div className="md:hidden absolute top-full left-0 right-0 h-[calc(100vh-100%)] h-[calc(100dvh-100%)] bg-white z-40 border-t border-gray-100 p-6 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="space-y-6">
             {/* Search Bar for Mobile */}
             <SearchBar

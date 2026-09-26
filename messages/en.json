@@ -9,6 +9,12 @@
     "exploreMenu": "Explore Menu",
     "currency": "VND"
   },
+  "announcement": {
+    "orderConfirmation": "Orders Confirmed Upon Staff Verification",
+    "delivery": "Delivery within central Hanoi",
+    "deliveryShort": "Central Hanoi Delivery",
+    "hotline": "Hotline"
+  },
   "nav": {
     "home": "Home",
     "menu": "Menu",

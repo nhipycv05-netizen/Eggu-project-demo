@@ -9,6 +9,12 @@
     "exploreMenu": "Khám Phá Thực Đơn",
     "currency": "VND"
   },
+  "announcement": {
+    "orderConfirmation": "Đơn Hàng Thành Công Khi Được Nhân Viên Xác Nhận",
+    "delivery": "Giao bánh tận nơi nội thành Hà Nội",
+    "deliveryShort": "Giao bánh nội thành HN",
+    "hotline": "Hotline"
+  },
   "nav": {
     "home": "Trang chủ",
     "menu": "Thực đơn",
