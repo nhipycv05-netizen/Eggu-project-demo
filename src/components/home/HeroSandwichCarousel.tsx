@@ -57,7 +57,7 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
     description: isVi
       ? 'Sự kết hợp hoàn hảo giữa độ béo ngậy của trứng, vị đậm đà của sốt đặc chế và chiếc bánh mì vàng ươm thơm lừng.'
       : 'A perfect combination of rich creamy eggs, signature flavorful sauce, and freshly toasted golden brioche.',
-    learnMore: isVi ? 'TÌM HIỂU THÊM' : 'LEARN MORE',
+    learnMore: isVi ? 'KHÁM PHÁ BÁNH' : 'DISCOVER SANDWICHES',
   };
 
   // Move to next item with infinite loop
@@ -225,7 +225,7 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
                 )}
               </div>
 
-              {/* Single CTA Button: TÌM HIỂU THÊM */}
+              {/* Single CTA Button: KHÁM PHÁ BÁNH */}
               <div className="pt-2">
                 <Link
                   href="/menu"

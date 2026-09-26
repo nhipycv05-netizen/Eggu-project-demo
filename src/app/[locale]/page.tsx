@@ -2,7 +2,8 @@ import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
-import ProductCard from '@/components/menu/ProductCard';
+import FeaturedProductsSlider from '@/components/home/FeaturedProductsSlider';
+import { MOCK_PRODUCTS } from '@/lib/mockProducts';
 import HeroSandwichCarousel from '@/components/home/HeroSandwichCarousel';
 import { ArrowRight, Clock, MapPin } from 'lucide-react';
 import {
@@ -42,57 +43,6 @@ const HOME_CATEGORIES = [
   },
 ];
 
-// Fallback mock products for visual demonstration when DB is not seeded yet
-const MOCK_FEATURED = [
-  {
-    id: '9a999999-9999-9999-9999-999999999999',
-    name_vi: 'Mr. Egg',
-    name_en: 'Mr. Egg',
-    slug: 'mr-egg',
-    description_vi: 'Bánh mì nướng bơ tỏi thơm lừng kẹp trứng khuấy mềm béo và sốt sriracha ngọt dịu.',
-    description_en: 'Garlic butter toast filled with fluffy soft-scrambled eggs and our signature sweet sriracha mayo.',
-    price: 39000,
-    image_url: '/images/carousel/sandwich-egg-scramble.jpg',
-    is_new: false,
-    is_best_seller: true,
-  },
-  {
-    id: 'afaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    name_vi: 'Bánh Mì Thịt Nguội & Phô Mai',
-    name_en: 'American Ham & Cheese',
-    slug: 'american-ham-cheese',
-    description_vi: 'Trứng khuấy bông mềm kết hợp thịt nguội cao cấp và phô mai Cheddar tan chảy.',
-    description_en: 'Fluffy soft-scrambled eggs, premium ham slices, and melted Cheddar cheese.',
-    price: 49000,
-    image_url: '/images/carousel/sandwich-bacon-cheese.jpg',
-    is_new: false,
-    is_best_seller: true,
-  },
-  {
-    id: 'bfbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-    name_vi: 'Bánh Mì Thịt Xông Khói & Phô Mai Kép',
-    name_en: 'Bacon Double Cheese',
-    slug: 'bacon-double-cheese',
-    description_vi: 'Thịt xông khói áp chảo giòn rụm nhân đôi, trứng khuấy mềm và phô mai Cheddar kép béo ngậy.',
-    description_en: 'Double crispy bacon, fluffy soft-scrambled eggs, and double melted Cheddar cheese on toasted brioche.',
-    price: 55000,
-    image_url: '/images/carousel/sandwich-bacon-cheese.jpg',
-    is_new: false,
-    is_best_seller: true,
-  },
-  {
-    id: 'dfdddddd-dddd-dddd-dddd-dddddddddddd',
-    name_vi: 'Herb Grilled Chicken',
-    name_en: 'Herb Grilled Chicken',
-    slug: 'grilled-chicken-herb',
-    description_vi: 'Ức gà nướng sốt thảo mộc tươi mát kết hợp trứng khuấy mềm ngậy giàu protein.',
-    description_en: 'Tender grilled herb chicken with signature fluffy scrambled eggs and melted cheese.',
-    price: 59000,
-    image_url: '/images/carousel/sandwich-chicken-herbs.jpg',
-    is_new: true,
-    is_best_seller: true,
-  },
-];
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -104,7 +54,7 @@ export default async function HomePage({ params }: HomePageProps) {
   const tm = await getTranslations('menu');
 
   // Fetch featured products from Supabase with a fallback to mock data
-  let products = MOCK_FEATURED;
+  let products = MOCK_PRODUCTS.filter((item) => item.is_best_seller);
   try {
     const supabase = await createClient();
     const { data } = await supabase
@@ -112,7 +62,7 @@ export default async function HomePage({ params }: HomePageProps) {
       .select('*')
       .eq('is_best_seller', true)
       .eq('is_active', true)
-      .limit(4);
+      .order('sort_order', { ascending: true });
 
     if (data && data.length > 0) {
       products = data;
@@ -120,6 +70,9 @@ export default async function HomePage({ params }: HomePageProps) {
   } catch (error) {
     console.error('Supabase query failed on homepage, using mock fallbacks:', error);
   }
+
+  // Filter all products with best seller flag
+  const bestSellerProducts = products.filter((item) => item.is_best_seller);
 
   // Fetch stores for homepage
   let store: any = {
@@ -198,21 +151,16 @@ export default async function HomePage({ params }: HomePageProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                locale={locale}
-                buttonLabel={tm('customize')}
-                currencyLabel={tc('currency')}
-                newBadgeLabel={tm('newBadge')}
-                bestSellerBadgeLabel={tm('bestSellerBadge')}
-                soldOutBadgeLabel={tm('soldOutBadge')}
-                soldOutBtnLabel={tm('soldOutBtn')}
-              />
-            ))}
-          </div>
+          <FeaturedProductsSlider
+            products={bestSellerProducts}
+            locale={locale}
+            buttonLabel={tm('customize')}
+            currencyLabel={tc('currency')}
+            newBadgeLabel={tm('newBadge')}
+            bestSellerBadgeLabel={tm('bestSellerBadge')}
+            soldOutBadgeLabel={tm('soldOutBadge')}
+            soldOutBtnLabel={tm('soldOutBtn')}
+          />
 
           <div className="sm:hidden text-center pt-2">
             <Link
