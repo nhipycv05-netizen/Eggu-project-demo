@@ -91,9 +91,9 @@ export default function CategoryHorizontalSection({
 
   return (
     <section className="mb-10 sm:mb-12 relative">
-      {/* Category Header Badge: inline-block bg-[#F8E2B0] text-[#452817] font-bold px-4 py-1.5 rounded-r-xl text-base mb-4 */}
+      {/* Category Header Badge: inline-block bg-[#e0352b] text-white font-bold px-4 py-1.5 rounded-r-xl text-base mb-4 */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="inline-block bg-[#F8E2B0] text-[#452817] font-bold px-4 py-1.5 rounded-r-xl text-base shadow-xs select-none">
+        <h2 className="inline-block bg-[#e0352b] text-white font-bold px-4 py-1.5 rounded-r-xl text-base shadow-xs select-none">
           {categoryName}
         </h2>
         <span className="text-xs text-[#706860] font-semibold pr-2">

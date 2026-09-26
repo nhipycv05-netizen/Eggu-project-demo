@@ -97,7 +97,7 @@ export default function ProductCard({
       <div className="p-3 md:p-3.5 flex-grow flex flex-col justify-between space-y-3">
         <div>
           <Link href={`/menu/${product.slug}`} className="block group-hover:text-[#e0352b] transition-colors">
-            <h3 className="text-base sm:text-lg font-black text-[#111111] line-clamp-2 leading-snug" title={isVi ? product.name_vi : product.name_en}>
+            <h3 className="text-xs md:text-sm font-bold uppercase tracking-tight text-gray-900 line-clamp-2 min-h-[36px] md:min-h-[40px] leading-snug" title={isVi ? product.name_vi : product.name_en}>
               {isVi ? product.name_vi : product.name_en}
             </h3>
           </Link>
@@ -109,7 +109,7 @@ export default function ProductCard({
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-[#E5E7EB] gap-2">
-          <span className="text-xs md:text-sm font-bold text-[#e0352b] shrink-0">
+          <span className="text-sm md:text-base font-extrabold text-[#e0352b] shrink-0">
             {product.price.toLocaleString()} {currencyLabel}
           </span>
           {isSoldOut ? (
