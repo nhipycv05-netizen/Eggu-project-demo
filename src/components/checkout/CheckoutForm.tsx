@@ -11,6 +11,7 @@ import { useCartStore } from '@/stores/cartStore';
 import { createOrder, getActivePromotions } from '@/features/orders/actions';
 import { ShoppingBag, Loader2, Tag, X, Check, TicketPercent, PhoneCall, Bike, Store, Zap, Clock } from 'lucide-react';
 import { Promotion } from '@/types/promotion';
+import { formatPrice } from '@/lib/utils';
 
 const STORE_PICKUP_ADDRESS = 'Nhận tại: EGGU - 54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội';
 
@@ -623,7 +624,7 @@ export default function CheckoutForm() {
                   )}
                 </div>
                 <span className="text-sm font-black text-[#E53935] shrink-0">
-                  {price.toLocaleString()} {tc('currency')}
+                  {formatPrice(price)} {tc('currency')}
                 </span>
               </div>
             );
@@ -664,11 +665,11 @@ export default function CheckoutForm() {
                 const discountLabel =
                   promo.discount_type === 'PERCENTAGE'
                     ? `${promo.discount_value}%`
-                    : `${Number(promo.discount_value).toLocaleString('vi-VN')} VND`;
+                    : `${formatPrice(promo.discount_value)} VND`;
 
                 const minOrderLabel =
                   promo.min_order_value && promo.min_order_value > 0
-                    ? `${t('minOrderShort') || 'Đơn từ'} ${Number(promo.min_order_value).toLocaleString('vi-VN')} VND`
+                    ? `${t('minOrderShort') || 'Đơn từ'} ${formatPrice(promo.min_order_value)} VND`
                     : t('noMinOrderShort') || 'Mọi đơn hàng';
 
                 return (
@@ -703,8 +704,8 @@ export default function CheckoutForm() {
                         {/* Ineligible warning hint */}
                         {!isEligible && missingAmount > 0 && (
                           <p className="text-[10px] font-bold text-amber-700 pt-0.5">
-                            {t('needMore', { amount: `${missingAmount.toLocaleString('vi-VN')} VND` }) ||
-                              `Mua thêm ${missingAmount.toLocaleString('vi-VN')} VND để dùng mã này`}
+                            {t('needMore', { amount: `${formatPrice(missingAmount)} VND` }) ||
+                              `Mua thêm ${formatPrice(missingAmount)} VND để dùng mã này`}
                           </p>
                         )}
                       </div>
@@ -754,7 +755,7 @@ export default function CheckoutForm() {
           <div className="flex justify-between">
             <span>Subtotal</span>
             <span className="text-[#111111] font-bold">
-              {subtotal.toLocaleString()} {tc('currency')}
+              {formatPrice(subtotal)} {tc('currency')}
             </span>
           </div>
 
@@ -776,7 +777,7 @@ export default function CheckoutForm() {
                 </button>
               </div>
               <span className="font-extrabold">
-                -{discount.toLocaleString()} {tc('currency')}
+                -{formatPrice(discount)} {tc('currency')}
               </span>
             </div>
           )}
@@ -785,7 +786,7 @@ export default function CheckoutForm() {
           <div className="border-t border-[#E5E7EB] pt-4 flex justify-between items-end">
             <span className="text-base font-black text-[#111111]">Total Amount</span>
             <span className="text-2xl font-black text-[#E53935]">
-              {total.toLocaleString()} {tc('currency')}
+              {formatPrice(total)} {tc('currency')}
             </span>
           </div>
         </div>

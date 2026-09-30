@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Eye, Search, Filter, Loader2, Trash2, AlertTriangle, CheckCircle2, X, Clock, ShoppingBag, XCircle, Archive } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 
 interface OrderItem {
   id: string;
@@ -666,7 +667,7 @@ export default function OrdersTab() {
                             <p className="text-[10px] text-neutral-400">{order.phone}</p>
                           </td>
                           <td className="p-4 font-bold text-neutral-900">
-                            {Number(order.total).toLocaleString()} VND
+                            {formatPrice(order.total)} VND
                           </td>
                           <td className="p-4">
                             <span
@@ -825,7 +826,7 @@ export default function OrdersTab() {
                             </p>
                             {item.options && item.options.length > 0 && (
                               <p className="text-[10px] text-neutral-500 font-medium mt-0.5">
-                                + {item.options.map((o) => o.price ? `${o.name_vi} (+${Number(o.price).toLocaleString()} VND)` : o.name_vi).join(', ')}
+                                + {item.options.map((o) => o.price ? `${o.name_vi} (+${formatPrice(o.price)} VND)` : o.name_vi).join(', ')}
                               </p>
                             )}
                             {item.note && (
@@ -835,7 +836,7 @@ export default function OrdersTab() {
                             )}
                           </div>
                           <span className="font-bold text-neutral-900 shrink-0">
-                            {Number(item.subtotal).toLocaleString()} VND
+                            {formatPrice(item.subtotal)} VND
                           </span>
                         </div>
                       ))}
@@ -850,14 +851,14 @@ export default function OrdersTab() {
                   <div className="flex justify-between">
                     <span>Tạm tính</span>
                     <span className="text-neutral-800">
-                      {Number(selectedOrder.subtotal).toLocaleString()} VND
+                      {formatPrice(selectedOrder.subtotal)} VND
                     </span>
                   </div>
                   {Number(selectedOrder.subtotal) - Number(selectedOrder.total) + Number(selectedOrder.delivery_fee) > 0 && (
                     <div className="flex justify-between text-emerald-600">
                       <span>Giảm giá (Khuyến mãi)</span>
                       <span>
-                        -{(Number(selectedOrder.subtotal) - Number(selectedOrder.total) + Number(selectedOrder.delivery_fee)).toLocaleString()} VND
+                        -{formatPrice(Number(selectedOrder.subtotal) - Number(selectedOrder.total) + Number(selectedOrder.delivery_fee))} VND
                       </span>
                     </div>
                   )}
@@ -865,14 +866,14 @@ export default function OrdersTab() {
                     <div className="flex justify-between">
                       <span>Phí giao hàng</span>
                       <span className="text-neutral-800">
-                        {Number(selectedOrder.delivery_fee).toLocaleString()} VND
+                        {formatPrice(selectedOrder.delivery_fee)} VND
                       </span>
                     </div>
                   )}
                   <div className="border-t border-neutral-100 pt-3 flex justify-between items-end">
                     <span className="text-sm font-black text-neutral-900">Tổng thanh toán</span>
                     <span className="text-lg font-black text-[#5C4B3E]">
-                      {Number(selectedOrder.total).toLocaleString()} VND
+                      {formatPrice(selectedOrder.total)} VND
                     </span>
                   </div>
                 </div>

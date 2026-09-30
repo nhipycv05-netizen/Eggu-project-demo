@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Plus, Edit2, Trash2, Loader2, Image as ImageIcon, Upload } from 'lucide-react';
 import Image from 'next/image';
+import { formatPrice } from '@/lib/utils';
 
 interface Product {
   id: string;
@@ -341,7 +342,7 @@ export default function ProductsTab() {
                           {cat ? cat.name_vi : 'Chưa phân loại'}
                         </td>
                         <td className="p-4 font-bold text-neutral-900">
-                          {Number(product.price).toLocaleString()} VND
+                          {formatPrice(product.price)} VND
                         </td>
                         <td className="p-4">
                           <button

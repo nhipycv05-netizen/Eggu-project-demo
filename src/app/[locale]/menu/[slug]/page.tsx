@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 import ProductCustomizer from '@/components/menu/ProductCustomizer';
 import { ChevronLeft } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 
 const MOCK_PRODUCTS = [
   {
@@ -314,7 +315,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 {isVi ? product.name_vi : product.name_en}
               </h1>
               <p className="text-xl font-bold text-[#e0352b]">
-                {product.price.toLocaleString()} {tc('currency')}
+                {formatPrice(product.price)} {tc('currency')}
               </p>
               <p className="text-xs sm:text-sm text-[#706860] leading-relaxed font-medium">
                 {isVi ? product.description_vi : product.description_en}
