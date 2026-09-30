@@ -4,6 +4,8 @@ import { createServiceRoleClient } from '@/lib/supabase/serviceRole';
 import { parsePromotionFromDb, isPromotionActiveAndValid, MOCK_PROMOTIONS } from '@/lib/promotions';
 import { z } from 'zod';
 import { formatPrice } from '@/lib/utils';
+import { after } from 'next/server';
+import { sendOrderNotificationEmail } from './orderNotificationEmail';
 
 // Order validation schema
 const checkoutFormSchema = z.object({
@@ -334,6 +336,9 @@ export async function createOrder(
       await supabase.from('orders').delete().eq('id', insertedOrder.id);
       return { success: false, error: 'Failed to create order items' };
     }
+
+    // 9. Notify shop by email once order + items are saved (runs after the response, never blocks checkout)
+    after(() => sendOrderNotificationEmail(insertedOrder, orderItemsToInsert));
 
     return { success: true, orderNumber };
   } catch (error) {
