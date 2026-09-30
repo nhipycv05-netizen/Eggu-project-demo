@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { MapPin, Phone, Clock, ExternalLink, MessageCircle } from 'lucide-react';
 import { CONTACT_CONFIG } from '@/constants/contact';
 import ZaloIcon from '@/components/ui/ZaloIcon';
+import TikTokIcon from '@/components/ui/TikTokIcon';
 
 export const dynamic = 'force-dynamic';
 
@@ -210,6 +211,25 @@ export default async function ContactPage({ params }: ContactPageProps) {
                             className="text-[#0068FF] font-bold hover:underline inline-flex items-center gap-1.5"
                           >
                             <span>{isVi ? 'Nhắn tin qua Zalo' : 'Chat via Zalo'}</span>
+                            <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
+                          </a>
+                        </div>
+                      </div>
+
+                      {/* Kênh TikTok */}
+                      <div className="flex items-start space-x-3">
+                        <TikTokIcon className="w-5 h-5 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
+                            {isVi ? 'Kênh TikTok' : 'TikTok Channel'}
+                          </p>
+                          <a
+                            href={CONTACT_CONFIG.tiktokUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#111111] font-bold hover:text-[#e0352b] transition-colors inline-flex items-center gap-1.5"
+                          >
+                            <span>@eggu_sandwich</span>
                             <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
                           </a>
                         </div>

@@ -12,6 +12,7 @@ import {
   getHighlightSegments,
   HighlightSegment,
 } from '@/lib/mockProducts';
+import { formatPrice } from '@/lib/utils';
 
 export interface SearchBarProps {
   placeholder?: string;
@@ -327,7 +328,7 @@ export default function SearchBar({
                         </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-xs font-black text-[#e0352b]">
-                            {product.price.toLocaleString('vi-VN')} {currencyLabel}
+                            {formatPrice(product.price)} {currencyLabel}
                           </span>
                           {isSoldOut && (
                             <span className="text-[10px] bg-gray-100 text-gray-500 font-semibold px-1.5 py-0.5 rounded-sm">

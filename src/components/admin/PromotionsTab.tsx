@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Plus, Edit2, Trash2, Loader2, Tag, Percent } from 'lucide-react';
 import { Promotion } from '@/types/promotion';
 import { parsePromotionFromDb, serializePromotionForDb } from '@/lib/promotions';
+import { formatPrice } from '@/lib/utils';
 
 export default function PromotionsTab() {
   const supabase = createClient();
@@ -192,11 +193,11 @@ export default function PromotionsTab() {
                       <td className="p-4 font-bold text-neutral-800">
                         {promo.discount_type === 'PERCENTAGE'
                           ? `${promo.discount_value}%`
-                          : `${Number(promo.discount_value).toLocaleString('vi-VN')} VND`}
+                          : `${formatPrice(promo.discount_value)} VND`}
                       </td>
                       <td className="p-4 text-neutral-500">
                         {promo.min_order_value && promo.min_order_value > 0
-                          ? `${Number(promo.min_order_value).toLocaleString('vi-VN')} VND`
+                          ? `${formatPrice(promo.min_order_value)} VND`
                           : 'Không yêu cầu'}
                       </td>
                       <td className="p-4 text-neutral-500 font-medium">

@@ -1,6 +1,7 @@
 import { Link } from '@/i18n/navigation';
 import SafeImage from '@/components/ui/SafeImage';
 import { Plus } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 
 export interface ProductCardItem {
   id: string;
@@ -110,7 +111,7 @@ export default function ProductCard({
 
         <div className="flex items-center justify-between pt-3 border-t border-[#E5E7EB] gap-2">
           <span className="text-sm md:text-base font-extrabold text-[#e0352b] shrink-0">
-            {product.price.toLocaleString()} {currencyLabel}
+            {formatPrice(product.price)} {currencyLabel}
           </span>
           {isSoldOut ? (
             <button

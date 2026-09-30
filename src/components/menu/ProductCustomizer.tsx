@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useCartStore, CartItemOption } from '@/stores/cartStore';
 import { useToastStore } from '@/stores/toastStore';
 import { Plus, Minus, Check, ShoppingBag } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 
 interface DBProductOption {
   id: string;
@@ -129,7 +130,7 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
                     </span>
                   </div>
                   <span className="text-xs sm:text-sm font-bold text-[#E53935] shrink-0 ml-2">
-                    +{Number(option.price).toLocaleString()} {tc('currency')}
+                    +{formatPrice(option.price)} {tc('currency')}
                   </span>
                 </button>
               );
@@ -189,7 +190,7 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
             {tp('totalPrice')}:
           </span>
           <span className="text-lg sm:text-xl font-black text-[#E53935]">
-            {totalPrice.toLocaleString()} {tc('currency')}
+            {formatPrice(totalPrice)} {tc('currency')}
           </span>
         </div>
       </div>

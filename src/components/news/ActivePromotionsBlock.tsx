@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Ticket, Copy, Check, ArrowRight, Sparkles, Tag, Clock } from 'lucide-react';
 import { Promotion } from '@/types/promotion';
+import { formatPrice } from '@/lib/utils';
 
 interface ActivePromotionsBlockProps {
   promotions: Promotion[];
@@ -88,18 +89,18 @@ export default function ActivePromotionsBlock({
           const discountLabel =
             promo.discount_type === 'PERCENTAGE'
               ? `-${promo.discount_value}%`
-              : `-${Number(promo.discount_value).toLocaleString('vi-VN')}đ`;
+              : `-${formatPrice(promo.discount_value)}đ`;
 
           const description = isVi
             ? promo.description_vi || promo.title_vi
             : promo.description_en || promo.title_en || promo.description_vi;
 
           const promoTitle = isVi
-            ? promo.title_vi || (promo.discount_type === 'PERCENTAGE' ? `Giảm ${promo.discount_value}%` : `Giảm ${Number(promo.discount_value).toLocaleString('vi-VN')}đ`)
-            : promo.title_en || (promo.discount_type === 'PERCENTAGE' ? `${promo.discount_value}% Off` : `Save ${Number(promo.discount_value).toLocaleString('vi-VN')} VND`);
+            ? promo.title_vi || (promo.discount_type === 'PERCENTAGE' ? `Giảm ${promo.discount_value}%` : `Giảm ${formatPrice(promo.discount_value)}đ`)
+            : promo.title_en || (promo.discount_type === 'PERCENTAGE' ? `${promo.discount_value}% Off` : `Save ${formatPrice(promo.discount_value)} VND`);
 
           const minOrderFormatted = promo.min_order_value
-            ? `${isVi ? 'Đơn từ' : 'Min order'} ${Number(promo.min_order_value).toLocaleString('vi-VN')}đ`
+            ? `${isVi ? 'Đơn từ' : 'Min order'} ${formatPrice(promo.min_order_value)}đ`
             : isVi ? 'Mọi đơn hàng' : 'All orders';
 
           const validUntilDate = promo.end_at

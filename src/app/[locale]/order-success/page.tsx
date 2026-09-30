@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { getOrderDetails } from '@/features/orders/actions';
 import { CheckCircle2, ShoppingBag, Home, FileText, Tag } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 
 interface SuccessOption {
   id: string;
@@ -173,7 +174,7 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
                           )}
                         </div>
                         <span className="text-[#5C4B3E] font-bold text-sm shrink-0">
-                          {Number(item.subtotal).toLocaleString()} {tc('currency')}
+                          {formatPrice(item.subtotal)} {tc('currency')}
                         </span>
                       </div>
                     );
@@ -187,7 +188,7 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
                 <div className="flex justify-between text-xs font-semibold text-[#6B7280]">
                   <span>Subtotal</span>
                   <span className="text-[#111111] font-bold">
-                    {subtotal.toLocaleString()} {tc('currency')}
+                    {formatPrice(subtotal)} {tc('currency')}
                   </span>
                 </div>
 
@@ -199,7 +200,7 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
                       {discountLabel}
                     </span>
                     <span>
-                      -{discountAmount.toLocaleString()} {tc('currency')}
+                      -{formatPrice(discountAmount)} {tc('currency')}
                     </span>
                   </div>
                 )}
@@ -209,7 +210,7 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
                   <div className="flex justify-between text-xs font-semibold text-[#6B7280]">
                     <span>Delivery Fee</span>
                     <span className="text-[#111111] font-bold">
-                      {deliveryFee.toLocaleString()} {tc('currency')}
+                      {formatPrice(deliveryFee)} {tc('currency')}
                     </span>
                   </div>
                 )}
@@ -218,7 +219,7 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
                 <div className="border-t border-[#E5E7EB] pt-3 flex justify-between items-end">
                   <span className="text-base font-black text-[#111111]">{t('total')}</span>
                   <span className="text-2xl font-black text-[#E53935]">
-                    {total.toLocaleString()} {tc('currency')}
+                    {formatPrice(total)} {tc('currency')}
                   </span>
                 </div>
               </div>

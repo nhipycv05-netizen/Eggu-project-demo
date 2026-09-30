@@ -7,6 +7,7 @@ import { useCartStore, getOptionsHash } from '@/stores/cartStore';
 import { Plus, Minus, Trash2, ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import DeliveryTypeModal from './DeliveryTypeModal';
+import { formatPrice } from '@/lib/utils';
 
 interface CartManagerProps {
   locale: string;
@@ -121,7 +122,7 @@ export default function CartManager({ locale }: CartManagerProps) {
                     </div>
                     {/* Item price */}
                     <span className="font-black text-[#E53935] shrink-0 text-sm md:text-base">
-                      {itemSubtotal.toLocaleString()} {tc('currency')}
+                      {formatPrice(itemSubtotal)} {tc('currency')}
                     </span>
                   </div>
 
@@ -182,7 +183,7 @@ export default function CartManager({ locale }: CartManagerProps) {
           <div className="flex justify-between">
             <span>{t('subtotal')}</span>
             <span className="text-[#111111] font-bold">
-              {subtotal.toLocaleString()} {tc('currency')}
+              {formatPrice(subtotal)} {tc('currency')}
             </span>
           </div>
 
@@ -190,7 +191,7 @@ export default function CartManager({ locale }: CartManagerProps) {
           <div className="border-t border-[#E5E7EB] pt-4 flex justify-between items-end">
             <span className="text-base font-black text-[#111111]">{t('total')}</span>
             <span className="text-2xl font-black text-[#E53935]">
-              {total.toLocaleString()} {tc('currency')}
+              {formatPrice(total)} {tc('currency')}
             </span>
           </div>
         </div>

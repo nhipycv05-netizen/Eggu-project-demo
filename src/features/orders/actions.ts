@@ -3,6 +3,7 @@
 import { createServiceRoleClient } from '@/lib/supabase/serviceRole';
 import { parsePromotionFromDb, isPromotionActiveAndValid, MOCK_PROMOTIONS } from '@/lib/promotions';
 import { z } from 'zod';
+import { formatPrice } from '@/lib/utils';
 
 // Order validation schema
 const checkoutFormSchema = z.object({
@@ -125,7 +126,7 @@ export async function validatePromoCode(code: string, subtotal: number) {
     if (matchedPromo.min_order_value && subtotal < matchedPromo.min_order_value) {
       return {
         valid: false,
-        error: `Đơn hàng chưa đạt giá trị tối thiểu ${Number(matchedPromo.min_order_value).toLocaleString('vi-VN')} VND`,
+        error: `Đơn hàng chưa đạt giá trị tối thiểu ${formatPrice(matchedPromo.min_order_value)} VND`,
         minOrderValue: matchedPromo.min_order_value,
       };
     }
@@ -262,7 +263,7 @@ export async function createOrder(
       const promoResult = await validatePromoCode(promoCode.trim(), subtotal);
       if (promoResult.valid && promoResult.discountAmount) {
         discount = promoResult.discountAmount;
-        promoPrefix = `[Mã giảm giá: ${promoResult.code} (-${discount.toLocaleString('vi-VN')} VND)]`;
+        promoPrefix = `[Mã giảm giá: ${promoResult.code} (-${formatPrice(discount)} VND)]`;
       }
     }
 
