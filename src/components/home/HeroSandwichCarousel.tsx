@@ -5,32 +5,45 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { getProductAltFromItem } from '@/lib/seo-alt';
 
 export interface SandwichItem {
   id: string;
   image_url: string;
+  name_vi?: string;
+  name_en?: string;
 }
 
 export const HERO_SANDWICH_IMAGES: SandwichItem[] = [
   {
     id: 'hero-bacon-cheese',
     image_url: '/images/carousel/sandwich-bacon-cheese.jpg',
+    name_vi: 'Bacon Double Cheese',
+    name_en: 'Bacon Double Cheese',
   },
   {
     id: 'hero-mr-egg',
     image_url: '/images/carousel/sandwich-egg-scramble.jpg',
+    name_vi: 'Mr. Egg',
+    name_en: 'Mr. Egg',
   },
   {
     id: 'hero-corn-bacon',
     image_url: '/images/carousel/sandwich-corn-bacon.jpg',
+    name_vi: 'Sweet Corn Bacon',
+    name_en: 'Sweet Corn Bacon',
   },
   {
     id: 'hero-chicken-herb',
     image_url: '/images/carousel/sandwich-chicken-herbs.jpg',
+    name_vi: 'Chicken Herbs Mayo',
+    name_en: 'Chicken Herbs Mayo',
   },
   {
     id: 'hero-tuna-tomato',
     image_url: '/images/carousel/sandwich-tuna-tomato.jpg',
+    name_vi: 'Tuna Salad Melt',
+    name_en: 'Tuna Salad Melt',
   },
 ];
 
@@ -332,7 +345,7 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
                           >
                             <Image
                               src={item.image_url}
-                              alt="EGGU Sandwich"
+                              alt={getProductAltFromItem(item, locale)}
                               fill
                               sizes="(max-width: 640px) 280px, (max-width: 1024px) 360px, 420px"
                               priority={index === 0 || index === 1}

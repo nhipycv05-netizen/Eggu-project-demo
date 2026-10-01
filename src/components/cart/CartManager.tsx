@@ -8,6 +8,7 @@ import { Plus, Minus, Trash2, ArrowLeft, ArrowRight, ShoppingBag } from 'lucide-
 import Image from 'next/image';
 import DeliveryTypeModal from './DeliveryTypeModal';
 import { formatPrice } from '@/lib/utils';
+import { getProductAltFromItem } from '@/lib/seo-alt';
 
 interface CartManagerProps {
   locale: string;
@@ -93,7 +94,7 @@ export default function CartManager({ locale }: CartManagerProps) {
                 <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border border-[#E5E7EB] shrink-0 bg-neutral-100">
                   <Image
                     src={item.image || '/images/hero-sandwich.jpg'}
-                    alt={isVi ? item.name_vi : item.name_en}
+                    alt={getProductAltFromItem(item, locale)}
                     fill
                     sizes="96px"
                     className="object-cover"

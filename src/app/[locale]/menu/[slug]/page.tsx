@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import ProductCustomizer from '@/components/menu/ProductCustomizer';
 import { ChevronLeft } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
+import { getProductAltFromItem } from '@/lib/seo-alt';
 
 const MOCK_PRODUCTS = [
   {
@@ -291,7 +292,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               <div className="relative w-full h-full">
                 <Image
                   src={product.image_url || '/images/hero-sandwich.jpg'}
-                  alt={isVi ? product.name_vi : product.name_en}
+                  alt={getProductAltFromItem(product, locale)}
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 400px"

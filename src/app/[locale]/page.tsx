@@ -12,6 +12,7 @@ import {
   CoffeeColorIcon,
   DessertColorIcon,
 } from '@/components/home/CategoryIcons';
+import { SOCIAL_ALT } from '@/lib/seo-alt';
 
 export const dynamic = 'force-dynamic';
 
@@ -190,7 +191,7 @@ export default async function HomePage({ params }: HomePageProps) {
               <div className="relative w-full h-[260px] sm:h-[280px] md:h-[300px] max-w-[460px] rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]">
                 <Image
                   src="/images/story-sandwich.jpg"
-                  alt="EGGU Story"
+                  alt={isVi ? 'Câu chuyện thương hiệu Eggu - Bánh Mì Sandwich Trứng Chuẩn Vị Hàn Quốc' : 'Eggu Brand Story - Authentic Korean Egg Sandwich'}
                   fill
                   sizes="(max-width: 768px) 100vw, 600px"
                   className="object-cover"
@@ -293,7 +294,7 @@ export default async function HomePage({ params }: HomePageProps) {
             {/* Cột bên phải: Google Maps iframe */}
             <div className="relative w-full min-h-[320px] lg:min-h-full rounded-3xl overflow-hidden border border-[#E5E7EB] shadow-xs bg-neutral-100">
               <iframe
-                title="EGGU Store Location Map"
+                title={SOCIAL_ALT.map(locale)}
                 src="https://maps.google.com/maps?q=54%20Nguy%E1%BB%85n%20H%E1%BB%AFu%20Hu%C3%A2n%2C%20Ho%C3%A0n%20Ki%E1%BA%BFm%2C%20H%C3%A0%20N%E1%BB%99i&t=&z=16&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"

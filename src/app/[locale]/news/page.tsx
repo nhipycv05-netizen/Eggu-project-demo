@@ -69,7 +69,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
                   <Link href={`/news/${article.slug}`} className="block relative aspect-video overflow-hidden bg-neutral-100">
                     <SafeImage
                       src={article.thumbnail_url || '/images/hero-sandwich.jpg'}
-                      alt={title}
+                      alt={title || (isVi ? 'Tin tức Eggu - Bánh Mì Sandwich Trứng' : 'Eggu News - Korean Egg Sandwich')}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 380px"
                       className="object-cover group-hover:scale-105 transition-transform duration-500"

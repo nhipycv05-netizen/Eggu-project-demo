@@ -324,7 +324,7 @@ export default function ProductsTab() {
                             {product.image_url ? (
                               <Image
                                 src={product.image_url}
-                                alt={product.name_en}
+                                alt={product.name_vi || product.name_en || 'Ảnh sản phẩm'}
                                 width={40}
                                 height={40}
                                 className="object-cover w-full h-full"

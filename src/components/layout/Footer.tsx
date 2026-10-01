@@ -8,6 +8,7 @@ import { CONTACT_CONFIG } from '@/constants/contact';
 import ZaloIcon from '@/components/ui/ZaloIcon';
 import FacebookIcon from '@/components/ui/FacebookIcon';
 import TikTokIcon from '@/components/ui/TikTokIcon';
+import { getLogoAlt, SOCIAL_ALT } from '@/lib/seo-alt';
 
 interface FooterProps {
   store?: {
@@ -25,6 +26,10 @@ interface FooterProps {
 export default function Footer({ store, locale = 'vi' }: FooterProps) {
   const t = useTranslations('nav');
   const isVi = locale === 'vi';
+  const logoAlt = getLogoAlt(locale);
+  const facebookAlt = SOCIAL_ALT.facebook(locale);
+  const zaloAlt = SOCIAL_ALT.zalo(locale);
+  const tiktokAlt = SOCIAL_ALT.tiktok(locale);
 
   const address = store
     ? (isVi ? store.address_vi : store.address_en) || store.address_vi
@@ -49,11 +54,11 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="sm:col-span-2 md:col-span-1">
-            <Link href="/" className="inline-flex items-center space-x-2.5 group">
+            <Link href="/" aria-label={logoAlt} className="inline-flex items-center space-x-2.5 group">
               <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white p-0.5 shadow-xs border border-[#44281D] group-hover:scale-105 transition-transform flex items-center justify-center">
                 <Image
                   src="/images/logo-icon.png"
-                  alt="EGGU Mascot"
+                  alt={logoAlt}
                   fill
                   sizes="40px"
                   className="object-contain p-0.5"
@@ -62,7 +67,7 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
               <div className="relative h-6 sm:h-7 w-16 flex items-center">
                 <Image
                   src="/images/logo-text.png"
-                  alt="Eggu"
+                  alt={logoAlt}
                   fill
                   sizes="64px"
                   className="object-contain object-left group-hover:scale-105 transition-transform"
@@ -74,30 +79,30 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                 href={CONTACT_CONFIG.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Facebook ${CONTACT_CONFIG.facebookName}`}
+                aria-label={facebookAlt}
                 className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#1877F2] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
               >
-                <FacebookIcon className="w-5 h-5 m-auto object-contain" />
+                <FacebookIcon alt={facebookAlt} className="w-5 h-5 m-auto object-contain" />
               </a>
 
               <a
                 href={CONTACT_CONFIG.zaloUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Zalo EGGU"
+                aria-label={zaloAlt}
                 className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#0068FF] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
               >
-                <ZaloIcon className="w-5.5 h-5.5 m-auto object-contain" />
+                <ZaloIcon alt={zaloAlt} className="w-5.5 h-5.5 m-auto object-contain" />
               </a>
 
               <a
                 href={CONTACT_CONFIG.tiktokUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="TikTok EGGU"
+                aria-label={tiktokAlt}
                 className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-black shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
               >
-                <TikTokIcon className="w-5 h-5 m-auto object-contain" />
+                <TikTokIcon alt={tiktokAlt} className="w-5 h-5 m-auto object-contain" />
               </a>
             </div>
           </div>
@@ -153,30 +158,30 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                   href={CONTACT_CONFIG.facebookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`Facebook ${CONTACT_CONFIG.facebookName}`}
+                  aria-label={facebookAlt}
                   className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#1877F2] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
                 >
-                  <FacebookIcon className="w-5 h-5 m-auto object-contain" />
+                  <FacebookIcon alt={facebookAlt} className="w-5 h-5 m-auto object-contain" />
                 </a>
 
                 <a
                   href={CONTACT_CONFIG.zaloUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Zalo EGGU"
+                  aria-label={zaloAlt}
                   className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#0068FF] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
                 >
-                  <ZaloIcon className="w-5.5 h-5.5 m-auto object-contain" />
+                  <ZaloIcon alt={zaloAlt} className="w-5.5 h-5.5 m-auto object-contain" />
                 </a>
 
                 <a
                   href={CONTACT_CONFIG.tiktokUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="TikTok EGGU"
+                  aria-label={tiktokAlt}
                   className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-black shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
                 >
-                  <TikTokIcon className="w-5 h-5 m-auto object-contain" />
+                  <TikTokIcon alt={tiktokAlt} className="w-5 h-5 m-auto object-contain" />
                 </a>
               </div>
             </div>

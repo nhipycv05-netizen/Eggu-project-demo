@@ -279,7 +279,7 @@ export default function NewsTab() {
                         <div className="w-14 h-10 rounded-lg overflow-hidden border border-neutral-200 relative bg-neutral-100 flex-shrink-0">
                           <SafeImage
                             src={article.thumbnail_url || '/images/hero-sandwich.jpg'}
-                            alt={article.title_vi}
+                            alt={article.title_vi || 'Ảnh bài viết'}
                             fill
                             sizes="56px"
                             className="object-cover"
@@ -369,7 +369,7 @@ export default function NewsTab() {
                     <div className="relative aspect-video w-full max-h-56 bg-neutral-100">
                       <SafeImage
                         src={thumbnailUrl}
-                        alt="Preview"
+                        alt="Xem trước ảnh bài viết"
                         fill
                         className="object-cover"
                       />
