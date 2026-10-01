@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 const FALLBACK_IMAGE = '/images/hero-sandwich.jpg';
 
-export default function SafeImage({ src, onError, unoptimized, ...props }: ImageProps) {
+export default function SafeImage({ src, alt, onError, unoptimized, ...props }: ImageProps) {
   const [imageSource, setImageSource] = useState<string>(() => {
     if (typeof src === 'string' && src.trim()) {
       return src;
@@ -22,10 +22,14 @@ export default function SafeImage({ src, onError, unoptimized, ...props }: Image
   }, [src]);
 
   const isBase64 = typeof imageSource === 'string' && imageSource.startsWith('data:');
+  const safeAlt = alt && typeof alt === 'string' && alt.trim() !== ''
+    ? alt
+    : 'Sandwich Trứng Eggu - Eggu Korean Egg Sandwich';
 
   return (
     <Image
       {...props}
+      alt={safeAlt}
       src={imageSource || FALLBACK_IMAGE}
       unoptimized={unoptimized || isBase64}
       onError={(event) => {

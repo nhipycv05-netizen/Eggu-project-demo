@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation';
 import SafeImage from '@/components/ui/SafeImage';
 import { CheckCircle2, ArrowRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getProductAltFromItem } from '@/lib/seo-alt';
 
 export default function CartToast() {
   const { toast, hideCartToast } = useToastStore();
@@ -42,7 +43,7 @@ export default function CartToast() {
             <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-neutral-100 shrink-0 border border-black/5">
               <SafeImage
                 src={toast.image || '/images/hero-sandwich.jpg'}
-                alt={itemName}
+                alt={getProductAltFromItem(toast, locale)}
                 fill
                 sizes="48px"
                 className="object-cover"

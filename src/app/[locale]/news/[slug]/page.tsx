@@ -183,7 +183,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
                           <div className="relative aspect-video rounded-xl overflow-hidden bg-neutral-100">
                             <SafeImage
                               src={item.thumbnail_url || '/images/hero-sandwich.jpg'}
-                              alt={itemTitle}
+                              alt={itemTitle || (isVi ? 'Tin tức Eggu - Bánh Mì Sandwich Trứng' : 'Eggu News - Korean Egg Sandwich')}
                               fill
                               sizes="280px"
                               className="object-cover group-hover:scale-105 transition-transform duration-300"

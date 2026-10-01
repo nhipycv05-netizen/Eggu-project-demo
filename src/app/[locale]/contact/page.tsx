@@ -4,6 +4,7 @@ import { MapPin, Phone, Clock, ExternalLink, MessageCircle } from 'lucide-react'
 import { CONTACT_CONFIG } from '@/constants/contact';
 import ZaloIcon from '@/components/ui/ZaloIcon';
 import TikTokIcon from '@/components/ui/TikTokIcon';
+import { SOCIAL_ALT } from '@/lib/seo-alt';
 
 export const dynamic = 'force-dynamic';
 
@@ -200,7 +201,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                       {/* Zalo hỗ trợ */}
                       <div className="flex items-start space-x-3">
                         <div className="w-5 h-5 rounded-full bg-[#0068FF] flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
-                          <ZaloIcon className="w-3.5 h-3.5 object-contain" />
+                          <ZaloIcon alt={SOCIAL_ALT.zalo(locale)} className="w-3.5 h-3.5 object-contain" />
                         </div>
                         <div>
                           <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
@@ -210,6 +211,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                             href={CONTACT_CONFIG.zaloUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={SOCIAL_ALT.zalo(locale)}
                             className="text-[#0068FF] font-bold hover:underline inline-flex items-center gap-1.5"
                           >
                             <span>{isVi ? 'Nhắn tin qua Zalo' : 'Chat via Zalo'}</span>
@@ -221,7 +223,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                       {/* Kênh TikTok */}
                       <div className="flex items-start space-x-3">
                         <div className="w-5 h-5 rounded-full bg-black flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
-                          <TikTokIcon className="w-3 h-3 object-contain" />
+                          <TikTokIcon alt={SOCIAL_ALT.tiktok(locale)} className="w-3 h-3 object-contain" />
                         </div>
                         <div>
                           <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
@@ -231,6 +233,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                             href={CONTACT_CONFIG.tiktokUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={SOCIAL_ALT.tiktok(locale)}
                             className="text-[#111111] font-bold hover:text-[#e0352b] transition-colors inline-flex items-center gap-1.5"
                           >
                             <span>@eggu_sandwich</span>
@@ -264,7 +267,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
             <div className="relative w-full flex-1 min-h-[260px] h-64 lg:h-auto rounded-2xl overflow-hidden border border-[#E5E7EB] shadow-xs bg-neutral-100">
               {embedUrl ? (
                 <iframe
-                  title="EGGU Location Map"
+                  title={SOCIAL_ALT.map(locale)}
                   src={embedUrl}
                   width="100%"
                   height="100%"
@@ -305,12 +308,13 @@ export default async function ContactPage({ params }: ContactPageProps) {
               href={CONTACT_CONFIG.zaloUrl}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={SOCIAL_ALT.zalo(locale)}
               className="p-4 bg-gradient-to-r from-blue-50/80 via-white to-white rounded-2xl border border-[#0068FF]/20 hover:border-[#0068FF] shadow-xs hover:shadow-md transition-all group cursor-pointer shrink-0"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center space-x-3 min-w-0">
                   <div className="w-10 h-10 rounded-xl bg-[#0068FF] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform shrink-0">
-                    <ZaloIcon className="w-6 h-6" />
+                    <ZaloIcon alt={SOCIAL_ALT.zalo(locale)} className="w-6 h-6" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-base sm:text-lg font-black text-[#111111] group-hover:text-[#0068FF] transition-colors truncate">

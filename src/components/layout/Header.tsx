@@ -2,16 +2,19 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { ShoppingCart, Menu, X, ChevronDown } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useCartStore } from '@/stores/cartStore';
 import SearchBar from '@/components/menu/SearchBar';
 import TopAnnouncementBar from './TopAnnouncementBar';
+import { getLogoAlt } from '@/lib/seo-alt';
 
 export default function Header() {
   const t = useTranslations('nav');
+  const locale = useLocale();
+  const logoAlt = getLogoAlt(locale);
   const pathname = usePathname();
   const router = useRouter();
   
@@ -102,13 +105,13 @@ export default function Header() {
         <div className="flex-shrink-0">
           <Link
             href="/"
-            aria-label="EGGU Home"
+            aria-label={logoAlt}
             className="flex items-center gap-2.5 group transition-transform duration-200 active:scale-95"
           >
             <div className="relative h-11 w-11 sm:h-12 sm:w-12 max-h-12 rounded-xl overflow-hidden bg-white shadow-xs border border-[#E5E7EB] group-hover:border-[#E53935]/40 group-hover:scale-105 transition-all duration-200 flex items-center justify-center">
               <Image
                 src="/images/logo-icon.png"
-                alt="EGGU Mascot"
+                alt={logoAlt}
                 fill
                 priority
                 sizes="(max-width: 640px) 44px, 48px"
@@ -118,7 +121,7 @@ export default function Header() {
             <div className="relative h-7 sm:h-8 w-16 sm:w-20 flex items-center">
               <Image
                 src="/images/logo-text.png"
-                alt="Eggu"
+                alt={logoAlt}
                 fill
                 priority
                 sizes="(max-width: 640px) 64px, 80px"

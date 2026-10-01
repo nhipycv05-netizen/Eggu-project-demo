@@ -2,6 +2,7 @@ import { Link } from '@/i18n/navigation';
 import SafeImage from '@/components/ui/SafeImage';
 import { Plus } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
+import { getProductAltFromItem } from '@/lib/seo-alt';
 
 export interface ProductCardItem {
   id: string;
@@ -40,6 +41,7 @@ export default function ProductCard({
 }: ProductCardProps) {
   const isVi = locale === 'vi';
   const isSoldOut = product.is_available === false;
+  const productAlt = getProductAltFromItem(product, locale);
 
   const actionText = isSoldOut
     ? soldOutBtnLabel || (isVi ? 'HẾT HÀNG' : 'SOLD OUT')
@@ -63,7 +65,7 @@ export default function ProductCard({
       >
         <SafeImage
           src={product.image_url || '/images/hero-sandwich.jpg'}
-          alt={isVi ? product.name_vi : product.name_en}
+          alt={productAlt}
           fill
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className={`w-full h-full object-contain p-2.5 sm:p-3 group-hover:scale-105 transition-transform duration-300 ${

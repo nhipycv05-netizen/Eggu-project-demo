@@ -13,6 +13,7 @@ import {
   HighlightSegment,
 } from '@/lib/mockProducts';
 import { formatPrice } from '@/lib/utils';
+import { getProductAltFromItem } from '@/lib/seo-alt';
 
 export interface SearchBarProps {
   placeholder?: string;
@@ -312,7 +313,7 @@ export default function SearchBar({
                       <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden shrink-0 flex items-center justify-center p-1">
                         <SafeImage
                           src={product.image_url || '/images/hero-sandwich.jpg'}
-                          alt={name}
+                          alt={getProductAltFromItem(product, locale)}
                           fill
                           sizes="48px"
                           className={`object-contain transition-transform duration-200 group-hover:scale-105 ${

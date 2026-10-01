@@ -173,7 +173,7 @@ export default function AboutClientView({ initialContent, locale }: AboutClientV
                     ? content.section1Image
                     : '/images/about-founder.jpg'
                 }
-                alt="Eggu Founder"
+                alt={isVi ? 'Nhà sáng lập Eggu - Thương hiệu Sandwich Trứng Chuẩn Vị Hàn Quốc' : 'Eggu Founder - Authentic Korean Egg Sandwich'}
                 fill
                 priority
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -249,7 +249,7 @@ export default function AboutClientView({ initialContent, locale }: AboutClientV
                       ? content.section3Image
                       : '/images/about-vision.jpg'
                   }
-                  alt="Eggu Vision"
+                  alt={isVi ? 'Tầm nhìn thương hiệu Eggu - Bánh Mì Sandwich Trứng Hàn Quốc' : 'Eggu Brand Vision - Korean Egg Sandwich'}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 500px"
