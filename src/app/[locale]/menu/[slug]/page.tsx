@@ -270,7 +270,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const isSoldOut = (product as Record<string, any>)?.is_available === false;
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-12 md:pb-16">
+    <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-28 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Back Link */}
         <div>
@@ -368,7 +368,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                   <h4 className="text-neutral-500 uppercase tracking-widest font-bold text-[10px]">
                     {tp('nutrition')}
                   </h4>
-                  <div className="grid grid-cols-4 gap-2 bg-[#FAF8F5] p-2 rounded-xl border border-[#E5E0D8]">
+                  <div className="grid grid-cols-4 gap-2 bg-white/80 p-2 rounded-xl border border-[#E5E0D8]">
                     {Object.entries(nutrition).map(([key, val]) => (
                       <div key={key} className="text-center">
                         <span className="text-[9px] text-[#706860] uppercase font-bold">{key}</span>

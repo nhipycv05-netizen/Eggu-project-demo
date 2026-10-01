@@ -47,7 +47,7 @@ export default function ScrollToTop() {
           whileTap={{ scale: 0.95 }}
           aria-label="Cuộn lên đầu trang"
           title="Cuộn lên đầu trang"
-          className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-10 h-10 md:w-11 md:h-11 rounded-full bg-[#e0352b] hover:bg-red-700 text-white shadow-lg shadow-black/15 transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#e0352b] focus:ring-offset-2"
+          className="fixed bottom-24 sm:bottom-6 right-6 z-50 flex items-center justify-center w-10 h-10 md:w-11 md:h-11 rounded-full bg-[#e0352b] hover:bg-red-700 text-white shadow-lg shadow-black/15 transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#e0352b] focus:ring-offset-2"
         >
           <ChevronUp className="w-5 h-5 md:w-6 md:h-6 stroke-[2.5] transition-transform duration-200 group-hover:-translate-y-0.5" />
         </motion.button>

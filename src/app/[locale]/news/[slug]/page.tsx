@@ -76,7 +76,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   );
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-16 md:pb-24">
+    <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-16 md:pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Link Button */}
         <div className="mb-6">

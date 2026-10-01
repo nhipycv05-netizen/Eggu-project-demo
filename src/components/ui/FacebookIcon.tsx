@@ -4,7 +4,7 @@ interface FacebookIconProps {
   className?: string;
 }
 
-export default function FacebookIcon({ className = 'w-6 h-6' }: FacebookIconProps) {
+export default function FacebookIcon({ className = 'w-5 h-5' }: FacebookIconProps) {
   return (
     <svg
       className={className}
@@ -13,9 +13,8 @@ export default function FacebookIcon({ className = 'w-6 h-6' }: FacebookIconProp
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <circle cx="12" cy="12" r="12" fill="#1877F2" />
       <path
-        d="M16.672 15.469L17.204 12h-3.328V9.763c0-.949.465-1.874 1.956-1.874h1.514V4.936s-1.374-.235-2.686-.235c-2.741 0-4.533 1.662-4.533 4.669V12H7.078v3.469h3.047v8.385a12.09 12.09 0 003.75 0v-8.385h2.797z"
+        d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.52-.14-2.71-.14-2.72 0-4.79 1.66-4.79 4.9v2.6H7v4h3V22h4v-8.5z"
         fill="#FFFFFF"
       />
     </svg>

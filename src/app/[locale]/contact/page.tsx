@@ -199,7 +199,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
                       {/* Zalo hỗ trợ */}
                       <div className="flex items-start space-x-3">
-                        <ZaloIcon className="w-5 h-5 shrink-0 mt-0.5" />
+                        <div className="w-5 h-5 rounded-full bg-[#0068FF] flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+                          <ZaloIcon className="w-3.5 h-3.5 object-contain" />
+                        </div>
                         <div>
                           <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
                             {isVi ? 'Zalo hỗ trợ' : 'Zalo Support'}
@@ -218,7 +220,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
                       {/* Kênh TikTok */}
                       <div className="flex items-start space-x-3">
-                        <TikTokIcon className="w-5 h-5 shrink-0 mt-0.5" />
+                        <div className="w-5 h-5 rounded-full bg-black flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+                          <TikTokIcon className="w-3 h-3 object-contain" />
+                        </div>
                         <div>
                           <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
                             {isVi ? 'Kênh TikTok' : 'TikTok Channel'}

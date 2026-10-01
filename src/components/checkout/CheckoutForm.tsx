@@ -301,30 +301,30 @@ export default function CheckoutForm() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      {/* Checkout Form - Left 7 columns */}
+      {/* Checkout Form - Right 7 columns on desktop, Bottom on mobile */}
       <form
         onSubmit={handleSubmit(onInitiateSubmit)}
-        className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6"
+        className="order-2 lg:order-2 lg:col-span-7 bg-white p-5 sm:p-6 rounded-2xl border border-[#E5E7EB] shadow-xs space-y-4"
       >
         <div className="space-y-1">
-          <h2 className="text-2xl font-black text-[#111111]">
+          <h2 className="text-xl sm:text-2xl font-black text-[#111111]">
             {deliveryType === 'pickup' ? t('titlePickup') : t('title')}
           </h2>
-          <p className="text-sm text-[#6B7280] font-medium leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#6B7280] font-medium leading-relaxed">
             {deliveryType === 'pickup' ? t('subtitlePickup') : t('subtitle')}
           </p>
         </div>
 
         {/* Fulfillment Method Switcher Tabs */}
-        <div className="space-y-2">
-          <label className="text-xs font-black uppercase tracking-wider text-[#111111] block">
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold uppercase tracking-wider text-gray-700 block">
             {t('fulfillmentMethod')}
           </label>
-          <div className="grid grid-cols-2 gap-2.5 p-1.5 bg-[#F8F9FA] rounded-2xl border border-[#E5E7EB]">
+          <div className="grid grid-cols-2 gap-2 p-1 bg-[#F8F9FA] rounded-xl border border-[#E5E7EB]">
             <button
               type="button"
               onClick={() => handleSelectType('delivery')}
-              className={`py-3 px-3 sm:px-4 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all duration-150 cursor-pointer ${
+              className={`py-2 px-3 sm:px-3.5 rounded-lg font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all duration-150 cursor-pointer ${
                 deliveryType === 'delivery'
                   ? 'bg-white text-[#E53935] shadow-xs border border-[#E53935]/20 ring-1 ring-[#E53935]/15'
                   : 'text-[#6B7280] hover:text-[#111111]'
@@ -337,7 +337,7 @@ export default function CheckoutForm() {
             <button
               type="button"
               onClick={() => handleSelectType('pickup')}
-              className={`py-3 px-3 sm:px-4 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all duration-150 cursor-pointer ${
+              className={`py-2 px-3 sm:px-3.5 rounded-lg font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition-all duration-150 cursor-pointer ${
                 deliveryType === 'pickup'
                   ? 'bg-white text-[#B45309] shadow-xs border border-[#EAAA08]/40 ring-1 ring-[#EAAA08]/20'
                   : 'text-[#6B7280] hover:text-[#111111]'
@@ -350,15 +350,15 @@ export default function CheckoutForm() {
         </div>
 
         {submitError && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-sm font-semibold">
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs sm:text-sm font-semibold">
             {submitError}
           </div>
         )}
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Full Name */}
           <div className="space-y-1">
-            <label htmlFor="fullName" className="text-xs font-black uppercase tracking-wider text-[#111111]">
+            <label htmlFor="fullName" className="text-xs font-bold uppercase tracking-wider text-gray-700 block">
               {t('fullName')} *
             </label>
             <input
@@ -366,7 +366,7 @@ export default function CheckoutForm() {
               type="text"
               disabled={isSubmitting}
               {...register('fullName')}
-              className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+              className={`w-full h-10 px-3.5 py-2 border rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
                 errors.fullName ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
             />
@@ -377,7 +377,7 @@ export default function CheckoutForm() {
 
           {/* Phone Number */}
           <div className="space-y-1">
-            <label htmlFor="phone" className="text-xs font-black uppercase tracking-wider text-[#111111]">
+            <label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider text-gray-700 block">
               {t('phone')} *
             </label>
             <input
@@ -385,7 +385,7 @@ export default function CheckoutForm() {
               type="text"
               disabled={isSubmitting}
               {...register('phone')}
-              className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+              className={`w-full h-10 px-3.5 py-2 border rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
                 errors.phone ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
             />
@@ -396,7 +396,7 @@ export default function CheckoutForm() {
 
           {/* Email Address */}
           <div className="space-y-1">
-            <label htmlFor="email" className="text-xs font-black uppercase tracking-wider text-[#111111]">
+            <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-gray-700 block">
               {t('email')}
             </label>
             <input
@@ -404,7 +404,7 @@ export default function CheckoutForm() {
               type="text"
               disabled={isSubmitting}
               {...register('email')}
-              className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+              className={`w-full h-10 px-3.5 py-2 border rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
                 errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
             />
@@ -416,7 +416,7 @@ export default function CheckoutForm() {
           {/* Delivery Address (if Delivery) or Fixed Store Address Card (if Pickup) */}
           {deliveryType === 'delivery' ? (
             <div className="space-y-1 animate-in fade-in duration-150">
-              <label htmlFor="address" className="text-xs font-black uppercase tracking-wider text-[#111111]">
+              <label htmlFor="address" className="text-xs font-bold uppercase tracking-wider text-gray-700 block">
                 {t('address')} *
               </label>
               <input
@@ -425,7 +425,7 @@ export default function CheckoutForm() {
                 disabled={isSubmitting}
                 {...register('address')}
                 placeholder={isVi ? 'Số nhà, tên đường, phường/xã, quận/huyện...' : 'Street address, ward, district...'}
-                className={`w-full p-4 border rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
+                className={`w-full h-10 px-3.5 py-2 border rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
                   errors.address ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
                 }`}
               />
@@ -434,19 +434,19 @@ export default function CheckoutForm() {
               )}
             </div>
           ) : (
-            <div className="p-4 sm:p-5 bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/30 to-[#FFFBEB] border-2 border-[#EAAA08]/50 rounded-2xl space-y-2 shadow-xs animate-in fade-in duration-200">
+            <div className="p-3.5 sm:p-4 bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/30 to-[#FFFBEB] border-2 border-[#EAAA08]/50 rounded-xl space-y-1.5 shadow-xs animate-in fade-in duration-200">
               <div className="flex items-center space-x-2 text-[#B45309]">
-                <div className="w-8 h-8 rounded-xl bg-[#EAAA08]/25 flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-[#EAAA08]/25 flex items-center justify-center shrink-0">
                   <Store className="w-4 h-4 text-[#B45309]" />
                 </div>
-                <span className="text-xs font-black uppercase tracking-wider">
+                <span className="text-xs font-bold uppercase tracking-wider">
                   {t('pickupAddressTitle')}
                 </span>
               </div>
-              <p className="text-sm sm:text-base font-black text-[#111111] leading-snug">
+              <p className="text-xs sm:text-sm font-extrabold text-[#111111] leading-snug">
                 {STORE_PICKUP_ADDRESS}
               </p>
-              <p className="text-xs font-semibold text-[#B45309]/90">
+              <p className="text-[11px] font-semibold text-[#B45309]/90">
                 {t('pickupAddressNote')}
               </p>
             </div>
@@ -454,16 +454,16 @@ export default function CheckoutForm() {
 
           {/* Pickup Timing Selection (Only for Pickup) */}
           {deliveryType === 'pickup' && (
-            <div className="space-y-2 pt-1 animate-in fade-in duration-200">
-              <label className="text-xs font-black uppercase tracking-wider text-[#111111] block">
+            <div className="space-y-1.5 pt-0.5 animate-in fade-in duration-200">
+              <label className="text-xs font-bold uppercase tracking-wider text-gray-700 block">
                 THỜI GIAN NHẬN MÓN *
               </label>
-              <div className="grid grid-cols-2 gap-3 mb-3">
+              <div className="grid grid-cols-2 gap-2.5 mb-2">
                 {/* Option 1: Lấy ngay */}
                 <button
                   type="button"
                   onClick={() => setPickupTimingMode('NOW')}
-                  className={`p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all duration-150 cursor-pointer ${
+                  className={`p-2.5 sm:p-3 rounded-xl border-2 text-left transition-all duration-150 cursor-pointer ${
                     pickupTimingMode === 'NOW'
                       ? 'border-[#EAAA08] bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/40 to-[#FFFBEB] shadow-xs ring-1 ring-[#EAAA08]/40'
                       : 'border-[#E5E7EB] bg-[#F8F9FA] hover:border-neutral-300'
@@ -471,23 +471,23 @@ export default function CheckoutForm() {
                 >
                   <div className="flex items-center space-x-2">
                     <div
-                      className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
                         pickupTimingMode === 'NOW'
                           ? 'bg-[#EAAA08] text-[#1E1B18]'
                           : 'bg-neutral-200 text-neutral-600'
                       }`}
                     >
-                      <Zap className="w-4 h-4 fill-current" />
+                      <Zap className="w-3.5 h-3.5 fill-current" />
                     </div>
                     <span
-                      className={`text-sm font-black ${
+                      className={`text-xs sm:text-sm font-extrabold ${
                         pickupTimingMode === 'NOW' ? 'text-[#1E1B18]' : 'text-neutral-700'
                       }`}
                     >
                       Lấy ngay
                     </span>
                   </div>
-                  <p className="text-[11px] text-neutral-500 font-medium mt-1.5 leading-normal">
+                  <p className="text-[10px] sm:text-[11px] text-neutral-500 font-medium mt-1 leading-normal">
                     Quán chuẩn bị trong 10 - 15 phút
                   </p>
                 </button>
@@ -496,7 +496,7 @@ export default function CheckoutForm() {
                 <button
                   type="button"
                   onClick={() => setPickupTimingMode('SCHEDULED')}
-                  className={`p-3.5 sm:p-4 rounded-2xl border-2 text-left transition-all duration-150 cursor-pointer ${
+                  className={`p-2.5 sm:p-3 rounded-xl border-2 text-left transition-all duration-150 cursor-pointer ${
                     pickupTimingMode === 'SCHEDULED'
                       ? 'border-[#EAAA08] bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/40 to-[#FFFBEB] shadow-xs ring-1 ring-[#EAAA08]/40'
                       : 'border-[#E5E7EB] bg-[#F8F9FA] hover:border-neutral-300'
@@ -504,23 +504,23 @@ export default function CheckoutForm() {
                 >
                   <div className="flex items-center space-x-2">
                     <div
-                      className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                      className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${
                         pickupTimingMode === 'SCHEDULED'
                           ? 'bg-[#EAAA08] text-[#1E1B18]'
                           : 'bg-neutral-200 text-neutral-600'
                       }`}
                     >
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-3.5 h-3.5" />
                     </div>
                     <span
-                      className={`text-sm font-black ${
+                      className={`text-xs sm:text-sm font-extrabold ${
                         pickupTimingMode === 'SCHEDULED' ? 'text-[#1E1B18]' : 'text-neutral-700'
                       }`}
                     >
                       Đặt giờ dự kiến
                     </span>
                   </div>
-                  <p className="text-[11px] text-neutral-500 font-medium mt-1.5 leading-normal">
+                  <p className="text-[10px] sm:text-[11px] text-neutral-500 font-medium mt-1 leading-normal">
                     Chọn giờ ghé lấy bánh
                   </p>
                 </button>
@@ -528,9 +528,9 @@ export default function CheckoutForm() {
 
               {/* Flexible Time Picker dropdown if SCHEDULED */}
               {pickupTimingMode === 'SCHEDULED' && (
-                <div className="p-3.5 bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/20 to-[#FFFBEB] border border-[#EAAA08]/50 rounded-2xl space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200 shadow-2xs">
+                <div className="p-3 bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7]/20 to-[#FFFBEB] border border-[#EAAA08]/50 rounded-xl space-y-1.5 animate-in fade-in slide-in-from-top-1 duration-200 shadow-2xs">
                   <div className="flex items-center justify-between">
-                    <label htmlFor="scheduledPickupTime" className="text-xs font-black text-[#1E1B18]">
+                    <label htmlFor="scheduledPickupTime" className="text-xs font-bold text-[#1E1B18]">
                       Khung giờ bạn dự kiến ghé lấy *
                     </label>
                     <span className="text-[10px] font-bold text-amber-800 bg-amber-200/60 px-2 py-0.5 rounded">
@@ -542,7 +542,7 @@ export default function CheckoutForm() {
                       id="scheduledPickupTime"
                       value={scheduledTime}
                       onChange={(e) => setScheduledTime(e.target.value)}
-                      className="w-full p-3 pr-10 border border-[#EAAA08]/60 rounded-xl text-sm font-black text-neutral-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#EAAA08]/30 focus:border-[#EAAA08] cursor-pointer shadow-xs"
+                      className="w-full h-10 px-3 pr-10 border border-[#EAAA08]/60 rounded-xl text-xs sm:text-sm font-bold text-neutral-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#EAAA08]/30 focus:border-[#EAAA08] cursor-pointer shadow-xs"
                     >
                       {timeSlots.map((time) => (
                         <option key={time} value={time}>
@@ -552,7 +552,7 @@ export default function CheckoutForm() {
                     </select>
                     <Clock className="w-4 h-4 text-[#B45309] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   </div>
-                  <p className="text-[11px] text-neutral-500 font-medium">
+                  <p className="text-[10px] sm:text-[11px] text-neutral-500 font-medium">
                     Tiệm mở cửa từ 07:00 đến 21:00. Vui lòng ghé đúng giờ để bánh luôn nóng giòn nhé!
                   </p>
                 </div>
@@ -562,20 +562,20 @@ export default function CheckoutForm() {
 
           {/* Special Delivery Note / Pickup Note */}
           <div className="space-y-1">
-            <label htmlFor="note" className="text-xs font-black uppercase tracking-wider text-[#111111]">
+            <label htmlFor="note" className="text-xs font-bold uppercase tracking-wider text-gray-700 block">
               {deliveryType === 'pickup' ? 'GHI CHÚ CHO TIỆM (TÙY CHỌN)' : t('note')}
             </label>
             <textarea
               id="note"
               disabled={isSubmitting}
               {...register('note')}
-              rows={3}
+              rows={2}
               placeholder={
                 deliveryType === 'pickup'
                   ? (isVi ? 'Ví dụ: Cần nhiều ớt, sốt ngọt để riêng...' : 'e.g., Extra chili, sauce on the side...')
                   : t('deliveryNotePlaceholder')
               }
-              className="w-full p-4 border border-[#E5E7EB] bg-[#F8F9FA] rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 resize-none text-[#111111] font-medium"
+              className="w-full px-3.5 py-2 border border-[#E5E7EB] bg-[#F8F9FA] rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 resize-none text-[#111111] font-medium"
             />
           </div>
         </div>
@@ -584,11 +584,11 @@ export default function CheckoutForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-4 bg-[#E53935] text-white font-black uppercase tracking-widest rounded-full hover:bg-[#D32F2F] transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cursor-pointer"
+          className="w-full py-3 bg-[#e0352b] hover:bg-red-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider rounded-full transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cursor-pointer"
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin" />
               <span>{t('processing')}</span>
             </>
           ) : (
@@ -597,33 +597,33 @@ export default function CheckoutForm() {
         </button>
       </form>
 
-      {/* Cart Summary List - Right 5 columns */}
-      <div className="lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6">
-        <h3 className="text-lg font-black text-[#111111] border-b border-[#E5E7EB] pb-4">
-          Review Items
+      {/* Review Items List - Left 5 columns on desktop, Top on mobile */}
+      <div className="order-1 lg:order-1 lg:col-span-5 bg-white p-5 sm:p-6 rounded-2xl border border-[#E5E7EB] shadow-xs space-y-3.5">
+        <h3 className="text-base sm:text-lg font-black text-[#111111] border-b border-[#E5E7EB] pb-3">
+          {t('reviewItems') || 'Review Items'}
         </h3>
 
         {/* Review list */}
-        <div className="divide-y divide-[#E5E7EB] max-h-[260px] overflow-y-auto pr-1">
+        <div className="divide-y divide-[#E5E7EB] max-h-[240px] overflow-y-auto pr-1">
           {items.map((item, idx) => {
             const optionsPrice = item.options.reduce((sum, opt) => sum + opt.price, 0);
             const price = (item.price + optionsPrice) * item.quantity;
             return (
-              <div key={idx} className="py-3 flex justify-between items-start gap-4 text-sm font-semibold">
+              <div key={idx} className="py-2.5 flex justify-between items-start gap-4 text-xs sm:text-sm font-semibold">
                 <div>
                   <h4 className="font-extrabold text-[#111111]">
                     {isVi ? item.name_vi : item.name_en}
-                    <span className="text-xs text-[#6B7280] font-black tracking-wider ml-1.5">
+                    <span className="text-xs text-[#6B7280] font-bold tracking-wider ml-1.5">
                       x{item.quantity}
                     </span>
                   </h4>
                   {item.options.length > 0 && (
-                    <p className="text-xs text-[#6B7280] font-medium mt-0.5">
+                    <p className="text-[11px] sm:text-xs text-[#6B7280] font-medium mt-0.5">
                       {item.options.map((o) => (isVi ? o.name_vi : o.name_en)).join(', ')}
                     </p>
                   )}
                 </div>
-                <span className="text-sm font-black text-[#E53935] shrink-0">
+                <span className="text-xs sm:text-sm font-black text-[#E53935] shrink-0">
                   {formatPrice(price)} {tc('currency')}
                 </span>
               </div>
@@ -632,11 +632,11 @@ export default function CheckoutForm() {
         </div>
 
         {/* Available Vouchers List Section (Between items list and Subtotal) */}
-        <div className="border-t border-[#E5E7EB] pt-5 space-y-3">
+        <div className="border-t border-[#E5E7EB] pt-3 space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-1.5">
               <TicketPercent className="w-4 h-4 text-[#EAAA08]" />
-              <span className="text-xs font-black uppercase tracking-wider text-[#111111]">
+              <span className="text-xs font-bold uppercase tracking-wider text-gray-700">
                 {t('vouchersTitle') || 'Mã Giảm Giá Khả Dụng'}
               </span>
             </div>
@@ -648,15 +648,15 @@ export default function CheckoutForm() {
           </div>
 
           {loadingPromos ? (
-            <div className="flex justify-center py-4">
-              <Loader2 className="w-5 h-5 text-[#EAAA08] animate-spin" />
+            <div className="flex justify-center py-3">
+              <Loader2 className="w-4 h-4 text-[#EAAA08] animate-spin" />
             </div>
           ) : promotions.length === 0 ? (
-            <p className="text-xs text-neutral-400 italic py-2">
+            <p className="text-xs text-neutral-400 italic py-1.5">
               {t('vouchersEmpty') || 'Hiện chưa có mã ưu đãi nào'}
             </p>
           ) : (
-            <div className="space-y-2.5 max-h-[240px] overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
               {promotions.map((promo) => {
                 const isSelected = selectedPromo?.id === promo.id;
                 const isEligible = !promo.min_order_value || subtotal >= promo.min_order_value;
@@ -676,7 +676,7 @@ export default function CheckoutForm() {
                   <div
                     key={promo.id}
                     onClick={() => isEligible && handleTogglePromo(promo)}
-                    className={`relative p-3 rounded-2xl border transition-all duration-200 ${
+                    className={`relative p-2.5 rounded-xl border transition-all duration-200 ${
                       isSelected
                         ? 'border-[#EAAA08] bg-gradient-to-r from-[#FFFBEB] via-[#FEF3C7]/40 to-[#FFFBEB] shadow-xs'
                         : isEligible
@@ -686,13 +686,13 @@ export default function CheckoutForm() {
                   >
                     <div className="flex items-start justify-between gap-2.5">
                       {/* Left: Code, Discount & Condition */}
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center space-x-2">
+                      <div className="space-y-0.5 flex-1">
+                        <div className="flex items-center space-x-1.5 flex-wrap gap-y-1">
                           <Tag className={`w-3.5 h-3.5 ${isSelected ? 'text-[#B45309]' : 'text-[#EAAA08]'}`} />
-                          <span className="font-mono font-black text-xs sm:text-sm text-[#111111] tracking-wide">
+                          <span className="font-mono font-bold text-xs sm:text-sm text-[#111111] tracking-wide">
                             {promo.code}
                           </span>
-                          <span className="inline-block px-2 py-0.5 rounded-full bg-[#E53935]/10 text-[#E53935] text-[10px] font-black uppercase tracking-wider">
+                          <span className="inline-block px-1.5 py-0.5 rounded-full bg-[#E53935]/10 text-[#E53935] text-[10px] font-bold uppercase tracking-wider">
                             Giảm {discountLabel}
                           </span>
                         </div>
@@ -719,7 +719,7 @@ export default function CheckoutForm() {
                               e.stopPropagation();
                               handleTogglePromo(promo);
                             }}
-                            className="px-2.5 py-1 rounded-xl bg-[#EAAA08] text-[#1E1B18] font-black text-[11px] uppercase tracking-wider flex items-center space-x-1 shadow-xs hover:bg-[#d89905] transition cursor-pointer"
+                            className="px-2 py-0.5 rounded-lg bg-[#EAAA08] text-[#1E1B18] font-bold text-[10px] uppercase tracking-wider flex items-center space-x-1 shadow-xs hover:bg-[#d89905] transition cursor-pointer"
                           >
                             <Check className="w-3 h-3 stroke-[3px]" />
                             <span>{t('deselect') || 'Bỏ chọn'}</span>
@@ -731,12 +731,12 @@ export default function CheckoutForm() {
                               e.stopPropagation();
                               handleTogglePromo(promo);
                             }}
-                            className="px-2.5 py-1 rounded-xl bg-neutral-900 hover:bg-[#E53935] text-white font-bold text-[11px] uppercase tracking-wider transition cursor-pointer"
+                            className="px-2 py-0.5 rounded-lg bg-neutral-900 hover:bg-[#E53935] text-white font-bold text-[10px] uppercase tracking-wider transition cursor-pointer"
                           >
                             {t('apply') || 'Áp dụng'}
                           </button>
                         ) : (
-                          <span className="px-2 py-0.5 rounded-lg bg-neutral-200/60 text-neutral-400 font-bold text-[10px] uppercase">
+                          <span className="px-1.5 py-0.5 rounded-md bg-neutral-200/60 text-neutral-400 font-bold text-[10px] uppercase">
                             Chưa đủ ĐK
                           </span>
                         )}
@@ -750,10 +750,10 @@ export default function CheckoutForm() {
         </div>
 
         {/* Payment and Delivery Summary info */}
-        <div className="border-t border-[#E5E7EB] pt-5 space-y-3 text-sm font-semibold text-[#6B7280]">
+        <div className="border-t border-[#E5E7EB] pt-3 space-y-2 text-xs sm:text-sm font-semibold text-[#6B7280]">
           {/* Subtotal */}
           <div className="flex justify-between">
-            <span>Subtotal</span>
+            <span>{t('subtotal') || 'Subtotal'}</span>
             <span className="text-[#111111] font-bold">
               {formatPrice(subtotal)} {tc('currency')}
             </span>
@@ -770,7 +770,7 @@ export default function CheckoutForm() {
                 <button
                   type="button"
                   onClick={() => setSelectedPromo(null)}
-                  className="p-1 text-neutral-400 hover:text-red-500 hover:bg-neutral-100 rounded-full transition cursor-pointer"
+                  className="p-0.5 text-neutral-400 hover:text-red-500 hover:bg-neutral-100 rounded-full transition cursor-pointer"
                   title={t('deselect') || 'Bỏ chọn'}
                 >
                   <X className="w-3 h-3" />
@@ -783,9 +783,9 @@ export default function CheckoutForm() {
           )}
 
           {/* Total Amount */}
-          <div className="border-t border-[#E5E7EB] pt-4 flex justify-between items-end">
-            <span className="text-base font-black text-[#111111]">Total Amount</span>
-            <span className="text-2xl font-black text-[#E53935]">
+          <div className="border-t border-[#E5E7EB] pt-2.5 flex justify-between items-baseline">
+            <span className="text-xs sm:text-sm font-extrabold text-[#111111]">{t('total') || 'Total Amount'}</span>
+            <span className="text-lg sm:text-xl font-black text-[#E53935]">
               {formatPrice(total)} {tc('currency')}
             </span>
           </div>

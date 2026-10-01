@@ -47,6 +47,7 @@
     "all": "All",
     "customize": "ORDER NOW",
     "addToCart": "Add to Cart",
+    "orderNow": "Order Now",
     "newBadge": "NEW",
     "bestSellerBadge": "Best Seller",
     "soldOutBadge": "SOLD OUT",
@@ -62,6 +63,8 @@
     "notePlaceholder": "E.g. No green onion, sweet sauce on the side...",
     "quantity": "Quantity",
     "addedToCart": "Added to Cart!",
+    "added": "ADDED",
+    "orderNow": "Order Now",
     "totalPrice": "Total Price"
   },
   "cartToast": {
@@ -122,6 +125,7 @@
   },
   "cart": {
     "title": "Your Shopping Cart",
+    "summary": "Order Summary",
     "empty": "Your cart is empty.",
     "subtotal": "Subtotal",
     "deliveryFee": "Delivery Fee",
@@ -145,6 +149,9 @@
   "checkout": {
     "title": "Delivery Information",
     "titlePickup": "Store Pickup Information",
+    "reviewItems": "Review Items",
+    "subtotal": "Subtotal",
+    "total": "Total Amount",
     "subtitle": "Provide your delivery information below. Payment is Cash on Delivery (COD) only.",
     "subtitlePickup": "Provide your contact information below. Payment directly upon pickup at store (COD).",
     "fulfillmentMethod": "Fulfillment Method",
