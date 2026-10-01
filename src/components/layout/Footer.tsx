@@ -75,9 +75,9 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Facebook ${CONTACT_CONFIG.facebookName}`}
-                className="w-8 h-8 rounded-full overflow-hidden hover:scale-110 hover:opacity-90 transition-all duration-200 inline-flex items-center justify-center shrink-0 shadow-xs"
+                className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#1877F2] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
               >
-                <FacebookIcon className="w-8 h-8" />
+                <FacebookIcon className="w-5 h-5 m-auto object-contain" />
               </a>
 
               <a
@@ -85,9 +85,9 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Zalo EGGU"
-                className="w-8 h-8 hover:scale-110 hover:opacity-90 transition-all duration-200 inline-flex items-center justify-center shrink-0 drop-shadow-xs"
+                className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#0068FF] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
               >
-                <ZaloIcon className="w-8 h-8" />
+                <ZaloIcon className="w-5.5 h-5.5 m-auto object-contain" />
               </a>
 
               <a
@@ -95,9 +95,9 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="TikTok EGGU"
-                className="w-8 h-8 rounded-full overflow-hidden hover:scale-110 hover:opacity-90 transition-all duration-200 inline-flex items-center justify-center shrink-0 shadow-xs"
+                className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-black shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
               >
-                <TikTokIcon className="w-8 h-8" />
+                <TikTokIcon className="w-5 h-5 m-auto object-contain" />
               </a>
             </div>
           </div>
@@ -154,9 +154,9 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Facebook ${CONTACT_CONFIG.facebookName}`}
-                  className="w-8 h-8 rounded-full overflow-hidden hover:scale-110 hover:opacity-90 transition-all duration-200 inline-flex items-center justify-center shrink-0 shadow-xs"
+                  className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#1877F2] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
                 >
-                  <FacebookIcon className="w-8 h-8" />
+                  <FacebookIcon className="w-5 h-5 m-auto object-contain" />
                 </a>
 
                 <a
@@ -164,9 +164,9 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Zalo EGGU"
-                  className="w-8 h-8 hover:scale-110 hover:opacity-90 transition-all duration-200 inline-flex items-center justify-center shrink-0 drop-shadow-xs"
+                  className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#0068FF] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
                 >
-                  <ZaloIcon className="w-8 h-8" />
+                  <ZaloIcon className="w-5.5 h-5.5 m-auto object-contain" />
                 </a>
 
                 <a
@@ -174,9 +174,9 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="TikTok EGGU"
-                  className="w-8 h-8 rounded-full overflow-hidden hover:scale-110 hover:opacity-90 transition-all duration-200 inline-flex items-center justify-center shrink-0 shadow-xs"
+                  className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-black shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
                 >
-                  <TikTokIcon className="w-8 h-8" />
+                  <TikTokIcon className="w-5 h-5 m-auto object-contain" />
                 </a>
               </div>
             </div>

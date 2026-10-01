@@ -47,7 +47,7 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
 
   if (!orderDetails) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] pt-24 pb-20 flex items-center justify-center">
+      <div className="min-h-screen bg-transparent pt-24 pb-20 flex items-center justify-center">
         <div className="text-center py-12 bg-white rounded-3xl border border-[#E5E0D8] p-8 space-y-4 max-w-md mx-auto shadow-sm">
           <ShoppingBag className="w-12 h-12 text-[#706860] mx-auto animate-pulse" />
           <h3 className="text-lg font-bold text-[#1E1B18]">Order not found</h3>
@@ -89,7 +89,7 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
     : null;
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-24 md:pt-28 pb-12 md:pb-16">
+    <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-12 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-xl mx-auto space-y-8">
           {/* Header checkmark */}

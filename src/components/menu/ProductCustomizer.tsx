@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { useCartStore, CartItemOption } from '@/stores/cartStore';
 import { useToastStore } from '@/stores/toastStore';
-import { Plus, Minus, Check, ShoppingBag } from 'lucide-react';
+import { Plus, Minus, Check, ShoppingBag, Zap } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 
 interface DBProductOption {
@@ -29,6 +30,7 @@ interface ProductCustomizerProps {
 }
 
 export default function ProductCustomizer({ product, options, locale }: ProductCustomizerProps) {
+  const router = useRouter();
   const tm = useTranslations('menu');
   const tp = useTranslations('product');
   const tc = useTranslations('common');
@@ -92,6 +94,30 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
     setTimeout(() => {
       setIsAdded(false);
     }, 1800);
+  };
+
+  // Direct order now handler (adds to cart & redirects to /cart)
+  const handleOrderNow = () => {
+    if (isSoldOut) return;
+    const cartOptions: CartItemOption[] = selectedOptions.map((o) => ({
+      id: o.id,
+      name_vi: o.name_vi || o.name || '',
+      name_en: o.name_en || o.name || '',
+      price: Number(o.price),
+    }));
+
+    addItem({
+      productId: product.id,
+      name_vi: product.name_vi,
+      name_en: product.name_en,
+      price: Number(product.price),
+      image: product.image_url || '/images/hero-sandwich.jpg',
+      quantity,
+      options: cartOptions,
+      note: note.trim() || undefined,
+    });
+
+    router.push('/cart');
   };
 
   return (
@@ -195,35 +221,71 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
         </div>
       </div>
 
-      {/* Action Button (Compact h-11 / py-2) */}
-      <div>
-        <button
-          type="button"
-          onClick={handleAddToCart}
-          disabled={isAdded || isSoldOut}
-          className={`w-full h-11 py-2 text-sm sm:text-base font-bold uppercase tracking-wider rounded-full shadow-md flex items-center justify-center space-x-2 transition-all duration-300 ${
-            isSoldOut
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none'
-              : isAdded
-              ? 'bg-[#22C55E] text-white shadow-none'
-              : 'bg-[#E53935] text-white hover:bg-[#D32F2F] hover:shadow-lg active:scale-98 cursor-pointer'
-          }`}
-        >
-          {isAdded ? (
-            <Check className="w-4 h-4 stroke-[3]" />
-          ) : (
-            <ShoppingBag className="w-4 h-4" />
-          )}
-          <span>
-            {isSoldOut
-              ? isVi
-                ? 'HẾT HÀNG'
-                : 'SOLD OUT'
-              : isAdded
-              ? tp('addedToCart')
-              : tm('addToCart')}
-          </span>
-        </button>
+      {/* 2 Action Buttons: In-flow on desktop, Sticky Bottom Bar on mobile */}
+      <div className="fixed sm:static bottom-0 left-0 right-0 z-40 bg-white/95 sm:bg-transparent backdrop-blur-md sm:backdrop-blur-none border-t border-[#E5E0D8] sm:border-0 p-3 sm:p-0 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] sm:shadow-none pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] sm:pb-0">
+        <div className="max-w-md mx-auto sm:max-w-none">
+          {/* Mobile-only compact row with total price */}
+          <div className="flex sm:hidden items-center justify-between mb-2 px-1">
+            <span className="text-xs font-bold text-[#706860] uppercase tracking-wider">
+              {tp('totalPrice')}:
+            </span>
+            <span className="text-base font-black text-[#e0352b]">
+              {formatPrice(totalPrice)} {tc('currency')}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+            {/* Nút 1: THÊM VÀO GIỎ */}
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={isAdded || isSoldOut}
+              className={`w-full h-11 sm:h-12 py-2 px-2 sm:px-4 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-full flex items-center justify-center space-x-1.5 sm:space-x-2 transition-all duration-200 select-none ${
+                isSoldOut
+                  ? 'border-2 border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
+                  : isAdded
+                  ? 'border-2 border-[#22C55E] bg-[#22C55E] text-white shadow-xs'
+                  : 'border-2 border-[#e0352b] bg-white text-[#e0352b] hover:bg-red-50 active:scale-98 shadow-xs cursor-pointer'
+              }`}
+            >
+              {isAdded ? (
+                <Check className="w-4 h-4 stroke-[3] shrink-0" />
+              ) : (
+                <ShoppingBag className="w-4 h-4 shrink-0" />
+              )}
+              <span className="truncate">
+                {isSoldOut
+                  ? isVi
+                    ? 'HẾT HÀNG'
+                    : 'SOLD OUT'
+                  : isAdded
+                  ? tp('added')
+                  : tm('addToCart')}
+              </span>
+            </button>
+
+            {/* Nút 2: ĐẶT HÀNG NGAY */}
+            <button
+              type="button"
+              onClick={handleOrderNow}
+              disabled={isSoldOut}
+              className={`w-full h-11 sm:h-12 py-2 px-2 sm:px-4 text-xs sm:text-sm font-bold uppercase tracking-wider rounded-full shadow-md flex items-center justify-center space-x-1.5 sm:space-x-2 transition-all duration-200 select-none ${
+                isSoldOut
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none'
+                  : 'bg-[#e0352b] hover:bg-red-700 text-white hover:shadow-lg active:scale-98 cursor-pointer'
+              }`}
+            >
+              <Zap className="w-4 h-4 fill-current shrink-0" />
+              <span className="truncate">
+                {isSoldOut
+                  ? isVi
+                    ? 'HẾT HÀNG'
+                    : 'SOLD OUT'
+                  : tm('orderNow')}
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

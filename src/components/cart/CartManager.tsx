@@ -87,9 +87,9 @@ export default function CartManager({ locale }: CartManagerProps) {
             return (
               <div
                 key={`${item.productId}-${hash}`}
-                className="bg-white p-5 rounded-2xl border border-[#E5E7EB] hover:border-[#E53935]/30 transition-colors flex gap-4 md:gap-6 items-start shadow-xs"
+                className="bg-white p-4 sm:p-5 rounded-2xl border border-[#E5E7EB] hover:border-[#e0352b]/30 transition-colors flex gap-4 md:gap-5 items-start justify-between shadow-xs"
               >
-                {/* Thumbnail */}
+                {/* Cột 1: Ảnh đại diện món ăn */}
                 <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border border-[#E5E7EB] shrink-0 bg-neutral-100">
                   <Image
                     src={item.image || '/images/hero-sandwich.jpg'}
@@ -100,61 +100,68 @@ export default function CartManager({ locale }: CartManagerProps) {
                   />
                 </div>
 
-                {/* Details */}
-                <div className="flex-grow space-y-3 min-w-0">
-                  <div className="flex justify-between items-start gap-4">
-                    <div>
-                      <h3 className="font-black text-base md:text-lg text-[#111111] truncate">
-                        {isVi ? item.name_vi : item.name_en}
-                      </h3>
-                      {/* Options */}
-                      {item.options.length > 0 && (
-                        <p className="text-xs text-[#6B7280] mt-1 font-semibold">
-                          + {item.options.map((o) => (isVi ? o.name_vi : o.name_en)).join(', ')}
-                        </p>
-                      )}
-                      {/* Note */}
-                      {item.note && (
-                        <p className="text-xs italic text-[#E53935] mt-1 font-semibold">
-                          {t('note')}: &ldquo;{item.note}&rdquo;
-                        </p>
-                      )}
-                    </div>
-                    {/* Item price */}
-                    <span className="font-black text-[#E53935] shrink-0 text-sm md:text-base">
+                {/* Cột 2: Cụm thông tin: Tên món → Giá tiền bên dưới → Topping → Bộ tăng giảm số lượng */}
+                <div className="flex-grow space-y-2 min-w-0">
+                  {/* Gom Tên món và Giá tiền vào chung một khối xếp theo chiều dọc */}
+                  <div className="flex flex-col items-start gap-1">
+                    <h3 className="font-bold uppercase text-gray-900 text-sm md:text-base truncate max-w-full">
+                      {isVi ? item.name_vi : item.name_en}
+                    </h3>
+                    <span className="font-extrabold text-[#e0352b] text-sm md:text-base">
                       {formatPrice(itemSubtotal)} {tc('currency')}
                     </span>
                   </div>
 
-                  {/* Quantity and Remove actions */}
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="flex items-center bg-[#F8F9FA] border border-[#E5E7EB] rounded-full p-0.5">
+                  {/* Danh sách topping đã chọn (nếu có) */}
+                  {item.options.length > 0 && (
+                    <p className="text-xs text-[#6B7280] font-semibold">
+                      + {item.options.map((o) => (isVi ? o.name_vi : o.name_en)).join(', ')}
+                    </p>
+                  )}
+
+                  {/* Ghi chú (nếu có) */}
+                  {item.note && (
+                    <p className="text-xs italic text-[#e0352b] font-semibold">
+                      {t('note')}: &ldquo;{item.note}&rdquo;
+                    </p>
+                  )}
+
+                  {/* Bộ tăng giảm số lượng */}
+                  <div className="pt-1">
+                    <div className="flex items-center bg-[#F8F9FA] border border-[#E5E7EB] rounded-full p-0.5 w-fit">
                       <button
+                        type="button"
                         onClick={() => updateQuantity(item.productId, hash, item.quantity - 1)}
-                        className="p-1 hover:bg-white rounded-full transition"
+                        className="p-1 hover:bg-white rounded-full transition cursor-pointer"
+                        aria-label="Decrease quantity"
                       >
                         <Minus className="w-3.5 h-3.5 text-[#111111]" />
                       </button>
-                      <span className="px-4 font-black text-xs text-[#111111] min-w-[30px] text-center">
+                      <span className="px-3.5 font-bold text-xs sm:text-sm text-[#111111] min-w-[28px] text-center">
                         {item.quantity}
                       </span>
                       <button
+                        type="button"
                         onClick={() => updateQuantity(item.productId, hash, item.quantity + 1)}
-                        className="p-1 hover:bg-white rounded-full transition"
+                        className="p-1 hover:bg-white rounded-full transition cursor-pointer"
+                        aria-label="Increase quantity"
                       >
                         <Plus className="w-3.5 h-3.5 text-[#111111]" />
                       </button>
                     </div>
-
-                    <button
-                      onClick={() => removeItem(item.productId, hash)}
-                      className="text-[#9CA3AF] hover:text-[#E53935] p-2 transition-colors duration-150"
-                      aria-label="Remove item"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </div>
                 </div>
+
+                {/* Cột 3 (bên phải cùng): Nút xóa/thùng rác (icon trash) để xóa món khỏi giỏ hàng */}
+                <button
+                  type="button"
+                  onClick={() => removeItem(item.productId, hash)}
+                  className="text-[#9CA3AF] hover:text-[#e0352b] p-2 hover:bg-red-50 rounded-xl transition-all duration-150 shrink-0 self-start cursor-pointer"
+                  aria-label="Remove item"
+                  title="Xóa món"
+                >
+                  <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
+                </button>
               </div>
             );
           })}
@@ -173,24 +180,24 @@ export default function CartManager({ locale }: CartManagerProps) {
       </div>
 
       {/* Cart Summary Panel - Right 4 columns */}
-      <div className="lg:col-span-4 bg-white p-6 rounded-3xl border border-[#E5E7EB] shadow-xs space-y-6">
-        <h3 className="text-lg font-black text-[#111111] border-b border-[#E5E7EB] pb-4">
-          Order Summary
+      <div className="lg:col-span-4 bg-white p-4 sm:p-5 rounded-2xl border border-[#E5E7EB] shadow-xs space-y-3">
+        <h3 className="text-sm sm:text-base font-extrabold text-gray-900 border-b border-[#E5E7EB] pb-2.5">
+          {t('summary')}
         </h3>
 
-        <div className="space-y-4 text-sm font-semibold text-[#6B7280]">
+        <div className="space-y-2.5 text-xs sm:text-sm">
           {/* Subtotal */}
-          <div className="flex justify-between">
-            <span>{t('subtotal')}</span>
-            <span className="text-[#111111] font-bold">
+          <div className="flex justify-between items-center text-xs sm:text-sm">
+            <span className="text-gray-500">{t('subtotal')}</span>
+            <span className="font-semibold text-gray-800">
               {formatPrice(subtotal)} {tc('currency')}
             </span>
           </div>
 
           {/* Total */}
-          <div className="border-t border-[#E5E7EB] pt-4 flex justify-between items-end">
-            <span className="text-base font-black text-[#111111]">{t('total')}</span>
-            <span className="text-2xl font-black text-[#E53935]">
+          <div className="border-t border-[#E5E7EB] pt-2.5 flex justify-between items-center">
+            <span className="text-xs sm:text-sm font-bold text-gray-900">{t('total')}</span>
+            <span className="text-base sm:text-lg font-black text-[#e0352b]">
               {formatPrice(total)} {tc('currency')}
             </span>
           </div>
@@ -200,7 +207,7 @@ export default function CartManager({ locale }: CartManagerProps) {
         <button
           type="button"
           onClick={() => setIsDeliveryModalOpen(true)}
-          className="w-full py-4 bg-[#E53935] text-white text-center font-black uppercase tracking-widest rounded-full shadow-md hover:shadow-lg hover:bg-[#D32F2F] transition duration-150 flex items-center justify-center space-x-2 cursor-pointer"
+          className="w-full py-2.5 px-4 bg-[#e0352b] text-white text-center font-bold text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-md hover:shadow-lg hover:bg-red-700 active:scale-98 transition duration-150 flex items-center justify-center space-x-1.5 cursor-pointer mt-1"
         >
           <span>{t('checkout')}</span>
           <ArrowRight className="w-4 h-4" />

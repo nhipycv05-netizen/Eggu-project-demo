@@ -47,6 +47,7 @@
     "all": "Tất Cả",
     "customize": "ĐẶT HÀNG",
     "addToCart": "Thêm Vào Giỏ",
+    "orderNow": "ĐẶT HÀNG NGAY",
     "newBadge": "MỚI",
     "bestSellerBadge": "Bán Chạy",
     "soldOutBadge": "HẾT MÓN",
@@ -62,6 +63,8 @@
     "notePlaceholder": "Ví dụ: Không hành, sốt ngọt để riêng...",
     "quantity": "Số Lượng",
     "addedToCart": "Đã thêm vào giỏ hàng!",
+    "added": "ĐÃ THÊM",
+    "orderNow": "ĐẶT HÀNG NGAY",
     "totalPrice": "Tổng Giá Tiền"
   },
   "cartToast": {
@@ -122,6 +125,7 @@
   },
   "cart": {
     "title": "Giỏ Hàng Của Bạn",
+    "summary": "Tóm Tắt Đơn Hàng",
     "empty": "Giỏ hàng của bạn đang trống.",
     "subtotal": "Tạm tính",
     "deliveryFee": "Phí vận chuyển",
@@ -145,6 +149,9 @@
   "checkout": {
     "title": "Thông Tin Giao Hàng",
     "titlePickup": "Thông Tin Nhận Món Tại Quán",
+    "reviewItems": "Đơn Hàng Của Bạn",
+    "subtotal": "Tạm tính",
+    "total": "Tổng thanh toán",
     "subtitle": "Vui lòng nhập đầy đủ địa chỉ giao nhận. Phương thức duy nhất là Thanh toán khi nhận hàng (COD).",
     "subtitlePickup": "Vui lòng nhập thông tin người nhận. Thanh toán trực tiếp khi nhận món tại tiệm (COD).",
     "fulfillmentMethod": "Hình thức nhận hàng",
