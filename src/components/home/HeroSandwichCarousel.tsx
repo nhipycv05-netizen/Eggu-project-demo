@@ -47,10 +47,11 @@ interface HeroSandwichCarouselProps {
   locale: string;
 }
 
-const AUTOPLAY_INTERVAL = 4000; // 4 seconds per slide
+const AUTOPLAY_INTERVAL = 2800; // 2.8s (rút ngắn trong khoảng 2500ms - 3000ms)
 
 export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
@@ -84,11 +85,14 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
     setCurrentIndex(index);
   }, []);
 
-  // Continuous Autoplay effect:
-  // - Runs every 4 seconds (AUTOPLAY_INTERVAL)
-  // - Resets 4-second countdown whenever user interacts (currentIndex changes)
-  // - Seamlessly continues infinite loop across all 5 images
+  // Continuous Autoplay effect with Pause-on-Hover:
+  // - Runs every 2.8s (AUTOPLAY_INTERVAL)
+  // - Pauses when user hovers (isHovered = true) so they can view the sandwich
+  // - Resumes automatically when user leaves (isHovered = false)
+  // - Resets countdown whenever user interacts (currentIndex changes)
   useEffect(() => {
+    if (isHovered) return;
+
     const timer = setInterval(() => {
       handleNext();
     }, AUTOPLAY_INTERVAL);
@@ -96,7 +100,7 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
     return () => {
       clearInterval(timer);
     };
-  }, [handleNext, currentIndex]);
+  }, [handleNext, currentIndex, isHovered]);
 
   // Touch swipe support for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -247,9 +251,11 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
 
             </div>
 
-            {/* RIGHT CAROUSEL 3D CONVEYOR AREA: ROTATING 5 PRODUCT IMAGES */}
+            {/* RIGHT CAROUSEL 3D CONVEYOR AREA: ROTATING 3 PRODUCT IMAGES */}
             <div 
               className="lg:col-span-6 flex flex-col items-center justify-center relative select-none w-full"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
@@ -295,10 +301,8 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
                           zIndex: style.zIndex,
                         }}
                         transition={{
-                          type: 'spring',
-                          stiffness: 220,
-                          damping: 26,
-                          mass: 0.85,
+                          duration: 0.55,
+                          ease: 'easeInOut',
                         }}
                         onClick={() => {
                           if (!isCurrent) handleSelectIndex(index);
@@ -373,9 +377,9 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
                     >
                       {isActive && (
                         <motion.div
-                          key={`progress-${currentIndex}`}
+                          key={`progress-${currentIndex}-${isHovered ? 'paused' : 'running'}`}
                           initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
+                          animate={{ scaleX: isHovered ? 0 : 1 }}
                           transition={{ duration: AUTOPLAY_INTERVAL / 1000, ease: 'linear' }}
                           style={{ originX: 0 }}
                           className="absolute inset-0 bg-white/30"
