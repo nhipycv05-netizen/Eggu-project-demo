@@ -60,7 +60,8 @@
     "allergy": "Allergy Warning",
     "options": "Customize Options",
     "note": "Special Instructions / Note",
-    "notePlaceholder": "E.g. No green onion, sweet sauce on the side...",
+    "notePlaceholder": "e.g. No onion, extra sauce on the side...",
+    "drinkNotePlaceholder": "e.g. Less sweet (50% sugar), less ice, hot...",
     "quantity": "Quantity",
     "addedToCart": "Added to Cart!",
     "added": "ADDED",
@@ -91,7 +92,10 @@
   },
   "faq": {
     "title": "FREQUENTLY ASKED QUESTIONS",
-    "subtitle": "Everything you need to know about EGGU ordering and delivery."
+    "subtitle": "Everything you need to know about EGGU ordering and delivery.",
+    "categoryOrdering": "ORDERING",
+    "categoryPayment": "PAYMENT",
+    "categoryDelivery": "DELIVERY"
   },
   "news": {
     "title": "NEWS & EVENTS",

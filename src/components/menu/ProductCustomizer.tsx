@@ -24,12 +24,104 @@ interface ProductCustomizerProps {
     price: number;
     image_url: string;
     is_available?: boolean;
+    category?: string;
+    category_slug?: string;
+    slug?: string;
   };
   options: DBProductOption[];
   locale: string;
+  category?: string;
 }
 
-export default function ProductCustomizer({ product, options, locale }: ProductCustomizerProps) {
+export function isDrinkProduct(
+  category?: string,
+  categorySlug?: string,
+  nameVi?: string,
+  nameEn?: string,
+  slug?: string
+): boolean {
+  const norm = (str?: string) => (str || '').toLowerCase().trim();
+  const c = norm(category);
+  const cs = norm(categorySlug);
+  const nVi = norm(nameVi);
+  const nEn = norm(nameEn);
+  const s = norm(slug);
+
+  // 1. Direct Category codes/slugs ('drink', 'coffee', 'smoothie', 'coffee-drinks', 'smoothie-fresh-juice' etc.)
+  const drinkCategorySlugs = [
+    'drink',
+    'drinks',
+    'coffee',
+    'coffee-drinks',
+    'ca-phe',
+    'ca-phe-do-uong',
+    'smoothie',
+    'smoothie-fresh-juice',
+    'sinh-to',
+    'sinh-to-nuoc-ep',
+    'juice',
+    'fresh-juice',
+    'nuoc-ep',
+    'beverage',
+    'beverages',
+    'tea',
+    'tra',
+    '3c333333-3333-3333-3333-333333333333',
+    '4d444444-4444-4444-4444-444444444444',
+  ];
+
+  if (drinkCategorySlugs.some((id) => c === id || cs === id || c.includes(id) || cs.includes(id))) {
+    return true;
+  }
+
+  // 2. Category names in Vietnamese / English ('Cà Phê & Đồ Uống', 'Sinh Tố & Nước Ép', etc.)
+  if (
+    c.includes('cà phê') ||
+    c.includes('đồ uống') ||
+    c.includes('sinh tố') ||
+    c.includes('nước ép') ||
+    c.includes('coffee') ||
+    c.includes('smoothie') ||
+    c.includes('juice') ||
+    cs.includes('cà phê') ||
+    cs.includes('đồ uống') ||
+    cs.includes('sinh tố') ||
+    cs.includes('nước ép')
+  ) {
+    return true;
+  }
+
+  // 3. Fallback name / slug matching
+  const drinkKeywords = [
+    'cà phê',
+    'ca phe',
+    'coffee',
+    'americano',
+    'latte',
+    'cappuccino',
+    'capuchino',
+    'espresso',
+    'sinh tố',
+    'sinh to',
+    'smoothie',
+    'nước ép',
+    'nuoc ep',
+    'juice',
+    'matcha',
+    'trà',
+    'tea',
+    'cold brew',
+    'chocolate',
+  ];
+
+  if (drinkKeywords.some((kw) => nVi.includes(kw) || nEn.includes(kw) || s.includes(kw))) {
+    return true;
+  }
+
+  return false;
+}
+
+export default function ProductCustomizer({ product, options, locale, category }: ProductCustomizerProps) {
   const router = useRouter();
   const tm = useTranslations('menu');
   const tp = useTranslations('product');
@@ -44,6 +136,19 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
 
   const isVi = locale === 'vi';
   const isSoldOut = product.is_available === false;
+
+  // Determine if product is Drink/Coffee/Smoothie to customize the note placeholder
+  const isDrink = isDrinkProduct(
+    category || product.category || product.category_slug,
+    product.category_slug,
+    product.name_vi,
+    product.name_en,
+    product.slug
+  );
+
+  const notePlaceholder = isDrink
+    ? (tp('drinkNotePlaceholder') || (isVi ? 'Ví dụ: Giảm ngọt (50% đường), ít đá, uống nóng...' : 'e.g. Less sweet (50% sugar), less ice, hot...'))
+    : (tp('notePlaceholder') || (isVi ? 'Ví dụ: Không hành, sốt ngọt để riêng...' : 'e.g. No onion, extra sauce on the side...'));
 
   // Toggle option selection
   const handleToggleOption = (option: DBProductOption) => {
@@ -175,7 +280,7 @@ export default function ProductCustomizer({ product, options, locale }: ProductC
           type="text"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder={tp('notePlaceholder')}
+          placeholder={notePlaceholder}
           className="w-full py-1.5 px-3 border border-[#E5E7EB] bg-white rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 font-medium text-[#111111]"
         />
       </div>

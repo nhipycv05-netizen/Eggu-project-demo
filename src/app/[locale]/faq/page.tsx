@@ -58,6 +58,21 @@ export default async function FaqPage({ params }: FaqPageProps) {
   // Group FAQs by category
   const categories = Array.from(new Set(faqs.map((f) => f.category)));
 
+  // Helper to translate category headers according to current locale (Ordering -> ĐẶT HÀNG / ORDERING, Payment -> THANH TOÁN / PAYMENT)
+  const getCategoryLabel = (category: string) => {
+    const key = category.toLowerCase().trim();
+    if (key === 'ordering' || key === 'dat-hang' || key === 'đặt hàng') {
+      return t('categoryOrdering') || (isVi ? 'ĐẶT HÀNG' : 'ORDERING');
+    }
+    if (key === 'payment' || key === 'thanh-toan' || key === 'thanh toán') {
+      return t('categoryPayment') || (isVi ? 'THANH TOÁN' : 'PAYMENT');
+    }
+    if (key === 'delivery' || key === 'giao-hang' || key === 'giao hàng') {
+      return t('categoryDelivery') || (isVi ? 'GIAO HÀNG' : 'DELIVERY');
+    }
+    return category;
+  };
+
   return (
     <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-12 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -76,7 +91,7 @@ export default async function FaqPage({ params }: FaqPageProps) {
               return (
                 <div key={category} className="space-y-6">
                   <h2 className="text-xl font-black text-[#111111] uppercase tracking-wider border-b border-[#E5E7EB] pb-2">
-                    {category}
+                    {getCategoryLabel(category)}
                   </h2>
                   <div className="divide-y divide-[#E5E7EB]">
                     {categoryFaqs.map((faq) => (

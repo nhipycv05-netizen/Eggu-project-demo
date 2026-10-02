@@ -61,6 +61,7 @@
     "options": "Tùy Chọn Thêm Topping",
     "note": "Yêu Cầu Đặc Biệt / Ghi Chú",
     "notePlaceholder": "Ví dụ: Không hành, sốt ngọt để riêng...",
+    "drinkNotePlaceholder": "Ví dụ: Giảm ngọt (50% đường), ít đá, uống nóng...",
     "quantity": "Số Lượng",
     "addedToCart": "Đã thêm vào giỏ hàng!",
     "added": "ĐÃ THÊM",
@@ -91,7 +92,10 @@
   },
   "faq": {
     "title": "CÂU HỎI THƯỜNG GẶP",
-    "subtitle": "Tất cả những thông tin bạn cần biết về đặt hàng, thanh toán COD và giao nhận."
+    "subtitle": "Tất cả những thông tin bạn cần biết về đặt hàng, thanh toán COD và giao nhận.",
+    "categoryOrdering": "ĐẶT HÀNG",
+    "categoryPayment": "THANH TOÁN",
+    "categoryDelivery": "GIAO HÀNG"
   },
   "news": {
     "title": "TIN TỨC & SỰ KIỆN",

@@ -85,3 +85,15 @@ export const SOCIAL_ALT = {
       ? 'Bản đồ chỉ đường đến Eggu 54 Nguyễn Hữu Huân'
       : 'Map to Eggu 54 Nguyen Huu Huan',
 };
+
+/**
+ * Hình ảnh Câu chuyện thương hiệu (Brand Story):
+ * vi: "Câu chuyện thương hiệu Eggu - Bánh Mì Sandwich Trứng Chuẩn Vị Hàn Quốc"
+ * en: "Eggu Brand Story - Authentic Korean Egg Sandwich"
+ */
+export function getBrandStoryAlt(locale: SupportedLocale = 'vi'): string {
+  const isVi = locale === 'vi';
+  return isVi
+    ? 'Câu chuyện thương hiệu Eggu - Bánh Mì Sandwich Trứng Chuẩn Vị Hàn Quốc'
+    : 'Eggu Brand Story - Authentic Korean Egg Sandwich';
+}
