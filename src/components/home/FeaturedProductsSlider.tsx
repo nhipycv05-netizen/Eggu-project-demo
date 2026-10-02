@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard, { ProductCardItem } from '@/components/menu/ProductCard';
 
@@ -100,9 +101,17 @@ export default function FeaturedProductsSlider({
         aria-label={isVi ? 'Danh sách món nổi bật bán chạy' : 'Featured bestseller products'}
         className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-3 md:gap-4 py-2 px-0.5 scroll-smooth focus:outline-none"
       >
-        {products.map((product) => (
-          <div
+        {products.map((product, index) => (
+          <motion.div
             key={product.id}
+            initial={{ opacity: 0, y: 32 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{
+              duration: 0.6,
+              ease: 'easeOut',
+              delay: (index % 5) * 0.1,
+            }}
             className="flex-none snap-start w-[calc((100vw-3.2rem)/2.25)] min-w-[150px] max-w-[185px] sm:max-w-none sm:w-[calc((100%-2*1rem)/3)] md:w-[calc((100%-3*1rem)/4)] lg:w-[calc((100%-4*1rem)/5)] flex flex-col"
           >
             <ProductCard
@@ -115,7 +124,7 @@ export default function FeaturedProductsSlider({
               soldOutBadgeLabel={soldOutBadgeLabel}
               soldOutBtnLabel={soldOutBtnLabel}
             />
-          </div>
+          </motion.div>
         ))}
       </div>
 
