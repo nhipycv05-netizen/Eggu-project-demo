@@ -12,38 +12,34 @@ export interface SandwichItem {
   image_url: string;
   name_vi?: string;
   name_en?: string;
+  alt_vi: string;
+  alt_en: string;
 }
 
 export const HERO_SANDWICH_IMAGES: SandwichItem[] = [
   {
-    id: 'hero-bacon-cheese',
-    image_url: '/images/carousel/sandwich-bacon-cheese.jpg',
-    name_vi: 'Bacon Double Cheese',
-    name_en: 'Bacon Double Cheese',
+    id: 'hero-sandwich-1',
+    image_url: '/images/hero/hero-sandwich-1.jpg',
+    name_vi: 'Sandwich Trứng Thịt Xông Khói Bơ Tỏi',
+    name_en: 'Real Bacon & Garlic Egg Sandwich',
+    alt_vi: 'Sandwich Trứng Thịt Xông Khói Bơ Tỏi Thực Tế - Eggu',
+    alt_en: 'Real Bacon & Garlic Egg Sandwich - Eggu',
   },
   {
-    id: 'hero-mr-egg',
-    image_url: '/images/carousel/sandwich-egg-scramble.jpg',
-    name_vi: 'Mr. Egg',
-    name_en: 'Mr. Egg',
+    id: 'hero-sandwich-2',
+    image_url: '/images/hero/hero-sandwich-2.jpg',
+    name_vi: 'Bánh Mì Sandwich Trứng Nóng Giòn Cầm Tay',
+    name_en: 'Crispy Hot Korean Egg Sandwich',
+    alt_vi: 'Bánh Mì Sandwich Trứng Nóng Giòn Cầm Tay - Eggu',
+    alt_en: 'Crispy Hot Korean Egg Sandwich - Eggu',
   },
   {
-    id: 'hero-corn-bacon',
-    image_url: '/images/carousel/sandwich-corn-bacon.jpg',
-    name_vi: 'Sweet Corn Bacon',
-    name_en: 'Sweet Corn Bacon',
-  },
-  {
-    id: 'hero-chicken-herb',
-    image_url: '/images/carousel/sandwich-chicken-herbs.jpg',
-    name_vi: 'Chicken Herbs Mayo',
-    name_en: 'Chicken Herbs Mayo',
-  },
-  {
-    id: 'hero-tuna-tomato',
-    image_url: '/images/carousel/sandwich-tuna-tomato.jpg',
-    name_vi: 'Tuna Salad Melt',
-    name_en: 'Tuna Salad Melt',
+    id: 'hero-sandwich-3',
+    image_url: '/images/hero/hero-sandwich-3.jpg',
+    name_vi: 'Sandwich Trứng Phô Mai Đẫm Topping',
+    name_en: 'Cheesy Egg Sandwich Loaded with Toppings',
+    alt_vi: 'Sandwich Trứng Phô Mai Đẫm Topping - Eggu',
+    alt_en: 'Cheesy Egg Sandwich Loaded with Toppings - Eggu',
   },
 ];
 
@@ -317,9 +313,9 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
                       >
                         {/* Sandwich Card Container */}
                         <div
-                          className={`relative w-full h-full rounded-3xl overflow-hidden bg-white border-2 transition-all duration-500 p-2 sm:p-3 flex items-center justify-center ${
+                          className={`relative w-full h-full rounded-3xl overflow-hidden bg-white border-2 transition-all duration-500 flex items-center justify-center ${
                             isCurrent
-                              ? 'border-[#FFC107] ring-4 ring-[#FFC107]/20 shadow-2xl bg-gradient-to-b from-white to-[#FFFDF7]'
+                              ? 'border-[#FBBF24] ring-4 ring-[#FBBF24]/20 shadow-2xl bg-gradient-to-b from-white to-[#FFFDF7]'
                               : 'border-transparent shadow-md bg-white/90'
                           }`}
                         >
@@ -341,7 +337,7 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
                                   }
                                 : {}
                             }
-                            className="relative w-full h-full rounded-2xl overflow-hidden flex items-center justify-center"
+                            className="relative w-full h-full rounded-3xl overflow-hidden flex items-center justify-center"
                           >
                             <Image
                               src={item.image_url}
@@ -349,7 +345,7 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
                               fill
                               sizes="(max-width: 640px) 280px, (max-width: 1024px) 360px, 420px"
                               priority={index === 0 || index === 1}
-                              className="object-contain p-1 transform transition-transform duration-500 hover:scale-105"
+                              className="object-cover w-full h-full transform transition-transform duration-500 hover:scale-105"
                             />
                           </motion.div>
                         </div>

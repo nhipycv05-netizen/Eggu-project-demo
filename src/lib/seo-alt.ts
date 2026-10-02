@@ -39,12 +39,22 @@ export function getProductAltFromItem(
     name_vi?: string | null;
     name_en?: string | null;
     name?: string | null;
+    alt_vi?: string | null;
+    alt_en?: string | null;
   } | null | undefined,
   locale: SupportedLocale = 'vi'
 ): string {
   const isVi = locale === 'vi';
   if (!item) {
     return isVi ? 'Sandwich Trứng Eggu' : 'Eggu Korean Egg Sandwich';
+  }
+
+  // Explicit multilingual SEO alt defined on item
+  if (isVi && item.alt_vi) {
+    return item.alt_vi;
+  }
+  if (!isVi && item.alt_en) {
+    return item.alt_en;
   }
 
   const productName = isVi
