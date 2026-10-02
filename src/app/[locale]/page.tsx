@@ -12,7 +12,7 @@ import {
   CoffeeColorIcon,
   DessertColorIcon,
 } from '@/components/home/CategoryIcons';
-import { SOCIAL_ALT } from '@/lib/seo-alt';
+import { SOCIAL_ALT, getBrandStoryAlt } from '@/lib/seo-alt';
 
 export const dynamic = 'force-dynamic';
 
@@ -188,13 +188,13 @@ export default async function HomePage({ params }: HomePageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Cột trái: Hình ảnh (giữ nguyên w-full, khống chế chiều cao cân bằng với khối chữ) */}
             <div className="w-full flex justify-center">
-              <div className="relative w-full h-[260px] sm:h-[280px] md:h-[300px] max-w-[460px] rounded-2xl overflow-hidden shadow-sm border border-[#E5E7EB]">
+              <div className="relative w-full h-[280px] sm:h-[320px] md:h-[340px] max-w-[480px] rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-[#E5E7EB] bg-white group">
                 <Image
-                  src="/images/story-sandwich.jpg"
-                  alt={isVi ? 'Câu chuyện thương hiệu Eggu - Bánh Mì Sandwich Trứng Chuẩn Vị Hàn Quốc' : 'Eggu Brand Story - Authentic Korean Egg Sandwich'}
+                  src="/images/brand-story.jpg"
+                  alt={getBrandStoryAlt(locale)}
                   fill
                   sizes="(max-width: 768px) 100vw, 600px"
-                  className="object-cover"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
             </div>

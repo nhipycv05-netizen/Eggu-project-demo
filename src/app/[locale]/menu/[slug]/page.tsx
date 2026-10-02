@@ -332,7 +332,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 price: product.price,
                 image_url: product.image_url || '',
                 is_available: !isSoldOut,
+                category_slug: categorySlug,
+                category: categorySlug,
+                slug: product.slug,
               }}
+              category={categorySlug}
               options={options}
               locale={locale}
             />
