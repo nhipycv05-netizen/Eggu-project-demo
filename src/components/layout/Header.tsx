@@ -10,6 +10,8 @@ import { useCartStore } from '@/stores/cartStore';
 import SearchBar from '@/components/menu/SearchBar';
 import TopAnnouncementBar from './TopAnnouncementBar';
 import { getLogoAlt } from '@/lib/seo-alt';
+import { CONTACT_CONFIG } from '@/constants/contact';
+import ZaloIcon from '@/components/ui/ZaloIcon';
 
 export default function Header() {
   const t = useTranslations('nav');
@@ -334,6 +336,21 @@ export default function Header() {
                 Ngôn ngữ / Language
               </span>
               <LanguageSwitcher />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">
+                Zalo Official Account
+              </span>
+              <a
+                href={CONTACT_CONFIG.zaloUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0068FF] text-white text-xs font-bold hover:bg-[#0055d4] transition-colors shadow-xs"
+                title="Nhắn tin Zalo OA"
+              >
+                <ZaloIcon className="w-4 h-4 object-contain" />
+                <span>Chat Zalo OA</span>
+              </a>
             </div>
             <p className="text-xs text-[#6B7280] text-center mt-2">
               © 2026 EGGU Korean Egg Sandwich. All rights reserved.
