@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 import ProductCard from '@/components/menu/ProductCard';
-import ProductGrid from '@/components/menu/ProductGrid';
 import CategoryHorizontalSection from '@/components/menu/CategoryHorizontalSection';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
@@ -158,16 +157,21 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
               })}
           </div>
         ) : (
-          <ProductGrid
-            products={filteredProducts}
-            locale={locale}
-            buttonLabel={tm('customize')}
-            currencyLabel={tc('currency')}
-            newBadgeLabel={tm('newBadge')}
-            bestSellerBadgeLabel={tm('bestSellerBadge')}
-            soldOutBadgeLabel={tm('soldOutBadge')}
-            soldOutBtnLabel={tm('soldOutBtn')}
-          />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 md:gap-4 max-w-7xl mx-auto px-4 my-6">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                locale={locale}
+                buttonLabel={tm('customize')}
+                currencyLabel={tc('currency')}
+                newBadgeLabel={tm('newBadge')}
+                bestSellerBadgeLabel={tm('bestSellerBadge')}
+                soldOutBadgeLabel={tm('soldOutBadge')}
+                soldOutBtnLabel={tm('soldOutBtn')}
+              />
+            ))}
+          </div>
         )}
       </div>
     </div>
