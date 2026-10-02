@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { MapPin, Phone, Clock, ExternalLink, MessageCircle } from 'lucide-react';
 import { CONTACT_CONFIG } from '@/constants/contact';
+import FacebookIcon from '@/components/ui/FacebookIcon';
 import ZaloIcon from '@/components/ui/ZaloIcon';
 import TikTokIcon from '@/components/ui/TikTokIcon';
 import { SOCIAL_ALT } from '@/lib/seo-alt';
@@ -179,9 +180,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
                       {/* Facebook Fanpage */}
                       <div className="flex items-start space-x-3">
-                        <svg className="w-5 h-5 text-[#1877F2] shrink-0 mt-0.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                          <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-                        </svg>
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 overflow-hidden">
+                          <FacebookIcon alt={SOCIAL_ALT.facebook(locale)} className="w-full h-full object-contain" />
+                        </div>
                         <div>
                           <p className="text-xs text-[#9CA3AF] uppercase font-black tracking-wider mb-1">
                             {isVi ? 'Fanpage Facebook' : 'Facebook Fanpage'}
@@ -349,11 +350,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
                 href={CONTACT_CONFIG.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="py-3 px-3 bg-[#1877F2] hover:bg-[#166fe5] text-white rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                className="py-3 px-3 bg-[#0866FF] hover:bg-[#0756d6] text-white rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
               >
-                <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-                </svg>
+                <FacebookIcon className="w-4 h-4 shrink-0" />
                 <span className="truncate">{isVi ? 'Ghé Thăm Fanpage' : 'Visit Fanpage'}</span>
                 <ExternalLink className="w-3.5 h-3.5 opacity-80 shrink-0" />
               </a>

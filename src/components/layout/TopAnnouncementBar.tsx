@@ -88,13 +88,13 @@ export default function TopAnnouncementBar({ mobileMode = 'ticker' }: TopAnnounc
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 hover:text-amber-200 transition-colors group cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50 rounded font-bold"
-              title="Nhắn tin Zalo Official Account tư vấn & đặt bánh"
+              title="Nhắn tin Zalo tư vấn & đặt bánh"
             >
               <div className="w-4 h-4 rounded-full bg-white flex items-center justify-center shrink-0 p-0.5 group-hover:scale-110 transition-transform">
                 <ZaloIcon className="w-3.5 h-3.5 object-contain" />
               </div>
               <span className="whitespace-nowrap font-bold underline decoration-white/70 underline-offset-2 group-hover:decoration-amber-200">
-                Zalo OA
+                Zalo
               </span>
             </a>
           </div>
@@ -155,12 +155,12 @@ export default function TopAnnouncementBar({ mobileMode = 'ticker' }: TopAnnounc
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 font-bold underline decoration-white/70 underline-offset-2 hover:text-amber-200 shrink-0"
-                title="Nhắn tin Zalo OA"
+                title="Nhắn tin Zalo"
               >
                 <div className="w-3.5 h-3.5 rounded-full bg-white flex items-center justify-center shrink-0 p-0.5">
                   <ZaloIcon className="w-3 h-3 object-contain" />
                 </div>
-                <span className="font-bold">Zalo OA</span>
+                <span className="font-bold">Zalo</span>
               </a>
             </div>
           </div>
@@ -204,12 +204,12 @@ export default function TopAnnouncementBar({ mobileMode = 'ticker' }: TopAnnounc
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 font-bold underline decoration-white/70 underline-offset-2 hover:text-amber-200 shrink-0"
-                title="Nhắn tin Zalo OA"
+                title="Nhắn tin Zalo"
               >
                 <div className="w-3.5 h-3.5 rounded-full bg-white flex items-center justify-center shrink-0 p-0.5">
                   <ZaloIcon className="w-3 h-3 object-contain" />
                 </div>
-                <span className="font-bold">Zalo OA</span>
+                <span className="font-bold">Zalo</span>
               </a>
             </div>
           </div>

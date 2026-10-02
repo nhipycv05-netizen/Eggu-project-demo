@@ -339,17 +339,17 @@ export default function Header() {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#6B7280] uppercase tracking-wider">
-                Zalo Official Account
+                Zalo
               </span>
               <a
                 href={CONTACT_CONFIG.zaloUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0068FF] text-white text-xs font-bold hover:bg-[#0055d4] transition-colors shadow-xs"
-                title="Nhắn tin Zalo OA"
+                title="Nhắn tin Zalo"
               >
                 <ZaloIcon className="w-4 h-4 object-contain" />
-                <span>Chat Zalo OA</span>
+                <span>Chat Zalo</span>
               </a>
             </div>
             <p className="text-xs text-[#6B7280] text-center mt-2">
