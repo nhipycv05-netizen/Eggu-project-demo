@@ -80,9 +80,9 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={facebookAlt}
-                className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#1877F2] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
+                className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#0866FF] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
               >
-                <FacebookIcon alt={facebookAlt} className="w-5 h-5 m-auto object-contain" />
+                <FacebookIcon alt={facebookAlt} className="w-full h-full object-contain" />
               </a>
 
               <a
@@ -159,9 +159,9 @@ export default function Footer({ store, locale = 'vi' }: FooterProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={facebookAlt}
-                  className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#1877F2] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
+                  className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center overflow-hidden bg-[#0866FF] shadow-xs hover:scale-110 hover:opacity-90 transition-all duration-200"
                 >
-                  <FacebookIcon alt={facebookAlt} className="w-5 h-5 m-auto object-contain" />
+                  <FacebookIcon alt={facebookAlt} className="w-full h-full object-contain" />
                 </a>
 
                 <a
