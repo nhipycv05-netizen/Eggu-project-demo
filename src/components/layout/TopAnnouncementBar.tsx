@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { CheckCircle2, Phone, Bike } from 'lucide-react';
+import { CONTACT_CONFIG } from '@/constants/contact';
+import ZaloIcon from '@/components/ui/ZaloIcon';
 
 interface TopAnnouncementBarProps {
   /**
@@ -76,6 +78,25 @@ export default function TopAnnouncementBar({ mobileMode = 'ticker' }: TopAnnounc
                 </strong>
               </span>
             </a>
+
+            <span className="text-white/50 select-none font-normal" aria-hidden="true">
+              |
+            </span>
+
+            <a
+              href={CONTACT_CONFIG.zaloUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 hover:text-amber-200 transition-colors group cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/50 rounded font-bold"
+              title="Nhắn tin Zalo Official Account tư vấn & đặt bánh"
+            >
+              <div className="w-4 h-4 rounded-full bg-white flex items-center justify-center shrink-0 p-0.5 group-hover:scale-110 transition-transform">
+                <ZaloIcon className="w-3.5 h-3.5 object-contain" />
+              </div>
+              <span className="whitespace-nowrap font-bold underline decoration-white/70 underline-offset-2 group-hover:decoration-amber-200">
+                Zalo OA
+              </span>
+            </a>
           </div>
         </div>
 
@@ -99,7 +120,7 @@ export default function TopAnnouncementBar({ mobileMode = 'ticker' }: TopAnnounc
               </span>
             </div>
 
-            {/* Slide 1: Delivery & Hotline */}
+            {/* Slide 1: Delivery & Hotline & Zalo */}
             <div
               className={`absolute inset-0 flex items-center justify-center gap-2 text-center text-xs tracking-tight transition-all duration-500 ease-in-out font-bold ${
                 activeSlide === 1
@@ -124,6 +145,23 @@ export default function TopAnnouncementBar({ mobileMode = 'ticker' }: TopAnnounc
                 <Phone className="w-3 h-3 text-white shrink-0" strokeWidth={2.5} />
                 <span className="font-bold">{t('hotline')}: 0356779899</span>
               </a>
+
+              <span className="text-white/50 font-normal" aria-hidden="true">
+                |
+              </span>
+
+              <a
+                href={CONTACT_CONFIG.zaloUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-bold underline decoration-white/70 underline-offset-2 hover:text-amber-200 shrink-0"
+                title="Nhắn tin Zalo OA"
+              >
+                <div className="w-3.5 h-3.5 rounded-full bg-white flex items-center justify-center shrink-0 p-0.5">
+                  <ZaloIcon className="w-3 h-3 object-contain" />
+                </div>
+                <span className="font-bold">Zalo OA</span>
+              </a>
             </div>
           </div>
         ) : (
@@ -137,7 +175,7 @@ export default function TopAnnouncementBar({ mobileMode = 'ticker' }: TopAnnounc
               <span className="font-bold">{t('orderConfirmation')}</span>
             </div>
 
-            {/* Line 2: Delivery & Hotline */}
+            {/* Line 2: Delivery & Hotline & Zalo */}
             <div className="flex items-center justify-center gap-2 text-white font-bold text-[11px] sm:text-xs">
               <span className="flex items-center gap-1 shrink-0 font-bold">
                 <Bike className="w-3 h-3 text-white shrink-0" strokeWidth={2.5} />
@@ -155,6 +193,23 @@ export default function TopAnnouncementBar({ mobileMode = 'ticker' }: TopAnnounc
               >
                 <Phone className="w-3 h-3 text-white shrink-0" strokeWidth={2.5} />
                 <span className="font-bold">{t('hotline')}: 0356779899</span>
+              </a>
+
+              <span className="text-white/50 font-normal" aria-hidden="true">
+                |
+              </span>
+
+              <a
+                href={CONTACT_CONFIG.zaloUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-bold underline decoration-white/70 underline-offset-2 hover:text-amber-200 shrink-0"
+                title="Nhắn tin Zalo OA"
+              >
+                <div className="w-3.5 h-3.5 rounded-full bg-white flex items-center justify-center shrink-0 p-0.5">
+                  <ZaloIcon className="w-3 h-3 object-contain" />
+                </div>
+                <span className="font-bold">Zalo OA</span>
               </a>
             </div>
           </div>
