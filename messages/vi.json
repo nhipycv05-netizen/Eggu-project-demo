@@ -175,7 +175,7 @@
     "placeOrder": "Đặt Hàng Ngay (COD)",
     "processing": "Đang xử lý đơn hàng...",
     "vouchersTitle": "Mã Giảm Giá Khả Dụng",
-    "vouchersEmpty": "Hiện chưa có mã ưu đãi nào",
+    "vouchersEmpty": "Không có mã giảm giá nào khả dụng",
     "apply": "Áp dụng",
     "applied": "Đang áp dụng",
     "deselect": "Bỏ chọn",
