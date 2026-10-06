@@ -6,7 +6,7 @@ import type { Promotion } from '@/types/promotion';
 import { z } from 'zod';
 import { formatPrice } from '@/lib/utils';
 import { after } from 'next/server';
-import { sendOrderNotificationEmail } from './orderNotificationEmail';
+import { notifyNewOrder } from './orderNotifications';
 
 // Order validation schema
 const checkoutFormSchema = z.object({
@@ -341,8 +341,8 @@ export async function createOrder(
       return { success: false, error: 'Failed to create order items' };
     }
 
-    // 9. Notify shop by email once order + items are saved (runs after the response, never blocks checkout)
-    after(() => sendOrderNotificationEmail(insertedOrder, orderItemsToInsert));
+    // 9. Notify shop (email + Zalo OA) once order + items are saved (runs after the response, never blocks checkout)
+    after(() => notifyNewOrder(insertedOrder, orderItemsToInsert));
 
     return { success: true, orderNumber };
   } catch (error) {
