@@ -3,7 +3,10 @@ import { getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import { Open_Sans, Geist_Mono } from 'next/font/google';
+import Script from 'next/script';
 import '../globals.css';
+
+const GA_MEASUREMENT_ID = 'G-653W80C2L8';
 
 const openSans = Open_Sans({
   variable: '--font-open-sans',
@@ -68,6 +71,19 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         />
       </head>
       <body className="flex min-h-full flex-col text-foreground font-sans">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main className="flex-grow">
