@@ -10,7 +10,7 @@
     "currency": "VND"
   },
   "announcement": {
-    "orderConfirmation": "Orders Confirmed Upon Staff Verification",
+    "orderConfirmation": "Orders are confirmed once staff calls with the shipping fee.",
     "delivery": "Delivery within central Hanoi",
     "deliveryShort": "Central Hanoi Delivery",
     "hotline": "Hotline"
