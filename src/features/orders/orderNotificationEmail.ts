@@ -1,6 +1,6 @@
 import { getMailer } from '@/lib/mailer';
 
-interface NotificationOrderItem {
+export interface NotificationOrderItem {
   product_name_vi: string;
   quantity: number;
   unit_price: number;
@@ -9,7 +9,7 @@ interface NotificationOrderItem {
   note: string | null;
 }
 
-interface NotificationOrder {
+export interface NotificationOrder {
   order_number: string;
   customer_name: string;
   phone: string;

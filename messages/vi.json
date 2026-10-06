@@ -180,6 +180,8 @@
     "needMore": "Mua thêm {amount} để dùng mã này",
     "discount": "Giảm giá",
     "removePromo": "Gỡ mã",
+    "emptyCart": "Giỏ hàng đang trống",
+    "emptyCartDesc": "Hãy thêm món vào giỏ trước khi thanh toán nhé.",
     "errors": {
       "nameRequired": "Vui lòng nhập họ và tên",
       "phoneRequired": "Vui lòng nhập số điện thoại",

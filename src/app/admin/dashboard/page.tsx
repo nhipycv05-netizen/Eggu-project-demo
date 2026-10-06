@@ -10,6 +10,7 @@ import StoresTab from '@/components/admin/StoresTab';
 import FaqsTab from '@/components/admin/FaqsTab';
 import NewsTab from '@/components/admin/NewsTab';
 import PromotionsTab from '@/components/admin/PromotionsTab';
+import NotificationRecipientsTab from '@/components/admin/NotificationRecipientsTab';
 import { Loader2 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -62,6 +63,8 @@ export default function AdminDashboardPage() {
         return <NewsTab />;
       case 'promotions':
         return <PromotionsTab />;
+      case 'notifications':
+        return <NotificationRecipientsTab />;
       default:
         return <OrdersTab />;
     }
@@ -77,6 +80,7 @@ export default function AdminDashboardPage() {
     faqs: 'Hỏi đáp (FAQ)',
     news: 'Tin tức & Bài viết',
     promotions: 'Chương trình khuyến mãi',
+    notifications: 'Người nhận thông báo',
   };
 
   return (

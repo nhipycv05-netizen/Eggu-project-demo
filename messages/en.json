@@ -180,6 +180,8 @@
     "needMore": "Add {amount} more to unlock this code",
     "discount": "Discount",
     "removePromo": "Remove code",
+    "emptyCart": "Your cart is empty",
+    "emptyCartDesc": "Add some items to your cart before checking out.",
     "errors": {
       "nameRequired": "Full name is required",
       "phoneRequired": "Phone number is required",

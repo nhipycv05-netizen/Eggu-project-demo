@@ -4,6 +4,8 @@ import type { NextConfig } from 'next';
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
+  // Dev only: allow opening the dev server via this machine's LAN IP (not just localhost)
+  allowedDevOrigins: ['172.16.49.75'],
   images: {
     remotePatterns: [
       {

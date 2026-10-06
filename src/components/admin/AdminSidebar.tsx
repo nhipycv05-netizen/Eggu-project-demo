@@ -12,6 +12,7 @@ import {
   HelpCircle,
   FileText,
   Percent,
+  BellRing,
   LogOut,
 } from 'lucide-react';
 
@@ -28,6 +29,7 @@ const MENU_ITEMS = [
   { id: 'faqs', label: 'Hỏi đáp (FAQ)', icon: HelpCircle },
   { id: 'news', label: 'Tin tức & Blog', icon: FileText },
   { id: 'promotions', label: 'Khuyến mãi', icon: Percent },
+  { id: 'notifications', label: 'Người nhận thông báo', icon: BellRing },
 ];
 
 export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
