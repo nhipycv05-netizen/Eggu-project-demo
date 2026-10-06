@@ -298,6 +298,12 @@ export default function CheckoutForm() {
     );
 
     if (result.success && result.orderNumber) {
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'generate_lead', {
+          event_category: 'Order',
+          event_label: 'New Lead / Order Placed',
+        });
+      }
       clearCart();
       setIsConfirmModalOpen(false);
       router.push(`/order-success?order=${result.orderNumber}`);
