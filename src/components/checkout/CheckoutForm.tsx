@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -156,6 +156,18 @@ export default function CheckoutForm() {
     }
   };
 
+  const fetchActivePromos = useCallback(async () => {
+    try {
+      const data = await getActivePromotions();
+      setPromotions(data || []);
+    } catch (err) {
+      console.error('Lỗi khi tải danh sách voucher:', err);
+      setPromotions([]);
+    } finally {
+      setLoadingPromos(false);
+    }
+  }, []);
+
   useEffect(() => {
     let active = true;
     setTimeout(() => {
@@ -164,23 +176,19 @@ export default function CheckoutForm() {
       }
     }, 0);
 
-    // Fetch active promotions for checkout list
-    getActivePromotions()
-      .then((data) => {
-        if (active) {
-          setPromotions(data || []);
-          setLoadingPromos(false);
-        }
-      })
-      .catch((err) => {
-        console.error('Lỗi khi tải danh sách voucher:', err);
-        if (active) setLoadingPromos(false);
-      });
+    fetchActivePromos();
+
+    // Re-fetch on window focus to immediately sync when admin adds promotions
+    const handleFocus = () => {
+      fetchActivePromos();
+    };
+    window.addEventListener('focus', handleFocus);
 
     return () => {
       active = false;
+      window.removeEventListener('focus', handleFocus);
     };
-  }, []);
+  }, [fetchActivePromos]);
 
   const subtotal = useMemo(() => {
     return items.reduce((sum, item) => {
@@ -653,7 +661,7 @@ export default function CheckoutForm() {
             </div>
           ) : promotions.length === 0 ? (
             <p className="text-xs text-neutral-400 italic py-1.5">
-              {t('vouchersEmpty') || 'Hiện chưa có mã ưu đãi nào'}
+              {t('vouchersEmpty') || (isVi ? 'Không có mã giảm giá nào khả dụng' : 'No coupons available')}
             </p>
           ) : (
             <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">

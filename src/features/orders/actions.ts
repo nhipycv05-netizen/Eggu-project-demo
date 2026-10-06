@@ -1,7 +1,8 @@
 'use server';
 
 import { createServiceRoleClient } from '@/lib/supabase/serviceRole';
-import { parsePromotionFromDb, isPromotionActiveAndValid, MOCK_PROMOTIONS } from '@/lib/promotions';
+import { parsePromotionFromDb, isPromotionActiveAndValid } from '@/lib/promotions';
+import type { Promotion } from '@/types/promotion';
 import { z } from 'zod';
 import { formatPrice } from '@/lib/utils';
 import { after } from 'next/server';
@@ -73,25 +74,29 @@ const STANDARD_TOPPINGS: Record<string, { name_vi: string; name_en: string; pric
 /**
  * Fetch all active and date-valid promotions for checkout selection
  */
-export async function getActivePromotions() {
+export async function getActivePromotions(): Promise<Promotion[]> {
   try {
     const supabase = createServiceRoleClient();
     const { data: promos, error } = await supabase
       .from('promotions')
       .select('*')
-      .eq('is_active', true)
       .order('created_at', { ascending: false });
 
-    if (error || !promos || promos.length === 0) {
-      return MOCK_PROMOTIONS;
+    if (error) {
+      console.error('Error fetching active promotions from database:', error);
+      return [];
+    }
+
+    if (!promos || promos.length === 0) {
+      return [];
     }
 
     const parsed = promos.map((p) => parsePromotionFromDb(p));
     const active = parsed.filter((p) => isPromotionActiveAndValid(p));
-    return active.length > 0 ? active : MOCK_PROMOTIONS;
+    return active;
   } catch (err) {
     console.error('Error fetching active promotions:', err);
-    return MOCK_PROMOTIONS;
+    return [];
   }
 }
 
@@ -109,8 +114,7 @@ export async function validatePromoCode(code: string, subtotal: number) {
 
     const { data: promos, error } = await supabase
       .from('promotions')
-      .select('*')
-      .eq('is_active', true);
+      .select('*');
 
     if (error || !promos || promos.length === 0) {
       return { valid: false, error: 'Mã không tồn tại hoặc đã hết hạn' };

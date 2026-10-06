@@ -22,12 +22,16 @@ export function parsePromotionFromDb(row: Record<string, any>): Promotion {
     }
   }
 
-  const code =
+  const rawCode =
     row.code ||
     meta.code ||
-    (row.title_vi && row.title_vi.length <= 25 && !row.title_vi.includes(' ')
-      ? row.title_vi.toUpperCase()
-      : 'EGGU');
+    (row.title_vi && row.title_vi.trim().length <= 25
+      ? row.title_vi.trim().toUpperCase().replace(/\s+/g, '')
+      : '') ||
+    (row.title_en && row.title_en.trim().length <= 25
+      ? row.title_en.trim().toUpperCase().replace(/\s+/g, '')
+      : '') ||
+    'EGGU';
 
   const discount_type: 'PERCENTAGE' | 'FIXED' =
     row.discount_type || meta.discount_type || 'PERCENTAGE';
@@ -37,7 +41,7 @@ export function parsePromotionFromDb(row: Record<string, any>): Promotion {
       ? row.discount_value
       : meta.discount_value !== undefined && meta.discount_value !== null
       ? meta.discount_value
-      : 10
+      : 0
   );
 
   const min_order_value =
@@ -53,9 +57,14 @@ export function parsePromotionFromDb(row: Record<string, any>): Promotion {
     row.end_date ||
     new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
+  const isActive =
+    row.status !== undefined
+      ? String(row.status).toLowerCase() === 'active'
+      : Boolean(row.is_active);
+
   return {
     id: row.id,
-    code: code.toUpperCase().trim(),
+    code: rawCode.toUpperCase().trim(),
     title_vi: row.title_vi || '',
     title_en: row.title_en || '',
     description_vi: row.description_vi || '',
@@ -67,7 +76,7 @@ export function parsePromotionFromDb(row: Record<string, any>): Promotion {
     end_at,
     start_date: start_at,
     end_date: end_at,
-    is_active: Boolean(row.is_active),
+    is_active: isActive,
     image_url: meta.image_url || (!row.image_url?.trim().startsWith('{') ? row.image_url : null),
     created_at: row.created_at,
     updated_at: row.updated_at,
@@ -97,6 +106,11 @@ export function serializePromotionForDb(promo: {
     image_url: promo.image_url || null,
   };
 
+  const endDateObj = new Date(promo.end_date);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(promo.end_date.trim())) {
+    endDateObj.setHours(23, 59, 59, 999);
+  }
+
   return {
     title_vi: promo.code.toUpperCase().trim(),
     title_en: promo.code.toUpperCase().trim(),
@@ -104,7 +118,7 @@ export function serializePromotionForDb(promo: {
     description_en: promo.description_en,
     image_url: JSON.stringify(meta),
     start_at: new Date(promo.start_date).toISOString(),
-    end_at: new Date(promo.end_date).toISOString(),
+    end_at: endDateObj.toISOString(),
     is_active: promo.is_active,
   };
 }
@@ -113,73 +127,36 @@ export function serializePromotionForDb(promo: {
  * Check whether a promotion is currently active and within its valid date range.
  */
 export function isPromotionActiveAndValid(promo: Promotion, now = new Date()): boolean {
-  if (!promo.is_active) return false;
+  const isActive =
+    (promo as any).status !== undefined
+      ? String((promo as any).status).toLowerCase() === 'active'
+      : Boolean(promo.is_active);
 
-  const start = new Date(promo.start_at);
-  const end = new Date(promo.end_at);
+  if (!isActive) return false;
+
   const currentTime = now.getTime();
 
-  if (!isNaN(start.getTime()) && currentTime < start.getTime()) {
-    return false;
+  if (promo.start_at) {
+    const start = new Date(promo.start_at);
+    if (!isNaN(start.getTime()) && currentTime < start.getTime()) {
+      return false;
+    }
   }
 
-  if (!isNaN(end.getTime()) && currentTime > end.getTime()) {
-    return false;
+  if (promo.end_at) {
+    const end = new Date(promo.end_at);
+    if (!isNaN(end.getTime())) {
+      let endTime = end.getTime();
+      if (typeof promo.end_at === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(promo.end_at.trim())) {
+        const endOfDay = new Date(promo.end_at);
+        endOfDay.setHours(23, 59, 59, 999);
+        endTime = endOfDay.getTime();
+      }
+      if (currentTime > endTime) {
+        return false;
+      }
+    }
   }
 
   return true;
 }
-
-/**
- * Fallback mock promotions for visual presentation when DB is empty or offline.
- */
-export const MOCK_PROMOTIONS: Promotion[] = [
-  {
-    id: 'promo-mock-1',
-    code: 'EGGUHELLO',
-    title_vi: 'Ưu Đãi Bạn Mới',
-    title_en: 'New Member Gift',
-    description_vi: 'Giảm 15% cho toàn bộ thực đơn bánh mì kẹp trứng bơ sữa',
-    description_en: '15% off on all signature Korean egg sandwiches',
-    discount_type: 'PERCENTAGE',
-    discount_value: 15,
-    min_order_value: 50000,
-    start_at: new Date('2026-01-01').toISOString(),
-    end_at: new Date('2026-12-31').toISOString(),
-    start_date: new Date('2026-01-01').toISOString(),
-    end_date: new Date('2026-12-31').toISOString(),
-    is_active: true,
-  },
-  {
-    id: 'promo-mock-2',
-    code: 'FREESHIP20',
-    title_vi: 'Miễn Phí Giao Hàng',
-    title_en: 'Free Delivery Discount',
-    description_vi: 'Giảm 20.000đ trực tiếp vào phí vận chuyển đơn từ 99.000đ',
-    description_en: '20,000 VND discount on delivery fee for orders from 99,000 VND',
-    discount_type: 'FIXED',
-    discount_value: 20000,
-    min_order_value: 99000,
-    start_at: new Date('2026-01-01').toISOString(),
-    end_at: new Date('2026-12-31').toISOString(),
-    start_date: new Date('2026-01-01').toISOString(),
-    end_date: new Date('2026-12-31').toISOString(),
-    is_active: true,
-  },
-  {
-    id: 'promo-mock-3',
-    code: 'EGGUPARTY',
-    title_vi: 'Combo Tiệc Bánh Mì',
-    title_en: 'Toast Party Special',
-    description_vi: 'Giảm 25% cho đơn hàng tiệc gia đình hoặc nhóm từ 150.000đ',
-    description_en: '25% off for group and party orders from 150,000 VND',
-    discount_type: 'PERCENTAGE',
-    discount_value: 25,
-    min_order_value: 150000,
-    start_at: new Date('2026-01-01').toISOString(),
-    end_at: new Date('2026-12-31').toISOString(),
-    start_date: new Date('2026-01-01').toISOString(),
-    end_date: new Date('2026-12-31').toISOString(),
-    is_active: true,
-  },
-];

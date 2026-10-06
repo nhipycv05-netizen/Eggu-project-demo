@@ -175,7 +175,7 @@
     "placeOrder": "Place Order (COD)",
     "processing": "Processing Order...",
     "vouchersTitle": "Available Coupons",
-    "vouchersEmpty": "No coupons available at the moment",
+    "vouchersEmpty": "No coupons available",
     "apply": "Apply",
     "applied": "Applied",
     "deselect": "Remove",
