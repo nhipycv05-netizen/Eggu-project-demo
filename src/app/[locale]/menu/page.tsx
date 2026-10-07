@@ -1,14 +1,55 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import ProductCard from '@/components/menu/ProductCard';
 import CategoryHorizontalSection from '@/components/menu/CategoryHorizontalSection';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { SITE_URL, getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
 
 import { MOCK_CATEGORIES, MOCK_PRODUCTS, removeVietnameseAccents } from '@/lib/mockProducts';
 
 interface MenuPageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ category?: string; q?: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: MenuPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isVi = locale === 'vi';
+  const canonicalUrl = getCanonicalUrl('/menu', locale);
+  const alternates = getAlternateLanguages('/menu');
+
+  return {
+    title: isVi
+      ? 'Thực Đơn Sandwich & Đồ Uống | EGGU - Sandwich Trứng Hàn Quốc'
+      : 'Menu - Korean Egg Sandwiches & Drinks | EGGU Hanoi',
+    description: isVi
+      ? 'Khám phá thực đơn bánh mì sandwich trứng Hàn Quốc chuẩn vị tại EGGU Hà Nội: Mr. Egg, Ham & Cheese, Bacon Double Cheese và các loại đồ uống thanh mát.'
+      : 'Explore EGGU Hanoi full menu: signature Korean egg sandwiches, brioche toasts, crispy sides and refreshing drinks.',
+    keywords: [
+      'Thực đơn EGGU',
+      'EGGU menu',
+      'Sandwich Trứng Hàn Quốc',
+      'Korean Egg Sandwich',
+      'Bánh mì sandwich Hà Nội',
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
+    openGraph: {
+      title: isVi
+        ? 'Thực Đơn Sandwich & Đồ Uống | EGGU'
+        : 'EGGU Menu - Korean Egg Sandwiches & Drinks',
+      description: isVi
+        ? 'Bánh mì sandwich trứng mềm béo và đồ uống tươi ngon tại EGGU Hà Nội.'
+        : 'Authentic Korean egg sandwiches and beverages at EGGU Hanoi.',
+      url: canonicalUrl,
+      siteName: 'EGGU',
+    },
+  };
 }
 
 function normalizeCategorySlug(slug?: string): string {

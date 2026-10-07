@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { MapPin, Phone, Clock, ExternalLink, MessageCircle } from 'lucide-react';
@@ -6,6 +7,7 @@ import FacebookIcon from '@/components/ui/FacebookIcon';
 import ZaloIcon from '@/components/ui/ZaloIcon';
 import TikTokIcon from '@/components/ui/TikTokIcon';
 import { SOCIAL_ALT } from '@/lib/seo-alt';
+import { getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +55,43 @@ function getMapEmbedUrl(url: string | null | undefined, address: string) {
 
 interface ContactPageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: ContactPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isVi = locale === 'vi';
+  const canonicalUrl = getCanonicalUrl('/contact', locale);
+  const alternates = getAlternateLanguages('/contact');
+
+  return {
+    title: isVi
+      ? 'Liên Hệ & Địa Chỉ Cửa Hàng | EGGU - Sandwich Trứng Hàn Quốc'
+      : 'Contact & Store Location | EGGU - Korean Egg Sandwich Hanoi',
+    description: isVi
+      ? 'Địa chỉ cửa hàng EGGU tại 54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội. Hotline: 0356779899. Giờ mở cửa: 07:00 - 21:00. Đặt hàng bánh mì sandwich trứng giao tận nơi.'
+      : 'Visit EGGU at 54 Nguyen Huu Huan, Hoan Kiem, Hanoi. Hotline: 0356779899. Open daily 07:00 - 21:00. Delicious Korean egg sandwich delivery.',
+    keywords: [
+      'Liên hệ EGGU',
+      'EGGU 54 Nguyễn Hữu Huân',
+      'Sandwich Trứng Hàn Quốc',
+      'Korean Egg Sandwich',
+      'Bánh mì sandwich Hà Nội',
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
+    openGraph: {
+      title: isVi ? 'Liên Hệ EGGU' : 'Contact EGGU',
+      description: isVi
+        ? 'Địa chỉ cửa hàng EGGU tại 54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội.'
+        : 'EGGU store location at 54 Nguyen Huu Huan, Hoan Kiem, Hanoi.',
+      url: canonicalUrl,
+      siteName: 'EGGU',
+    },
+  };
 }
 
 export default async function ContactPage({ params }: ContactPageProps) {

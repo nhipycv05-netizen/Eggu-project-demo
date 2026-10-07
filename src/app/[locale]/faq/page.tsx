@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { Plus, Minus } from 'lucide-react';
+import { getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
 
 const MOCK_FAQS = [
   {
@@ -31,6 +33,45 @@ const MOCK_FAQS = [
 
 interface FaqPageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: FaqPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isVi = locale === 'vi';
+  const canonicalUrl = getCanonicalUrl('/faq', locale);
+  const alternates = getAlternateLanguages('/faq');
+
+  return {
+    title: isVi
+      ? 'Hỏi Đáp & Trợ Giúp (FAQ) | EGGU - Sandwich Trứng Hàn Quốc'
+      : 'Frequently Asked Questions (FAQ) | EGGU Hanoi',
+    description: isVi
+      ? 'Giải đáp thắc mắc về cách đặt bánh, thanh toán COD, phạm vi giao hàng tận nơi của EGGU - Sandwich Trứng Hàn Quốc tại Hà Nội.'
+      : 'Answers to frequently asked questions about ordering, delivery, and payment at EGGU Korean Egg Sandwich Hanoi.',
+    keywords: [
+      'FAQ EGGU',
+      'Hỏi đáp EGGU',
+      'Sandwich Trứng Hàn Quốc',
+      'Korean Egg Sandwich',
+      'Bánh mì sandwich Hà Nội',
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
+    openGraph: {
+      title: isVi
+        ? 'Hỏi Đáp & Trợ Giúp (FAQ) | EGGU'
+        : 'Frequently Asked Questions (FAQ) | EGGU',
+      description: isVi
+        ? 'Giải đáp thắc mắc về đặt bánh mì sandwich trứng Hàn Quốc tại EGGU Hà Nội.'
+        : 'Answers to frequently asked questions about EGGU Korean egg sandwiches in Hanoi.',
+      url: canonicalUrl,
+      siteName: 'EGGU',
+    },
+  };
 }
 
 export default async function FaqPage({ params }: FaqPageProps) {
@@ -73,8 +114,27 @@ export default async function FaqPage({ params }: FaqPageProps) {
     return category;
   };
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: isVi ? f.question_vi : f.question_en,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: isVi ? f.answer_vi : f.answer_en,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-12 md:pb-16">
+      {/* FAQ Schema Markup JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto space-y-8 md:space-y-10">
           {/* Title Header (Minimalist Left-Aligned) */}

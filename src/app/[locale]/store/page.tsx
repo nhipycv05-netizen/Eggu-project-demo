@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { MapPin, Phone, Clock, ArrowUpRight } from 'lucide-react';
+import { getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +34,43 @@ const MOCK_STORES = [
 
 interface StorePageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: StorePageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isVi = locale === 'vi';
+  const canonicalUrl = getCanonicalUrl('/store', locale);
+  const alternates = getAlternateLanguages('/store');
+
+  return {
+    title: isVi
+      ? 'Hệ Thống Cửa Hàng | EGGU - Sandwich Trứng Hàn Quốc'
+      : 'Store Locator | EGGU - Korean Egg Sandwich Hanoi',
+    description: isVi
+      ? 'Tìm cửa hàng EGGU gần bạn nhất để thưởng thức bánh mì sandwich trứng Hàn Quốc tươi nóng mỗi ngày.'
+      : 'Find the nearest EGGU store location to enjoy freshly made Korean egg sandwiches in Hanoi.',
+    keywords: [
+      'Cửa hàng EGGU',
+      'Hệ thống EGGU',
+      'Sandwich Trứng Hàn Quốc',
+      'Korean Egg Sandwich',
+      'Bánh mì sandwich Hà Nội',
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
+    openGraph: {
+      title: isVi ? 'Hệ Thống Cửa Hàng EGGU' : 'EGGU Store Locations',
+      description: isVi
+        ? 'Danh sách cửa hàng EGGU - Sandwich Trứng Hàn Quốc.'
+        : 'EGGU store directory and locations.',
+      url: canonicalUrl,
+      siteName: 'EGGU',
+    },
+  };
 }
 
 export default async function StorePage({ params }: StorePageProps) {

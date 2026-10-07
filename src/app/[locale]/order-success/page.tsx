@@ -119,12 +119,6 @@ export default async function OrderSuccessPage({ params, searchParams }: OrderSu
                 <span className="text-[#1E1B18] font-extrabold">{orderDetails.order_number}</span>
               </div>
 
-              {/* Payment Method */}
-              <div className="flex justify-between items-center py-1">
-                <span>{t('paymentMethod')}</span>
-                <span className="text-[#1E1B18] font-extrabold">{orderDetails.payment_method} (COD)</span>
-              </div>
-
               {/* Delivery address info */}
               <div className="border-t border-[#E5E0D8] pt-4 space-y-1">
                 <span className="text-xs uppercase text-[#706860] font-black tracking-wider block">

@@ -1,14 +1,55 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import SafeImage from '@/components/ui/SafeImage';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Calendar, ArrowRight, Newspaper } from 'lucide-react';
 import { MOCK_NEWS_ARTICLES } from '@/lib/mockNews';
+import { getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 interface NewsPageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: NewsPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isVi = locale === 'vi';
+  const canonicalUrl = getCanonicalUrl('/news', locale);
+  const alternates = getAlternateLanguages('/news');
+
+  return {
+    title: isVi
+      ? 'Tin Tức & Ưu Đãi Mới Nhất | EGGU - Sandwich Trứng Hàn Quốc'
+      : 'News, Offers & Stories | EGGU Hanoi',
+    description: isVi
+      ? 'Cập nhật tin tức, câu chuyện thương hiệu và các chương trình ưu đãi hấp dẫn từ EGGU - Sandwich Trứng Hàn Quốc tại Hà Nội.'
+      : 'Stay updated with the latest news, promotions and culinary stories from EGGU Korean Egg Sandwich Hanoi.',
+    keywords: [
+      'Tin tức EGGU',
+      'EGGU blog',
+      'Sandwich Trứng Hàn Quốc',
+      'Korean Egg Sandwich',
+      'Bánh mì sandwich Hà Nội',
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
+    openGraph: {
+      title: isVi
+        ? 'Tin Tức & Khuyến Mãi | EGGU'
+        : 'News & Promotions | EGGU',
+      description: isVi
+        ? 'Tin tức mới nhất từ thương hiệu Sandwich Trứng Hàn Quốc EGGU.'
+        : 'Latest news and updates from EGGU Korean Egg Sandwich.',
+      url: canonicalUrl,
+      siteName: 'EGGU',
+    },
+  };
 }
 
 export default async function NewsPage({ params }: NewsPageProps) {

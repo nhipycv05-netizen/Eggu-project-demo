@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -7,6 +8,7 @@ import ProductCustomizer from '@/components/menu/ProductCustomizer';
 import { ChevronLeft } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import { getProductAltFromItem } from '@/lib/seo-alt';
+import { SITE_URL, getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
 
 const MOCK_PRODUCTS = [
   {
@@ -211,6 +213,75 @@ interface ProductDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
+export async function generateMetadata({
+  params,
+}: ProductDetailPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const isVi = locale === 'vi';
+
+  let product: any = MOCK_PRODUCTS.find((p) => p.slug === slug);
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('products')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_active', true)
+      .maybeSingle();
+    if (data) product = data;
+  } catch {
+    // fallback to mock
+  }
+
+  if (!product) {
+    return {
+      title: isVi ? 'Món Ăn Không Tồn Tại | EGGU' : 'Product Not Found | EGGU',
+    };
+  }
+
+  const name = isVi
+    ? (product.name_vi || product.name)
+    : (product.name_en || product.name || product.name_vi);
+  const title = isVi
+    ? `${name} - Sandwich Trứng Hàn Quốc | EGGU Hà Nội`
+    : `${name} - Korean Egg Sandwich | EGGU Hanoi`;
+  const description = isVi
+    ? (product.description_vi || `Thưởng thức ${name} - Bánh mì sandwich trứng Hàn Quốc chuẩn vị tại EGGU Hà Nội.`)
+    : (product.description_en || `Enjoy ${name} - Authentic Korean egg sandwich at EGGU Hanoi.`);
+  const canonicalUrl = getCanonicalUrl(`/menu/${slug}`, locale);
+  const alternates = getAlternateLanguages(`/menu/${slug}`);
+
+  return {
+    title,
+    description,
+    keywords: [
+      name,
+      'EGGU',
+      'Sandwich Trứng Hàn Quốc',
+      'Korean Egg Sandwich',
+      'Bánh mì sandwich Hà Nội',
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'EGGU',
+      images: [
+        {
+          url: product.image_url?.startsWith('http')
+            ? product.image_url
+            : `${SITE_URL}${product.image_url || '/images/hero-sandwich.jpg'}`,
+          alt: `${name} - EGGU Sandwich`,
+        },
+      ],
+    },
+  };
+}
+
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { locale, slug } = await params;
   
@@ -270,8 +341,39 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   // Check if sold out
   const isSoldOut = (product as Record<string, any>)?.is_available === false;
 
+  const productDisplayName = isVi
+    ? ((product as any).name_vi || (product as any).name)
+    : ((product as any).name_en || (product as any).name || (product as any).name_vi);
+
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: productDisplayName,
+    description: isVi ? (product.description_vi || '') : (product.description_en || ''),
+    image: product.image_url?.startsWith('http')
+      ? product.image_url
+      : `${SITE_URL}${product.image_url || '/images/hero-sandwich.jpg'}`,
+    offers: {
+      '@type': 'Offer',
+      price: product.price,
+      priceCurrency: 'VND',
+      availability: isSoldOut ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+      url: getCanonicalUrl(`/menu/${slug}`, locale),
+    },
+    brand: {
+      '@type': 'Brand',
+      name: 'EGGU',
+    },
+  };
+
   return (
     <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-28 md:pb-16">
+      {/* Product Schema Markup */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Back Link */}
         <div>
