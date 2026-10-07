@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import SafeImage from '@/components/ui/SafeImage';
 import { notFound } from 'next/navigation';
@@ -5,11 +6,81 @@ import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Calendar, ChevronLeft, ChevronRight, FileText, ArrowRight } from 'lucide-react';
 import { MOCK_NEWS_ARTICLES } from '@/lib/mockNews';
+import { SITE_URL, getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 interface NewsDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: NewsDetailPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const isVi = locale === 'vi';
+
+  let article: any = MOCK_NEWS_ARTICLES.find((n) => n.slug === slug);
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('news')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'PUBLISHED')
+      .maybeSingle();
+    if (data) article = data;
+  } catch {
+    // fallback
+  }
+
+  if (!article) {
+    return {
+      title: isVi ? 'Bài Viết Không Tồn Tại | EGGU' : 'Article Not Found | EGGU',
+    };
+  }
+
+  const title = (isVi ? article.title_vi : article.title_en) || article.title_vi;
+  const description =
+    (isVi
+      ? ((article as any).summary_vi || (article as any).excerpt_vi)
+      : ((article as any).summary_en || (article as any).excerpt_en)) || '';
+  const canonicalUrl = getCanonicalUrl(`/news/${slug}`, locale);
+  const alternates = getAlternateLanguages(`/news/${slug}`);
+  const articleImageUrl =
+    (article as any).thumbnail_url || (article as any).image_url || '/images/brand-story.jpg';
+
+  return {
+    title: `${title} | EGGU - Sandwich Trứng Hàn Quốc`,
+    description,
+    keywords: [
+      title,
+      'EGGU',
+      'Sandwich Trứng Hàn Quốc',
+      'Korean Egg Sandwich',
+      'Bánh mì sandwich Hà Nội',
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
+    openGraph: {
+      title: `${title} | EGGU`,
+      description,
+      url: canonicalUrl,
+      siteName: 'EGGU',
+      type: 'article',
+      publishedTime: article.published_at,
+      images: [
+        {
+          url: articleImageUrl.startsWith('http')
+            ? articleImageUrl
+            : `${SITE_URL}${articleImageUrl}`,
+          alt: title,
+        },
+      ],
+    },
+  };
 }
 
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
@@ -75,8 +146,49 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     { day: '2-digit', month: '2-digit', year: '2-digit' }
   );
 
+  const schemaImage =
+    (article as any).thumbnail_url || (article as any).image_url || '/images/brand-story.jpg';
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: title,
+    description:
+      (isVi
+        ? ((article as any).summary_vi || (article as any).excerpt_vi)
+        : ((article as any).summary_en || (article as any).excerpt_en)) || '',
+    image: schemaImage.startsWith('http')
+      ? schemaImage
+      : `${SITE_URL}${schemaImage}`,
+    datePublished: article.published_at,
+    dateModified: (article as any).updated_at || article.published_at,
+    author: {
+      '@type': 'Organization',
+      name: 'EGGU',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Eggu - Sandwich Trứng Hàn Quốc',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/images/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': getCanonicalUrl(`/news/${slug}`, locale),
+    },
+  };
+
   return (
     <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-16 md:pb-24">
+      {/* Article Schema Markup JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Link Button */}
         <div className="mb-6">

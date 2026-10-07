@@ -24,6 +24,12 @@ import Footer from '@/components/layout/Footer';
 import CartToast from '@/components/ui/CartToast';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { createClient } from '@/lib/supabase/server';
+import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/seo';
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+};
 
 interface LocaleLayoutProps {
   children: React.ReactNode;

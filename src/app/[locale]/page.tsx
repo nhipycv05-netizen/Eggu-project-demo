@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
@@ -13,8 +14,59 @@ import {
   DessertColorIcon,
 } from '@/components/home/CategoryIcons';
 import { SOCIAL_ALT, getBrandStoryAlt } from '@/lib/seo-alt';
+import {
+  HOMEPAGE_SEO,
+  SITE_URL,
+  getCanonicalUrl,
+  getAlternateLanguages,
+  getRestaurantSchema,
+} from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({
+  params,
+}: HomePageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const isVi = locale === 'vi';
+  const seoData = isVi ? HOMEPAGE_SEO.vi : HOMEPAGE_SEO.en;
+  const canonicalUrl = getCanonicalUrl('', locale);
+  const alternates = getAlternateLanguages('');
+
+  return {
+    title: seoData.title,
+    description: seoData.description,
+    keywords: seoData.keywords,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      url: canonicalUrl,
+      siteName: 'EGGU',
+      locale: isVi ? 'vi_VN' : 'en_US',
+      type: 'website',
+      images: [
+        {
+          url: `${SITE_URL}/images/hero-sandwich.jpg`,
+          width: 1200,
+          height: 630,
+          alt: isVi
+            ? 'EGGU - Sandwich Trứng Hàn Quốc - Korean Egg Sandwich Hà Nội'
+            : 'EGGU - Korean Egg Sandwich - Sandwich Trứng Hàn Quốc Hanoi',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData.title,
+      description: seoData.description,
+      images: [`${SITE_URL}/images/hero-sandwich.jpg`],
+    },
+  };
+}
 
 // 4 Homepage Categories with cute colored icons and menu links
 const HOME_CATEGORIES = [
@@ -43,7 +95,6 @@ const HOME_CATEGORIES = [
     icon: DessertColorIcon,
   },
 ];
-
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -102,9 +153,16 @@ export default async function HomePage({ params }: HomePageProps) {
   }
 
   const isVi = locale === 'vi';
+  const restaurantSchema = getRestaurantSchema(locale);
 
   return (
     <div className="flex min-h-screen flex-col bg-transparent">
+      {/* Schema Markup JSON-LD Restaurant cho SEO Local & Google Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(restaurantSchema) }}
+      />
+
       {/* 1. Interactive Sandwich Carousel Hero */}
       <HeroSandwichCarousel locale={locale} />
 
