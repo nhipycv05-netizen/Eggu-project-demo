@@ -8,7 +8,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useSearchParams } from 'next/navigation';
 import { useCartStore } from '@/stores/cartStore';
-import { createOrder, getActivePromotions } from '@/features/orders/actions';
+import { createOrder, getActivePromotions, validatePromoCode } from '@/features/orders/actions';
 import { ShoppingBag, Loader2, Tag, X, Check, TicketPercent, PhoneCall, Bike, Store, Zap, Clock } from 'lucide-react';
 import { Promotion } from '@/types/promotion';
 import { formatPrice } from '@/lib/utils';
@@ -91,6 +91,9 @@ export default function CheckoutForm() {
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loadingPromos, setLoadingPromos] = useState(true);
   const [selectedPromo, setSelectedPromo] = useState<Promotion | null>(null);
+  const [manualPromoCode, setManualPromoCode] = useState('');
+  const [manualPromoLoading, setManualPromoLoading] = useState(false);
+  const [manualPromoError, setManualPromoError] = useState<string | null>(null);
 
   const checkoutSchema = useMemo(() => {
     return z.object({
@@ -218,6 +221,12 @@ export default function CheckoutForm() {
   const total = Math.max(0, subtotal - discount);
 
   const handleTogglePromo = (promo: Promotion) => {
+    // Check usage limit
+    if (promo.usage_limit && (promo.used_count ?? 0) >= promo.usage_limit) {
+      alert(isVi ? 'Mã khuyến mãi này đã hết lượt sử dụng!' : 'This coupon has reached its usage limit!');
+      return;
+    }
+
     const isEligible = !promo.min_order_value || subtotal >= promo.min_order_value;
     if (!isEligible) return;
 
@@ -227,7 +236,48 @@ export default function CheckoutForm() {
     } else {
       // Select
       setSelectedPromo(promo);
+      setManualPromoError(null);
     }
+  };
+
+  const handleApplyManualPromo = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const cleanCode = manualPromoCode.trim().toUpperCase();
+    if (!cleanCode) {
+      setManualPromoError(isVi ? 'Vui lòng nhập mã giảm giá' : 'Please enter a coupon code');
+      return;
+    }
+    setManualPromoLoading(true);
+    setManualPromoError(null);
+
+    const res = await validatePromoCode(cleanCode, subtotal);
+    setManualPromoLoading(false);
+
+    if (!res.valid) {
+      setManualPromoError(res.error || (isVi ? 'Mã không hợp lệ' : 'Invalid coupon'));
+      return;
+    }
+
+    const matched = promotions.find((p) => p.code.toUpperCase() === cleanCode);
+    if (matched) {
+      setSelectedPromo(matched);
+    } else {
+      setSelectedPromo({
+        id: res.promoId || 'manual-applied',
+        code: res.code || cleanCode,
+        description_vi: '',
+        description_en: '',
+        discount_type: res.discountType || 'PERCENTAGE',
+        discount_value: res.discountValue || 0,
+        min_order_value: res.minOrderValue ?? null,
+        usage_limit: res.usageLimit ?? null,
+        used_count: res.usedCount ?? 0,
+        start_at: new Date().toISOString(),
+        end_at: new Date().toISOString(),
+        is_active: true,
+      });
+    }
+    setManualPromoCode('');
   };
 
   if (!isMounted) {
@@ -651,13 +701,55 @@ export default function CheckoutForm() {
             <div className="flex items-center space-x-1.5">
               <TicketPercent className="w-4 h-4 text-[#EAAA08]" />
               <span className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                {t('vouchersTitle') || 'Mã Giảm Giá Khả Dụng'}
+                {t('vouchersTitle') || 'Mã Giảm Giá'}
               </span>
             </div>
             {promotions.length > 0 && (
               <span className="text-[11px] font-bold text-neutral-400">
                 {promotions.length} {locale === 'vi' ? 'voucher' : 'coupons'}
               </span>
+            )}
+          </div>
+
+          {/* Manual Voucher Input */}
+          <div className="space-y-1.5">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Tag className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder={locale === 'vi' ? 'Nhập mã giảm giá...' : 'Enter coupon code...'}
+                  value={manualPromoCode}
+                  onChange={(e) => {
+                    setManualPromoCode(e.target.value.toUpperCase());
+                    if (manualPromoError) setManualPromoError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleApplyManualPromo();
+                    }
+                  }}
+                  className="w-full pl-9 pr-3 py-2 text-xs font-mono font-bold uppercase rounded-xl border border-[#E5E7EB] bg-white focus:outline-none focus:border-[#EAAA08]"
+                />
+              </div>
+              <button
+                type="button"
+                disabled={manualPromoLoading || !manualPromoCode.trim()}
+                onClick={() => handleApplyManualPromo()}
+                className="px-3.5 py-2 bg-[#EAAA08] hover:bg-[#d89905] text-[#1E1B18] font-bold text-xs uppercase tracking-wider rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 flex items-center gap-1.5"
+              >
+                {manualPromoLoading ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  t('apply') || 'Áp dụng'
+                )}
+              </button>
+            </div>
+            {manualPromoError && (
+              <p className="text-[11px] font-bold text-red-600 animate-in fade-in">
+                {manualPromoError}
+              </p>
             )}
           </div>
 
@@ -673,6 +765,7 @@ export default function CheckoutForm() {
             <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
               {promotions.map((promo) => {
                 const isSelected = selectedPromo?.id === promo.id;
+                const isOutOfUses = Boolean(promo.usage_limit && (promo.used_count ?? 0) >= promo.usage_limit);
                 const isEligible = !promo.min_order_value || subtotal >= promo.min_order_value;
                 const missingAmount = promo.min_order_value ? promo.min_order_value - subtotal : 0;
 
@@ -689,10 +782,18 @@ export default function CheckoutForm() {
                 return (
                   <div
                     key={promo.id}
-                    onClick={() => isEligible && handleTogglePromo(promo)}
+                    onClick={() => {
+                      if (isOutOfUses) {
+                        alert(isVi ? 'Mã khuyến mãi này đã hết lượt sử dụng!' : 'This coupon has reached its usage limit!');
+                        return;
+                      }
+                      if (isEligible) handleTogglePromo(promo);
+                    }}
                     className={`relative p-2.5 rounded-xl border transition-all duration-200 ${
                       isSelected
                         ? 'border-[#EAAA08] bg-gradient-to-r from-[#FFFBEB] via-[#FEF3C7]/40 to-[#FFFBEB] shadow-xs'
+                        : isOutOfUses
+                        ? 'border-dashed border-red-200 bg-red-50/40 opacity-70 cursor-not-allowed'
                         : isEligible
                         ? 'border-[#E5E7EB] bg-white hover:border-[#EAAA08]/70 hover:bg-[#FDFBF7] cursor-pointer'
                         : 'border-dashed border-[#E5E7EB] bg-neutral-50/70 opacity-65 cursor-not-allowed'
@@ -709,6 +810,21 @@ export default function CheckoutForm() {
                           <span className="inline-block px-1.5 py-0.5 rounded-full bg-[#E53935]/10 text-[#E53935] text-[10px] font-bold uppercase tracking-wider">
                             Giảm {discountLabel}
                           </span>
+                          {promo.usage_limit && (
+                            <span
+                              className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                                isOutOfUses
+                                  ? 'bg-red-100 text-red-700 border border-red-200'
+                                  : 'bg-neutral-100 text-neutral-600'
+                              }`}
+                            >
+                              {isOutOfUses
+                                ? isVi ? 'Hết lượt dùng' : 'Out of uses'
+                                : isVi
+                                ? `Còn ${Math.max(0, promo.usage_limit - (promo.used_count ?? 0))}/${promo.usage_limit} lượt`
+                                : `${Math.max(0, promo.usage_limit - (promo.used_count ?? 0))}/${promo.usage_limit} left`}
+                            </span>
+                          )}
                         </div>
 
                         <p className="text-[11px] text-neutral-500 font-medium">
@@ -716,10 +832,15 @@ export default function CheckoutForm() {
                         </p>
 
                         {/* Ineligible warning hint */}
-                        {!isEligible && missingAmount > 0 && (
+                        {!isEligible && missingAmount > 0 && !isOutOfUses && (
                           <p className="text-[10px] font-bold text-amber-700 pt-0.5">
                             {t('needMore', { amount: `${formatPrice(missingAmount)} VND` }) ||
                               `Mua thêm ${formatPrice(missingAmount)} VND để dùng mã này`}
+                          </p>
+                        )}
+                        {isOutOfUses && (
+                          <p className="text-[10px] font-bold text-red-600 pt-0.5">
+                            {isVi ? 'Mã khuyến mãi này đã hết lượt sử dụng!' : 'This coupon has reached its usage limit!'}
                           </p>
                         )}
                       </div>
@@ -738,6 +859,10 @@ export default function CheckoutForm() {
                             <Check className="w-3 h-3 stroke-[3px]" />
                             <span>{t('deselect') || 'Bỏ chọn'}</span>
                           </button>
+                        ) : isOutOfUses ? (
+                          <span className="px-1.5 py-0.5 rounded-md bg-red-100 text-red-700 font-bold text-[10px] uppercase">
+                            Hết lượt
+                          </span>
                         ) : isEligible ? (
                           <button
                             type="button"

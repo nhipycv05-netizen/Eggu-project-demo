@@ -122,11 +122,19 @@ export async function validatePromoCode(code: string, subtotal: number) {
 
     const parsedPromos = promos.map((p) => parsePromotionFromDb(p));
     const matchedPromo = parsedPromos.find(
-      (p) => p.code.toUpperCase() === cleanCode && isPromotionActiveAndValid(p)
+      (p) => p.code.toUpperCase() === cleanCode
     );
 
-    if (!matchedPromo) {
+    if (!matchedPromo || !isPromotionActiveAndValid(matchedPromo)) {
       return { valid: false, error: 'Mã không tồn tại hoặc đã hết hạn' };
+    }
+
+    // Check usage limit
+    if (
+      matchedPromo.usage_limit &&
+      (matchedPromo.used_count ?? 0) >= matchedPromo.usage_limit
+    ) {
+      return { valid: false, error: 'Mã khuyến mãi này đã hết lượt sử dụng!' };
     }
 
     if (matchedPromo.min_order_value && subtotal < matchedPromo.min_order_value) {
@@ -146,11 +154,14 @@ export async function validatePromoCode(code: string, subtotal: number) {
 
     return {
       valid: true,
+      promoId: matchedPromo.id,
       code: matchedPromo.code,
       discountType: matchedPromo.discount_type,
       discountValue: matchedPromo.discount_value,
       discountAmount,
       minOrderValue: matchedPromo.min_order_value,
+      usageLimit: matchedPromo.usage_limit,
+      usedCount: matchedPromo.used_count,
     };
   } catch (err) {
     console.error('Error validating promo code:', err);
@@ -264,12 +275,16 @@ export async function createOrder(
     // 5. Verify & Calculate Discount
     let discount = 0;
     let promoPrefix = '';
+    let appliedPromoId: string | null = null;
 
     if (promoCode && promoCode.trim()) {
       const promoResult = await validatePromoCode(promoCode.trim(), subtotal);
       if (promoResult.valid && promoResult.discountAmount) {
         discount = promoResult.discountAmount;
         promoPrefix = `[Mã giảm giá: ${promoResult.code} (-${formatPrice(discount)} VND)]`;
+        appliedPromoId = promoResult.promoId || null;
+      } else if (!promoResult.valid) {
+        return { success: false, error: promoResult.error || 'Mã giảm giá không hợp lệ' };
       }
     }
 
@@ -339,6 +354,54 @@ export async function createOrder(
       // Clean up order header on item failure
       await supabase.from('orders').delete().eq('id', insertedOrder.id);
       return { success: false, error: 'Failed to create order items' };
+    }
+
+    // 8.5. Automatically increment used_count for the applied promotion
+    if (appliedPromoId) {
+      try {
+        const { data: promoRow } = await supabase
+          .from('promotions')
+          .select('*')
+          .eq('id', appliedPromoId)
+          .single();
+
+        if (promoRow) {
+          const parsed = parsePromotionFromDb(promoRow);
+          const newUsedCount = (parsed.used_count || 0) + 1;
+
+          let updatedImageUrl = promoRow.image_url;
+          if (
+            promoRow.image_url &&
+            typeof promoRow.image_url === 'string' &&
+            promoRow.image_url.trim().startsWith('{')
+          ) {
+            try {
+              const meta = JSON.parse(promoRow.image_url);
+              meta.used_count = newUsedCount;
+              updatedImageUrl = JSON.stringify(meta);
+            } catch {}
+          }
+
+          const updateData: Record<string, any> = { used_count: newUsedCount };
+          if (updatedImageUrl !== promoRow.image_url) {
+            updateData.image_url = updatedImageUrl;
+          }
+
+          const { error: incError } = await supabase
+            .from('promotions')
+            .update(updateData)
+            .eq('id', appliedPromoId);
+
+          if (incError && incError.message?.includes('used_count') && updatedImageUrl) {
+            await supabase
+              .from('promotions')
+              .update({ image_url: updatedImageUrl })
+              .eq('id', appliedPromoId);
+          }
+        }
+      } catch (promoErr) {
+        console.error('Error incrementing promotion used_count:', promoErr);
+      }
     }
 
     // 9. Notify shop (email + Zalo OA) once order + items are saved (runs after the response, never blocks checkout)

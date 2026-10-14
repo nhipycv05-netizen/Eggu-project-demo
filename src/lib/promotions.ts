@@ -5,6 +5,8 @@ interface PromoMetadata {
   discount_type?: 'PERCENTAGE' | 'FIXED';
   discount_value?: number;
   min_order_value?: number | null;
+  usage_limit?: number | null;
+  used_count?: number;
   image_url?: string | null;
 }
 
@@ -51,6 +53,21 @@ export function parsePromotionFromDb(row: Record<string, any>): Promotion {
       ? Number(meta.min_order_value)
       : null;
 
+  const usage_limit =
+    row.usage_limit !== undefined && row.usage_limit !== null
+      ? Number(row.usage_limit)
+      : meta.usage_limit !== undefined && meta.usage_limit !== null
+      ? Number(meta.usage_limit)
+      : null;
+
+  const used_count = Number(
+    row.used_count !== undefined && row.used_count !== null
+      ? row.used_count
+      : meta.used_count !== undefined && meta.used_count !== null
+      ? meta.used_count
+      : 0
+  );
+
   const start_at = row.start_at || row.start_date || new Date().toISOString();
   const end_at =
     row.end_at ||
@@ -72,6 +89,8 @@ export function parsePromotionFromDb(row: Record<string, any>): Promotion {
     discount_type,
     discount_value,
     min_order_value,
+    usage_limit,
+    used_count,
     start_at,
     end_at,
     start_date: start_at,
@@ -93,6 +112,7 @@ export function serializePromotionForDb(promo: {
   discount_type: 'PERCENTAGE' | 'FIXED';
   discount_value: number;
   min_order_value: number | null;
+  usage_limit?: number | null;
   start_date: string;
   end_date: string;
   is_active: boolean;
@@ -103,6 +123,7 @@ export function serializePromotionForDb(promo: {
     discount_type: promo.discount_type,
     discount_value: Number(promo.discount_value),
     min_order_value: promo.min_order_value ? Number(promo.min_order_value) : null,
+    usage_limit: promo.usage_limit !== undefined && promo.usage_limit !== null ? Number(promo.usage_limit) : null,
     image_url: promo.image_url || null,
   };
 
@@ -117,6 +138,7 @@ export function serializePromotionForDb(promo: {
     description_vi: promo.description_vi,
     description_en: promo.description_en,
     image_url: JSON.stringify(meta),
+    usage_limit: promo.usage_limit !== undefined && promo.usage_limit !== null ? Number(promo.usage_limit) : null,
     start_at: new Date(promo.start_date).toISOString(),
     end_at: endDateObj.toISOString(),
     is_active: promo.is_active,
