@@ -21,6 +21,7 @@ export default function PromotionsTab() {
   const [discountType, setDiscountType] = useState<'PERCENTAGE' | 'FIXED'>('PERCENTAGE');
   const [discountValue, setDiscountValue] = useState(10);
   const [minOrderValue, setMinOrderValue] = useState(0);
+  const [usageLimit, setUsageLimit] = useState<number | ''>('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isActive, setIsActive] = useState(true);
@@ -54,6 +55,9 @@ export default function PromotionsTab() {
     setDiscountType(promo.discount_type);
     setDiscountValue(Number(promo.discount_value));
     setMinOrderValue(promo.min_order_value ? Number(promo.min_order_value) : 0);
+    setUsageLimit(
+      promo.usage_limit !== undefined && promo.usage_limit !== null ? Number(promo.usage_limit) : ''
+    );
     setStartDate(new Date(promo.start_at).toISOString().split('T')[0]);
     setEndDate(new Date(promo.end_at).toISOString().split('T')[0]);
     setIsActive(promo.is_active);
@@ -68,6 +72,7 @@ export default function PromotionsTab() {
     setDiscountType('PERCENTAGE');
     setDiscountValue(10);
     setMinOrderValue(0);
+    setUsageLimit('');
     const today = new Date().toISOString().split('T')[0];
     const nextMonth = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     setStartDate(today);
@@ -87,6 +92,7 @@ export default function PromotionsTab() {
       discount_type: discountType,
       discount_value: discountValue,
       min_order_value: minOrderValue > 0 ? minOrderValue : null,
+      usage_limit: usageLimit !== '' ? Number(usageLimit) : null,
       start_date: startDate,
       end_date: endDate,
       is_active: isActive,
@@ -99,10 +105,26 @@ export default function PromotionsTab() {
           .update(payload)
           .eq('id', editingPromo.id);
 
-        if (error) throw error;
+        if (error && error.message?.includes('usage_limit')) {
+          // Fallback if column not yet added to table: omit usage_limit column (it remains in image_url metadata)
+          const { usage_limit: _unused, ...fallbackPayload } = payload;
+          const retry = await supabase
+            .from('promotions')
+            .update(fallbackPayload)
+            .eq('id', editingPromo.id);
+          if (retry.error) throw retry.error;
+        } else if (error) {
+          throw error;
+        }
       } else {
         const { error } = await supabase.from('promotions').insert(payload);
-        if (error) throw error;
+        if (error && error.message?.includes('usage_limit')) {
+          const { usage_limit: _unused, ...fallbackPayload } = payload;
+          const retry = await supabase.from('promotions').insert(fallbackPayload);
+          if (retry.error) throw retry.error;
+        } else if (error) {
+          throw error;
+        }
       }
 
       setIsModalOpen(false);
@@ -164,6 +186,7 @@ export default function PromotionsTab() {
                   <th className="p-4">Mô tả</th>
                   <th className="p-4">Mức giảm</th>
                   <th className="p-4">Đơn tối thiểu</th>
+                  <th className="p-4">Lượt dùng</th>
                   <th className="p-4">Thời gian áp dụng</th>
                   <th className="p-4">Trạng thái</th>
                   <th className="p-4 text-right">Thao tác</th>
@@ -172,7 +195,7 @@ export default function PromotionsTab() {
               <tbody className="divide-y divide-neutral-100 font-semibold text-neutral-700">
                 {promotions.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-neutral-400 font-bold">
+                    <td colSpan={8} className="p-8 text-center text-neutral-400 font-bold">
                       Không có mã khuyến mãi nào.
                     </td>
                   </tr>
@@ -199,6 +222,20 @@ export default function PromotionsTab() {
                         {promo.min_order_value && promo.min_order_value > 0
                           ? `${formatPrice(promo.min_order_value)} VND`
                           : 'Không yêu cầu'}
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center space-x-1 font-bold">
+                          <span className="text-neutral-900">{promo.used_count || 0}</span>
+                          <span className="text-neutral-400">/</span>
+                          <span className="text-neutral-600">
+                            {promo.usage_limit ? promo.usage_limit : '∞'}
+                          </span>
+                        </div>
+                        {Boolean(promo.usage_limit && (promo.used_count || 0) >= promo.usage_limit) && (
+                          <span className="inline-block mt-0.5 px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-red-100 text-red-700 border border-red-200">
+                            Hết lượt
+                          </span>
+                        )}
                       </td>
                       <td className="p-4 text-neutral-500 font-medium">
                         {new Date(promo.start_at).toLocaleDateString('vi-VN')} -{' '}
@@ -300,6 +337,35 @@ export default function PromotionsTab() {
                     onChange={(e) => setMinOrderValue(Number(e.target.value))}
                     className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
                   />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-neutral-400 font-black block">
+                  Giới hạn số lượt dùng (Usage Limit)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="vd: 20 (bỏ trống nếu không giới hạn)"
+                  value={usageLimit}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') setUsageLimit('');
+                    else {
+                      const num = parseInt(val, 10);
+                      setUsageLimit(isNaN(num) || num < 1 ? '' : num);
+                    }
+                  }}
+                  className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
+                />
+                <div className="flex justify-between items-center text-[10px] text-neutral-400">
+                  <span>Bỏ trống nếu không giới hạn số lượt áp dụng.</span>
+                  {editingPromo && (
+                    <span className="font-bold text-neutral-600">
+                      Đã dùng: {editingPromo.used_count || 0} lượt
+                    </span>
+                  )}
                 </div>
               </div>
 

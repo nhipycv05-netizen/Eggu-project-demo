@@ -8,6 +8,8 @@ export interface Promotion {
   discount_type: 'PERCENTAGE' | 'FIXED';
   discount_value: number;
   min_order_value: number | null;
+  usage_limit?: number | null;
+  used_count?: number;
   start_at: string;
   end_at: string;
   start_date?: string;
