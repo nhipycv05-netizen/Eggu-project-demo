@@ -12,10 +12,11 @@ export const SITE_URL = (
  */
 export function getCanonicalUrl(path: string = '', locale: string = 'vi'): string {
   const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : '';
+  const normalizedPath = cleanPath === '/' ? '' : cleanPath;
   if (locale === 'en') {
-    return `${SITE_URL}/en${cleanPath === '/' ? '' : cleanPath}`;
+    return `${SITE_URL}/en${normalizedPath}`;
   }
-  return `${SITE_URL}${cleanPath === '/' ? '' : cleanPath}`;
+  return `${SITE_URL}/vi${normalizedPath}`;
 }
 
 /**
@@ -23,10 +24,11 @@ export function getCanonicalUrl(path: string = '', locale: string = 'vi'): strin
  */
 export function getAlternateLanguages(path: string = '') {
   const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : '';
+  const normalizedPath = cleanPath === '/' ? '' : cleanPath;
   return {
-    vi: `${SITE_URL}${cleanPath === '/' ? '' : cleanPath}`,
-    en: `${SITE_URL}/en${cleanPath === '/' ? '' : cleanPath}`,
-    'x-default': `${SITE_URL}${cleanPath === '/' ? '' : cleanPath}`,
+    vi: `${SITE_URL}/vi${normalizedPath}`,
+    en: `${SITE_URL}/en${normalizedPath}`,
+    'x-default': `${SITE_URL}/vi${normalizedPath}`,
   };
 }
 
@@ -80,7 +82,7 @@ export const HOMEPAGE_SEO = {
  */
 export function getRestaurantSchema(locale: string = 'vi') {
   const isVi = locale === 'vi';
-  const menuUrl = isVi ? `${SITE_URL}/menu` : `${SITE_URL}/en/menu`;
+  const menuUrl = isVi ? `${SITE_URL}/vi/menu` : `${SITE_URL}/en/menu`;
 
   return {
     '@context': 'https://schema.org',
@@ -88,7 +90,7 @@ export function getRestaurantSchema(locale: string = 'vi') {
     '@id': `${SITE_URL}/#restaurant`,
     name: 'Eggu - Sandwich Trứng Hàn Quốc',
     alternateName: 'EGGU - Korean Egg Sandwich',
-    url: isVi ? SITE_URL : `${SITE_URL}/en`,
+    url: isVi ? `${SITE_URL}/vi` : `${SITE_URL}/en`,
     telephone: CONTACT_CONFIG.phone || '0356779899',
     menu: menuUrl,
     hasMenu: menuUrl,

@@ -16,6 +16,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/menu',
+        destination: '/vi/menu',
+        permanent: true,
+      },
+      {
+        source: '/menu/:slug',
+        destination: '/vi/menu/:slug',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);
