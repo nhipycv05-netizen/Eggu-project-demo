@@ -73,6 +73,31 @@ export default async function middleware(request: NextRequest) {
     });
   });
 
+  // Convert temporary redirects (307) from next-intl to permanent redirects (308) for SEO & Google Search Console
+  if (i18nResponse.status === 307) {
+    const location = i18nResponse.headers.get('location');
+    if (location) {
+      const permanentResponse = NextResponse.redirect(new URL(location, request.url), 308);
+      i18nResponse.headers.forEach((value, key) => {
+        if (key.toLowerCase() !== 'location') {
+          permanentResponse.headers.set(key, value);
+        }
+      });
+      i18nResponse.cookies.getAll().forEach((cookie) => {
+        permanentResponse.cookies.set(cookie.name, cookie.value, {
+          path: cookie.path,
+          domain: cookie.domain,
+          maxAge: cookie.maxAge,
+          secure: cookie.secure,
+          sameSite: cookie.sameSite,
+          httpOnly: cookie.httpOnly,
+          expires: cookie.expires,
+        });
+      });
+      return permanentResponse;
+    }
+  }
+
   return i18nResponse;
 }
 

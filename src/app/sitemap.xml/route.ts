@@ -31,21 +31,21 @@ export async function GET() {
   const today = formatDate();
   const baseUrl = SITE_URL.replace(/\/$/, '');
 
-  // 1. Các trang tĩnh công khai
+  // 1. Các trang tĩnh công khai (chuẩn SEO đa ngôn ngữ có tiền tố locale /vi và /en)
   const staticPages = [
-    { loc: `${baseUrl}/`, changefreq: 'daily', priority: '1.0', lastmod: today },
+    { loc: `${baseUrl}/vi`, changefreq: 'daily', priority: '1.0', lastmod: today },
     { loc: `${baseUrl}/en`, changefreq: 'daily', priority: '0.9', lastmod: today },
-    { loc: `${baseUrl}/menu`, changefreq: 'daily', priority: '0.9', lastmod: today },
+    { loc: `${baseUrl}/vi/menu`, changefreq: 'daily', priority: '0.9', lastmod: today },
     { loc: `${baseUrl}/en/menu`, changefreq: 'daily', priority: '0.8', lastmod: today },
-    { loc: `${baseUrl}/news`, changefreq: 'daily', priority: '0.8', lastmod: today },
+    { loc: `${baseUrl}/vi/news`, changefreq: 'daily', priority: '0.8', lastmod: today },
     { loc: `${baseUrl}/en/news`, changefreq: 'daily', priority: '0.7', lastmod: today },
-    { loc: `${baseUrl}/faq`, changefreq: 'weekly', priority: '0.7', lastmod: today },
+    { loc: `${baseUrl}/vi/faq`, changefreq: 'weekly', priority: '0.7', lastmod: today },
     { loc: `${baseUrl}/en/faq`, changefreq: 'weekly', priority: '0.6', lastmod: today },
-    { loc: `${baseUrl}/about`, changefreq: 'monthly', priority: '0.6', lastmod: today },
+    { loc: `${baseUrl}/vi/about`, changefreq: 'monthly', priority: '0.6', lastmod: today },
     { loc: `${baseUrl}/en/about`, changefreq: 'monthly', priority: '0.5', lastmod: today },
-    { loc: `${baseUrl}/contact`, changefreq: 'monthly', priority: '0.6', lastmod: today },
+    { loc: `${baseUrl}/vi/contact`, changefreq: 'monthly', priority: '0.6', lastmod: today },
     { loc: `${baseUrl}/en/contact`, changefreq: 'monthly', priority: '0.5', lastmod: today },
-    { loc: `${baseUrl}/store`, changefreq: 'monthly', priority: '0.6', lastmod: today },
+    { loc: `${baseUrl}/vi/store`, changefreq: 'monthly', priority: '0.6', lastmod: today },
     { loc: `${baseUrl}/en/store`, changefreq: 'monthly', priority: '0.5', lastmod: today },
   ];
 
@@ -105,7 +105,7 @@ export async function GET() {
   for (const p of products) {
     const lastmod = formatDate(p.updated_at);
     urls.push({
-      loc: `${baseUrl}/menu/${p.slug}`,
+      loc: `${baseUrl}/vi/menu/${p.slug}`,
       lastmod,
       changefreq: 'weekly',
       priority: '0.8',
@@ -121,7 +121,7 @@ export async function GET() {
   for (const a of articles) {
     const lastmod = formatDate(a.updated_at || a.published_at);
     urls.push({
-      loc: `${baseUrl}/news/${a.slug}`,
+      loc: `${baseUrl}/vi/news/${a.slug}`,
       lastmod,
       changefreq: 'weekly',
       priority: '0.7',
