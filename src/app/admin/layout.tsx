@@ -15,6 +15,10 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: 'EGGU - Trang Quản Trị Hệ Thống',
   description: 'Trang quản trị hệ thống bánh mì trứng EGGU Hàn Quốc',
+  icons: {
+    icon: '/icon.png',
+    apple: '/apple-icon.png',
+  },
 };
 
 interface AdminLayoutProps {
