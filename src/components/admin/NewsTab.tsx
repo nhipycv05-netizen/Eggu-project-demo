@@ -35,6 +35,28 @@ interface NewsArticle {
   published_at: string;
 }
 
+/**
+ * Safely extracts a string error message from any unknown error type
+ * to prevent React error #441 (passing objects as React children).
+ */
+function extractErrorMessage(err: unknown): string {
+  if (!err) return 'Lỗi không xác định';
+  if (typeof err === 'string') return err;
+  if (err instanceof Error) return err.message;
+  if (typeof err === 'object') {
+    const record = err as Record<string, unknown>;
+    if (typeof record.message === 'string') return record.message;
+    if (typeof record.error === 'string') return record.error;
+    if (typeof record.error_description === 'string') return record.error_description;
+    try {
+      return JSON.stringify(err);
+    } catch {
+      return 'Lỗi không xác định';
+    }
+  }
+  return String(err);
+}
+
 export default function NewsTab() {
   const supabase = createClient();
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -67,7 +89,7 @@ export default function NewsTab() {
 
       if (error) throw error;
       setArticles(data || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Lỗi khi tải danh sách bài viết:', err);
     } finally {
       setLoading(false);
@@ -126,7 +148,7 @@ export default function NewsTab() {
     }
   };
 
-  // Upload image to Supabase Storage via Server Action (bypasses RLS restrictions safely)
+  // Upload image to Supabase Storage bucket 'news'
   const processImageFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
       alert('Vui lòng chọn tệp hình ảnh hợp lệ (PNG, JPG, WebP, GIF)!');
@@ -146,20 +168,47 @@ export default function NewsTab() {
     setThumbnailUrl(previewUrl);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      const fileExt = file.name.split('.').pop() || 'jpg';
+      const cleanExt = fileExt.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const fileName = `news-${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${cleanExt}`;
+      const filePath = `${fileName}`;
 
-      const res = await uploadNewsImageAction(formData);
+      // 1. Direct upload from browser to Supabase Storage bucket 'news'
+      const { error: uploadError } = await supabase.storage
+        .from('news')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
 
-      if (!res.ok || !res.url) {
-        throw new Error(res.error || 'Không nhận được đường dẫn ảnh từ máy chủ');
+      if (!uploadError) {
+        const { data: pubData } = supabase.storage
+          .from('news')
+          .getPublicUrl(filePath);
+
+        if (pubData?.publicUrl) {
+          setThumbnailUrl(pubData.publicUrl);
+          setFormError(null);
+          return;
+        }
       }
 
-      // Update with permanent public URL from Storage
-      setThumbnailUrl(res.url);
-    } catch (err: any) {
+      // 2. Fallback: try via server action if client RLS restrictions occur
+      const formData = new FormData();
+      formData.append('file', file);
+      const serverRes = await uploadNewsImageAction(formData);
+
+      if (serverRes.ok && serverRes.url) {
+        setThumbnailUrl(serverRes.url);
+        setFormError(null);
+        return;
+      }
+
+      const finalMsg = serverRes.error || extractErrorMessage(uploadError);
+      throw new Error(finalMsg);
+    } catch (err: unknown) {
       console.error('Lỗi khi tải ảnh lên Storage:', err);
-      const msg = err?.message || 'Lỗi không xác định khi tải ảnh lên máy chủ';
+      const msg = extractErrorMessage(err);
       setFormError(`Tải ảnh lên thất bại: ${msg}`);
       alert(`Tải ảnh lên thất bại: ${msg}`);
     } finally {
@@ -231,9 +280,9 @@ export default function NewsTab() {
 
       setIsModalOpen(false);
       await fetchArticles();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Lỗi khi lưu bài viết:', err);
-      const errMsg = err?.message || 'Đã xảy ra lỗi không xác định';
+      const errMsg = extractErrorMessage(err);
       setFormError(errMsg);
       alert(`Lưu bài viết thất bại: ${errMsg}`);
     } finally {
@@ -251,9 +300,9 @@ export default function NewsTab() {
         throw new Error(result.error || 'Không thể xóa bài viết');
       }
       await fetchArticles();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Lỗi khi xóa bài viết:', err);
-      const errMsg = err?.message || 'Đã xảy ra lỗi khi xóa bài viết';
+      const errMsg = extractErrorMessage(err);
       alert(`Xóa bài viết thất bại: ${errMsg}`);
     } finally {
       setLoading(false);
@@ -381,13 +430,13 @@ export default function NewsTab() {
               </button>
             </div>
 
-            {/* Error Banner */}
+            {/* Error Banner (Always string, never object) */}
             {formError && (
               <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-xs font-semibold flex items-start gap-3">
                 <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <p className="font-extrabold text-red-800">Lưu bài viết thất bại</p>
-                  <p className="text-red-600 leading-relaxed">{formError}</p>
+                  <p className="font-extrabold text-red-800">Thông báo lỗi</p>
+                  <p className="text-red-600 leading-relaxed">{String(formError)}</p>
                 </div>
               </div>
             )}
