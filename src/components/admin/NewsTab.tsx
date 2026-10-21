@@ -2,8 +2,24 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Plus, Edit2, Trash2, Loader2, Upload, Image as ImageIcon, X, RefreshCw } from 'lucide-react';
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Loader2,
+  Upload,
+  Image as ImageIcon,
+  X,
+  RefreshCw,
+  AlertCircle,
+  Wand2,
+} from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
+import {
+  saveNewsArticleAction,
+  deleteNewsArticleAction,
+  uploadNewsImageAction,
+} from '@/features/news/actions';
 
 interface NewsArticle {
   id: string;
@@ -23,10 +39,12 @@ export default function NewsTab() {
   const supabase = createClient();
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form states
@@ -48,13 +66,11 @@ export default function NewsTab() {
         .order('published_at', { ascending: false });
 
       if (error) throw error;
-      setTimeout(() => {
-        setArticles(data || []);
-        setLoading(false);
-      }, 0);
-    } catch (err) {
+      setArticles(data || []);
+    } catch (err: any) {
       console.error('Lỗi khi tải danh sách bài viết:', err);
-      setTimeout(() => setLoading(false), 0);
+    } finally {
+      setLoading(false);
     }
   }, [supabase]);
 
@@ -64,15 +80,16 @@ export default function NewsTab() {
 
   const handleEditClick = (article: NewsArticle) => {
     setEditingArticle(article);
-    setTitleVi(article.title_vi);
-    setTitleEn(article.title_en);
-    setSlug(article.slug);
-    setSummaryVi(article.summary_vi);
-    setSummaryEn(article.summary_en);
+    setTitleVi(article.title_vi || '');
+    setTitleEn(article.title_en || '');
+    setSlug(article.slug || '');
+    setSummaryVi(article.summary_vi || '');
+    setSummaryEn(article.summary_en || '');
     setContentVi(article.content_vi || '');
     setContentEn(article.content_en || '');
     setThumbnailUrl(article.thumbnail_url || '');
-    setStatus(article.status);
+    setStatus(article.status || 'DRAFT');
+    setFormError(null);
     setIsModalOpen(true);
   };
 
@@ -87,58 +104,67 @@ export default function NewsTab() {
     setContentEn('');
     setThumbnailUrl('');
     setStatus('DRAFT');
+    setFormError(null);
     setIsModalOpen(true);
   };
 
-  // Process selected file (FileReader Base64 + Supabase Storage upload attempt)
+  // Helper to generate a clean, safe slug from Vietnamese / English title
+  const generateCleanSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[đĐ]/g, 'd')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
+  };
+
+  const handleAutoSlug = () => {
+    const text = titleVi || titleEn;
+    if (text) {
+      setSlug(generateCleanSlug(text));
+    }
+  };
+
+  // Upload image to Supabase Storage via Server Action (bypasses RLS restrictions safely)
   const processImageFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
       alert('Vui lòng chọn tệp hình ảnh hợp lệ (PNG, JPG, WebP, GIF)!');
       return;
     }
 
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Dung lượng ảnh vượt quá giới hạn 5MB. Vui lòng chọn ảnh nhỏ hơn.');
+      return;
+    }
+
     setUploading(true);
+    setFormError(null);
 
-    // 1. First read as Base64 for instant preview and fallback reliability
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const base64Data = event.target?.result as string;
-      if (base64Data) {
-        setThumbnailUrl(base64Data);
+    // Show instant preview
+    const previewUrl = URL.createObjectURL(file);
+    setThumbnailUrl(previewUrl);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await uploadNewsImageAction(formData);
+
+      if (!res.ok || !res.url) {
+        throw new Error(res.error || 'Không nhận được đường dẫn ảnh từ máy chủ');
       }
 
-      // 2. Attempt to upload to Supabase Storage if bucket exists
-      try {
-        const fileExt = file.name.split('.').pop() || 'jpg';
-        const fileName = `news-${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
-        const filePath = `${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from('news')
-          .upload(filePath, file, {
-            cacheControl: '3600',
-            upsert: false,
-          });
-
-        if (!uploadError) {
-          const { data } = supabase.storage.from('news').getPublicUrl(filePath);
-          if (data?.publicUrl) {
-            setThumbnailUrl(data.publicUrl);
-          }
-        }
-      } catch {
-        // Keep the Base64 representation if storage upload fails or bucket doesn't exist
-      } finally {
-        setUploading(false);
-      }
-    };
-
-    reader.onerror = () => {
-      alert('Đọc tệp ảnh thất bại, vui lòng thử lại.');
+      // Update with permanent public URL from Storage
+      setThumbnailUrl(res.url);
+    } catch (err: any) {
+      console.error('Lỗi khi tải ảnh lên Storage:', err);
+      const msg = err?.message || 'Lỗi không xác định khi tải ảnh lên máy chủ';
+      setFormError(`Tải ảnh lên thất bại: ${msg}`);
+      alert(`Tải ảnh lên thất bại: ${msg}`);
+    } finally {
       setUploading(false);
-    };
-
-    reader.readAsDataURL(file);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,12 +200,16 @@ export default function NewsTab() {
 
   const handleSaveArticle = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSaving(true);
+    setFormError(null);
+
+    const finalSlug = slug.trim() || generateCleanSlug(titleVi || titleEn);
 
     const payload = {
+      id: editingArticle?.id,
       title_vi: titleVi,
       title_en: titleEn,
-      slug: slug || titleEn.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') || titleVi.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      slug: finalSlug,
       summary_vi: summaryVi,
       summary_en: summaryEn,
       content_vi: contentVi || null,
@@ -190,25 +220,24 @@ export default function NewsTab() {
     };
 
     try {
-      if (editingArticle) {
-        const { error } = await supabase
-          .from('news')
-          .update(payload)
-          .eq('id', editingArticle.id);
+      const result = await saveNewsArticleAction(payload);
 
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from('news').insert(payload);
-        if (error) throw error;
+      if (!result.ok) {
+        const errMsg = result.error || 'Lỗi không xác định khi lưu bài viết';
+        setFormError(errMsg);
+        alert(`Lưu bài viết thất bại: ${errMsg}`);
+        return;
       }
 
       setIsModalOpen(false);
       await fetchArticles();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi khi lưu bài viết:', err);
-      alert('Lưu bài viết thất bại');
+      const errMsg = err?.message || 'Đã xảy ra lỗi không xác định';
+      setFormError(errMsg);
+      alert(`Lưu bài viết thất bại: ${errMsg}`);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -217,12 +246,15 @@ export default function NewsTab() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.from('news').delete().eq('id', id);
-      if (error) throw error;
+      const result = await deleteNewsArticleAction(id);
+      if (!result.ok) {
+        throw new Error(result.error || 'Không thể xóa bài viết');
+      }
       await fetchArticles();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Lỗi khi xóa bài viết:', err);
-      alert('Xóa bài viết thất bại');
+      const errMsg = err?.message || 'Đã xảy ra lỗi khi xóa bài viết';
+      alert(`Xóa bài viết thất bại: ${errMsg}`);
     } finally {
       setLoading(false);
     }
@@ -290,9 +322,11 @@ export default function NewsTab() {
                         <p className="font-extrabold text-neutral-900 max-w-xs truncate">{article.title_vi}</p>
                         <p className="text-[10px] text-neutral-400 max-w-xs truncate">{article.title_en}</p>
                       </td>
-                      <td className="p-4 text-neutral-500 font-mono">{article.slug}</td>
+                      <td className="p-4 text-neutral-500 font-mono text-[11px] max-w-[200px] truncate" title={article.slug}>
+                        {article.slug}
+                      </td>
                       <td className="p-4 text-neutral-500 font-medium">
-                        {new Date(article.published_at).toLocaleDateString('vi-VN')}
+                        {article.published_at ? new Date(article.published_at).toLocaleDateString('vi-VN') : '—'}
                       </td>
                       <td className="p-4">
                         <span
@@ -346,6 +380,17 @@ export default function NewsTab() {
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            {/* Error Banner */}
+            {formError && (
+              <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-xs font-semibold flex items-start gap-3">
+                <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-extrabold text-red-800">Lưu bài viết thất bại</p>
+                  <p className="text-red-600 leading-relaxed">{formError}</p>
+                </div>
+              </div>
+            )}
 
             <form onSubmit={handleSaveArticle} className="space-y-5 text-xs font-semibold text-neutral-700">
               {/* Image Upload / Preview Area */}
@@ -401,7 +446,7 @@ export default function NewsTab() {
                     {uploading && (
                       <div className="absolute inset-0 bg-white/80 backdrop-blur-xs flex items-center justify-center gap-2 text-neutral-800 font-bold">
                         <Loader2 className="w-5 h-5 animate-spin text-[#EAAA08]" />
-                        <span>Đang tải ảnh lên...</span>
+                        <span>Đang tải ảnh lên máy chủ...</span>
                       </div>
                     )}
                   </div>
@@ -428,7 +473,7 @@ export default function NewsTab() {
 
                     <div className="space-y-1">
                       <p className="font-extrabold text-neutral-800 text-sm">
-                        {uploading ? 'Đang xử lý ảnh...' : 'Nhấp để chọn tệp hoặc kéo thả ảnh vào đây'}
+                        {uploading ? 'Đang xử lý tải ảnh lên máy chủ...' : 'Nhấp để chọn tệp hoặc kéo thả ảnh vào đây'}
                       </p>
                       <p className="text-[11px] text-neutral-400 font-medium">
                         Hỗ trợ PNG, JPG, JPEG, WebP, GIF (tối đa 5MB)
@@ -454,7 +499,12 @@ export default function NewsTab() {
                     type="text"
                     required
                     value={titleVi}
-                    onChange={(e) => setTitleVi(e.target.value)}
+                    onChange={(e) => {
+                      setTitleVi(e.target.value);
+                      if (!slug) {
+                        setSlug(generateCleanSlug(e.target.value));
+                      }
+                    }}
                     placeholder="VD: Khai trương chi nhánh mới"
                     className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
                   />
@@ -476,13 +526,23 @@ export default function NewsTab() {
               {/* Slug & Status */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-neutral-400 font-black block">Đường dẫn URL (Slug)</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] uppercase text-neutral-400 font-black block">Đường dẫn URL (Slug)</label>
+                    <button
+                      type="button"
+                      onClick={handleAutoSlug}
+                      className="text-[10px] text-[#EAAA08] hover:underline font-bold flex items-center gap-1"
+                    >
+                      <Wand2 className="w-2.5 h-2.5" />
+                      <span>Tạo tự động</span>
+                    </button>
+                  </div>
                   <input
                     type="text"
-                    placeholder="Tự động tạo nếu để trống (vd: khai-truong-chi-nhanh)"
+                    placeholder="vd: khai-truong-chi-nhanh-moi"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
-                    className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08]"
+                    className="w-full p-3 border border-neutral-200 rounded-xl focus:outline-none focus:border-[#EAAA08] font-mono text-xs"
                   />
                 </div>
 
@@ -552,17 +612,18 @@ export default function NewsTab() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-3 border border-neutral-200 text-neutral-700 font-bold uppercase rounded-xl hover:bg-neutral-50 transition"
+                  disabled={saving || uploading}
+                  className="flex-1 py-3 border border-neutral-200 text-neutral-700 font-bold uppercase rounded-xl hover:bg-neutral-50 transition disabled:opacity-50"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  disabled={uploading}
-                  className="flex-1 py-3 bg-[#EAAA08] text-[#1E1B18] font-bold uppercase rounded-xl hover:bg-[#EAAA08]/90 transition flex items-center justify-center gap-2"
+                  disabled={saving || uploading}
+                  className="flex-1 py-3 bg-[#EAAA08] text-[#1E1B18] font-bold uppercase rounded-xl hover:bg-[#EAAA08]/90 transition flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                  <span>Lưu bài viết</span>
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  <span>{saving ? 'Đang lưu...' : 'Lưu bài viết'}</span>
                 </button>
               </div>
             </form>
