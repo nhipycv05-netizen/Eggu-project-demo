@@ -84,7 +84,7 @@ export async function GET() {
       const { data, error } = await supabase
         .from('news')
         .select('slug, updated_at, published_at')
-        .eq('status', 'PUBLISHED');
+        .in('status', ['PUBLISHED', 'published']);
       if (!error && data && data.length > 0) {
         articles = data;
       }

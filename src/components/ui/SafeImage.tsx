@@ -22,16 +22,22 @@ export default function SafeImage({ src, alt, onError, unoptimized, ...props }: 
   }, [src]);
 
   const isBase64 = typeof imageSource === 'string' && imageSource.startsWith('data:');
-  const safeAlt = alt && typeof alt === 'string' && alt.trim() !== ''
-    ? alt
-    : 'Sandwich Trứng Eggu - Eggu Korean Egg Sandwich';
+  const isExternal =
+    typeof imageSource === 'string' &&
+    (imageSource.startsWith('http://') || imageSource.startsWith('https://')) &&
+    !imageSource.includes('bnblofcypxfydnptazrs.supabase.co');
+
+  const safeAlt =
+    alt && typeof alt === 'string' && alt.trim() !== ''
+      ? alt
+      : 'Sandwich Trứng Eggu - Eggu Korean Egg Sandwich';
 
   return (
     <Image
       {...props}
       alt={safeAlt}
       src={imageSource || FALLBACK_IMAGE}
-      unoptimized={unoptimized || isBase64}
+      unoptimized={unoptimized || isBase64 || isExternal}
       onError={(event) => {
         setImageSource(FALLBACK_IMAGE);
         onError?.(event);

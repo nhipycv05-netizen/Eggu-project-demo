@@ -7,8 +7,36 @@ import { createClient } from '@/lib/supabase/server';
 import { Calendar, ChevronLeft, ChevronRight, FileText, ArrowRight } from 'lucide-react';
 import { MOCK_NEWS_ARTICLES } from '@/lib/mockNews';
 import { SITE_URL, getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
+import TikTokEmbedPlayer from '@/components/news/TikTokEmbedPlayer';
 
 export const dynamic = 'force-dynamic';
+
+const TIKTOK_VIDEO_REGEX =
+  /https?:\/\/(?:www\.)?tiktok\.com\/@([a-zA-Z0-9_.-]+)\/video\/(\d+)(?:[^\s<"'>]*)?/gi;
+
+interface TikTokVideoMatch {
+  fullUrl: string;
+  username: string;
+  videoId: string;
+}
+
+function parseTikTokVideos(text: string): TikTokVideoMatch[] {
+  if (!text) return [];
+  const matches: TikTokVideoMatch[] = [];
+  const seen = new Set<string>();
+
+  for (const m of text.matchAll(TIKTOK_VIDEO_REGEX)) {
+    const fullUrl = m[0];
+    const username = m[1];
+    const videoId = m[2];
+    if (!seen.has(videoId)) {
+      seen.add(videoId);
+      matches.push({ fullUrl, username, videoId });
+    }
+  }
+
+  return matches;
+}
 
 interface NewsDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -18,16 +46,17 @@ export async function generateMetadata({
   params,
 }: NewsDetailPageProps): Promise<Metadata> {
   const { locale, slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
   const isVi = locale === 'vi';
 
-  let article: any = MOCK_NEWS_ARTICLES.find((n) => n.slug === slug);
+  let article: any = MOCK_NEWS_ARTICLES.find((n) => n.slug === slug || n.slug === decodedSlug);
   try {
     const supabase = await createClient();
     const { data } = await supabase
       .from('news')
       .select('*')
-      .eq('slug', slug)
-      .eq('status', 'PUBLISHED')
+      .or(`slug.eq."${slug}",slug.eq."${decodedSlug}"`)
+      .in('status', ['PUBLISHED', 'published'])
       .maybeSingle();
     if (data) article = data;
   } catch {
@@ -45,8 +74,8 @@ export async function generateMetadata({
     (isVi
       ? ((article as any).summary_vi || (article as any).excerpt_vi)
       : ((article as any).summary_en || (article as any).excerpt_en)) || '';
-  const canonicalUrl = getCanonicalUrl(`/news/${slug}`, locale);
-  const alternates = getAlternateLanguages(`/news/${slug}`);
+  const canonicalUrl = getCanonicalUrl(`/news/${encodeURIComponent(slug)}`, locale);
+  const alternates = getAlternateLanguages(`/news/${encodeURIComponent(slug)}`);
   const articleImageUrl =
     (article as any).thumbnail_url || (article as any).image_url || '/images/brand-story.jpg';
 
@@ -70,7 +99,7 @@ export async function generateMetadata({
       url: canonicalUrl,
       siteName: 'EGGU',
       type: 'article',
-      publishedTime: article.published_at,
+      publishedTime: article.published_at || new Date().toISOString(),
       images: [
         {
           url: articleImageUrl.startsWith('http')
@@ -85,11 +114,12 @@ export async function generateMetadata({
 
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
   const { locale, slug } = await params;
+  const decodedSlug = decodeURIComponent(slug);
   const t = await getTranslations('news');
   const isVi = locale === 'vi';
 
   // 1. Fetch current article matching slug
-  let article = MOCK_NEWS_ARTICLES.find((n) => n.slug === slug);
+  let article = MOCK_NEWS_ARTICLES.find((n) => n.slug === slug || n.slug === decodedSlug);
   let relatedArticles: any[] = [];
 
   try {
@@ -97,20 +127,20 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     const { data } = await supabase
       .from('news')
       .select('*')
-      .eq('slug', slug)
-      .eq('status', 'PUBLISHED')
-      .single();
+      .or(`slug.eq."${slug}",slug.eq."${decodedSlug}"`)
+      .in('status', ['PUBLISHED', 'published'])
+      .maybeSingle();
 
     if (data) {
       article = data;
     }
 
-    // 2. Fetch other published articles directly from Admin database for Related Posts
+    // 2. Fetch other published articles directly from database for Related Posts
     if (article?.id) {
       const { data: related } = await supabase
         .from('news')
         .select('*')
-        .eq('status', 'PUBLISHED')
+        .in('status', ['PUBLISHED', 'published'])
         .neq('id', article.id)
         .order('published_at', { ascending: false })
         .limit(3);
@@ -122,7 +152,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
       const { data: related } = await supabase
         .from('news')
         .select('*')
-        .eq('status', 'PUBLISHED')
+        .in('status', ['PUBLISHED', 'published'])
         .neq('slug', article.slug)
         .order('published_at', { ascending: false })
         .limit(3);
@@ -141,10 +171,14 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
 
   const title = (isVi ? article.title_vi : article.title_en) || article.title_vi;
   const content = (isVi ? article.content_vi : article.content_en) || article.content_vi || '';
-  const formattedDate = new Date(article.published_at).toLocaleDateString(
-    isVi ? 'vi-VN' : 'en-US',
-    { day: '2-digit', month: '2-digit', year: '2-digit' }
-  );
+  const tiktokVideos = parseTikTokVideos(content);
+
+  const formattedDate = article.published_at
+    ? new Date(article.published_at).toLocaleDateString(
+        isVi ? 'vi-VN' : 'en-US',
+        { day: '2-digit', month: '2-digit', year: 'numeric' }
+      )
+    : '';
 
   const schemaImage =
     (article as any).thumbnail_url || (article as any).image_url || '/images/brand-story.jpg';
@@ -160,8 +194,8 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     image: schemaImage.startsWith('http')
       ? schemaImage
       : `${SITE_URL}${schemaImage}`,
-    datePublished: article.published_at,
-    dateModified: (article as any).updated_at || article.published_at,
+    datePublished: article.published_at || new Date().toISOString(),
+    dateModified: (article as any).updated_at || article.published_at || new Date().toISOString(),
     author: {
       '@type': 'Organization',
       name: 'EGGU',
@@ -177,7 +211,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': getCanonicalUrl(`/news/${slug}`, locale),
+      '@id': getCanonicalUrl(`/news/${encodeURIComponent(slug)}`, locale),
     },
   };
 
@@ -227,7 +261,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
             </div>
           </aside>
 
-          {/* Right Column (Article Content + Related Posts: 70% - 75%) */}
+          {/* Right Column (Article Content + TikTok Player + Related Posts: 70% - 75%) */}
           <main className="w-full lg:w-[72%] space-y-8 text-left">
             {/* Header: Title & Published Date */}
             <header className="space-y-2 border-b border-neutral-200 pb-4 text-left">
@@ -235,10 +269,12 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
                 {title}
               </h1>
 
-              <div className="flex items-center space-x-1.5 text-xs sm:text-[13px] text-neutral-500 font-medium">
-                <Calendar className="w-3.5 h-3.5 text-[#e0352b]" />
-                <span>{formattedDate}</span>
-              </div>
+              {formattedDate && (
+                <div className="flex items-center space-x-1.5 text-xs sm:text-[13px] text-neutral-500 font-medium">
+                  <Calendar className="w-3.5 h-3.5 text-[#e0352b]" />
+                  <span>{formattedDate}</span>
+                </div>
+              )}
             </header>
 
             {/* Content rendered directly on page background with comfortable line-height and compact readable font */}
@@ -261,6 +297,21 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
               )}
             </div>
 
+            {/* Embedded TikTok Players (Rendered if detected in article content) */}
+            {tiktokVideos.length > 0 && (
+              <div className="space-y-6 pt-2">
+                {tiktokVideos.map((video) => (
+                  <TikTokEmbedPlayer
+                    key={video.videoId}
+                    videoId={video.videoId}
+                    username={video.username}
+                    originalUrl={video.fullUrl}
+                    title={title}
+                  />
+                ))}
+              </div>
+            )}
+
             {/* Related Articles Section (Restored right below article content, auto-hidden if empty) */}
             {relatedArticles.length > 0 && (
               <section className="space-y-5 pt-8 border-t border-neutral-200 text-left">
@@ -280,15 +331,17 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {relatedArticles.map((item) => {
                     const itemTitle = (isVi ? item.title_vi : item.title_en) || item.title_vi;
-                    const itemDate = new Date(item.published_at).toLocaleDateString(
-                      isVi ? 'vi-VN' : 'en-US',
-                      { day: '2-digit', month: '2-digit', year: '2-digit' }
-                    );
+                    const itemDate = item.published_at
+                      ? new Date(item.published_at).toLocaleDateString(
+                          isVi ? 'vi-VN' : 'en-US',
+                          { day: '2-digit', month: '2-digit', year: 'numeric' }
+                        )
+                      : '';
 
                     return (
                       <Link
                         key={item.id}
-                        href={`/news/${item.slug}`}
+                        href={`/news/${encodeURIComponent(item.slug)}`}
                         className="bg-white rounded-2xl p-4 border border-neutral-200 hover:border-[#e0352b]/40 hover:shadow-md transition-all group flex flex-col justify-between text-left"
                       >
                         <div className="space-y-3">
@@ -301,10 +354,12 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
                               className="object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                           </div>
-                          <div className="flex items-center gap-1 text-[11px] font-bold text-[#9CA3AF]">
-                            <Calendar className="w-3 h-3 text-[#e0352b]" />
-                            <span>{itemDate}</span>
-                          </div>
+                          {itemDate && (
+                            <div className="flex items-center gap-1 text-[11px] font-bold text-[#9CA3AF]">
+                              <Calendar className="w-3 h-3 text-[#e0352b]" />
+                              <span>{itemDate}</span>
+                            </div>
+                          )}
                           <h4 className="text-xs font-bold text-[#2b2523] group-hover:text-[#e0352b] transition-colors line-clamp-2 leading-snug">
                             {itemTitle}
                           </h4>
@@ -312,7 +367,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
 
                         <div className="pt-3 mt-3 border-t border-neutral-100 text-[11px] font-black uppercase text-[#e0352b] flex items-center justify-between">
                           <span>{t('readMore')}</span>
-                          <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                         </div>
                       </Link>
                     );
