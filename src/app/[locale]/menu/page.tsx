@@ -132,14 +132,54 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
     });
   }
 
+  const menuSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Menu',
+    name: isVi ? 'Thực Đơn EGGU - Sandwich Trứng Hàn Quốc' : 'EGGU Menu - Korean Egg Sandwich Hanoi',
+    url: getCanonicalUrl('/menu', locale),
+    inLanguage: isVi ? 'vi' : 'en',
+    mainEntityOfPage: getCanonicalUrl('/menu', locale),
+    hasMenuItem: filteredProducts.slice(0, 30).map((p) => ({
+      '@type': 'MenuItem',
+      name: isVi ? p.name_vi : p.name_en,
+      description: isVi ? (p.description_vi || '') : (p.description_en || ''),
+      offers: {
+        '@type': 'Offer',
+        price: p.price,
+        priceCurrency: 'VND',
+        availability: p.is_available === false ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+        url: getCanonicalUrl(`/menu/${p.slug}`, locale),
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-12 md:pb-16">
+      {/* Schema Markup Menu / MenuItem for Google Rich Results & AI Search */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(menuSchema) }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Title Header (Minimalist Left-Aligned) */}
-        <div className="border-b border-[#e0352b]/20 pb-3 mb-6 text-left">
-          <h1 className="text-xl font-bold uppercase tracking-wider text-[#e0352b]">
-            {tm('title')}
-          </h1>
+        {/* Title Header with Freshness & Quality Assurance */}
+        <div className="border-b border-[#e0352b]/20 pb-4 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-left">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold uppercase tracking-wider text-[#e0352b]">
+              {tm('title')}
+            </h1>
+            <p className="text-xs sm:text-sm text-gray-600 mt-1 font-medium">
+              {isVi
+                ? 'Bánh mì brioche nướng bơ tỏi tươi mỗi sáng · 100% trứng thanh trùng béo mịn chuẩn vị Seoul'
+                : 'Freshly baked brioche every morning · 100% pasteurized fluffy eggs'}
+            </p>
+          </div>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-xs font-bold text-amber-900 w-fit shrink-0 shadow-xs">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>{isVi ? 'Bánh nướng nóng theo từng đơn gọi' : 'Freshly toasted to order'}</span>
+          </div>
         </div>
 
         {/* Categories Bar */}

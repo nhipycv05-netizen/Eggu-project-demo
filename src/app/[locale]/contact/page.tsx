@@ -7,7 +7,7 @@ import FacebookIcon from '@/components/ui/FacebookIcon';
 import ZaloIcon from '@/components/ui/ZaloIcon';
 import TikTokIcon from '@/components/ui/TikTokIcon';
 import { SOCIAL_ALT } from '@/lib/seo-alt';
-import { getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
+import { getCanonicalUrl, getAlternateLanguages, getRestaurantSchema } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -129,9 +129,15 @@ export default async function ContactPage({ params }: ContactPageProps) {
       ? primaryStore.google_maps_url
       : `https://maps.google.com/?q=${encodeURIComponent(primaryAddress)}`;
   const embedUrl = getMapEmbedUrl(primaryStore.google_maps_url, primaryAddress);
+  const restaurantSchema = getRestaurantSchema(locale);
 
   return (
     <div className="min-h-screen bg-transparent pt-20 md:pt-24 pb-12 md:pb-16">
+      {/* Schema Markup Restaurant / LocalBusiness for SEO Local */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(restaurantSchema) }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 space-y-8 md:space-y-10">
         {/* Title Header */}
         <div className="border-b border-[#e0352b]/20 pb-3 mb-6 text-left">
@@ -280,6 +286,34 @@ export default async function ContactPage({ params }: ContactPageProps) {
                             <ExternalLink className="w-3.5 h-3.5 text-neutral-400" />
                           </a>
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Local SEO Context Highlights */}
+                    <div className="mt-4 p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl space-y-2 text-xs">
+                      <div className="flex items-start gap-2">
+                        <span className="text-amber-700 font-bold shrink-0">📍 Vị trí:</span>
+                        <span className="text-neutral-700 font-medium">
+                          {isVi
+                            ? 'Nằm trên phố cà phê trứng Nguyễn Hữu Huân, cách Hồ Gươm & Phố Đi Bộ chỉ 300m.'
+                            : 'Located on Nguyen Huu Huan street, only 300m from Hoan Kiem Lake & Walking Street.'}
+                        </span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-amber-700 font-bold shrink-0">🛵 Đỗ xe:</span>
+                        <span className="text-neutral-700 font-medium">
+                          {isVi
+                            ? 'Có chỗ dừng đỗ xe máy thuận tiện ngay trước tiệm để ghé mua mang đi (Takeaway).'
+                            : 'Convenient motorbike parking in front for quick takeaway orders.'}
+                        </span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-amber-700 font-bold shrink-0">🚀 Giao nhanh:</span>
+                        <span className="text-neutral-700 font-medium">
+                          {isVi
+                            ? 'Ship bánh nóng giòn từ 15-30 phút tới các cơ quan, văn phòng quận Hoàn Kiếm & Hai Bà Trưng.'
+                            : 'Fast warm sandwich delivery within 15-30 mins across Hoan Kiem & Hai Ba Trung offices.'}
+                        </span>
                       </div>
                     </div>
                   </div>

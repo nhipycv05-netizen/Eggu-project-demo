@@ -236,6 +236,15 @@ export default function ProductCustomizer({ product, options, locale, category }
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {options.map((option) => {
               const isSelected = selectedOptions.some((o) => o.id === option.id);
+              const optName = (option.name || (isVi ? option.name_vi : option.name_en) || '').toLowerCase();
+              const isPopular =
+                option.id === 'cheese' ||
+                option.id === 'bacon' ||
+                optName.includes('cheese') ||
+                optName.includes('phô mai') ||
+                optName.includes('bacon') ||
+                optName.includes('xông khói');
+
               return (
                 <button
                   key={option.id}
@@ -246,7 +255,7 @@ export default function ProductCustomizer({ product, options, locale, category }
                       : 'border-[#E5E7EB] bg-white hover:border-[#111111]'
                   }`}
                 >
-                  <div className="flex items-center space-x-2.5 min-w-0">
+                  <div className="flex items-center space-x-2 min-w-0">
                     <div
                       className={`w-4 h-4 rounded-md border flex items-center justify-center transition-colors shrink-0 ${
                         isSelected
@@ -259,6 +268,11 @@ export default function ProductCustomizer({ product, options, locale, category }
                     <span className="font-semibold text-[#111111] text-xs sm:text-sm truncate">
                       {option.name || (isVi ? option.name_vi : option.name_en)}
                     </span>
+                    {isPopular && (
+                      <span className="text-[10px] bg-amber-100 text-amber-900 font-bold px-1.5 py-0.5 rounded-md shrink-0">
+                        {isVi ? '⭐ Gợi ý' : '⭐ Top'}
+                      </span>
+                    )}
                   </div>
                   <span className="text-xs sm:text-sm font-bold text-[#E53935] shrink-0 ml-2">
                     +{formatPrice(option.price)} {tc('currency')}

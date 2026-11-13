@@ -36,14 +36,14 @@
   "home": {
     "order": "Đặt hàng",
     "hero": {
-      "subtitle": "Bánh Mì Trứng Hàn Quốc",
-      "title": "Chế biến tươi ngon. Trải nghiệm tuyệt vời.",
-      "description": "Thưởng thức hương vị cao cấp của bánh mì kẹp trứng Hàn Quốc, bánh mì nướng và đồ uống được chuẩn bị mới mỗi ngày."
+      "subtitle": "Bánh Mì Trứng Chuẩn Vị Seoul",
+      "title": "Bánh mì Brioche nóng giòn – Ngập tràn trứng bơ béo ngậy",
+      "description": "Thưởng thức sandwich trứng nướng bơ tỏi thơm lừng, 100% trứng tươi thanh trùng mềm xốp và nước sốt độc quyền chuẩn vị Hàn Quốc làm mới mỗi ngày."
     }
   },
   "menu": {
     "title": "THỰC ĐƠN",
-    "subtitle": "Bánh mì kẹp trứng chế biến thủ công, bánh mì nướng hảo hạng và đồ uống mát lạnh.",
+    "subtitle": "Bánh mì brioche nướng bơ Pháp thơm nức mũi, trứng cuộn mềm mượt tan chảy cùng đồ uống tươi mát khởi đầu ngày mới.",
     "all": "Tất Cả",
     "customize": "ĐẶT HÀNG",
     "addToCart": "Thêm Vào Giỏ",
@@ -76,11 +76,11 @@
   },
   "about": {
     "title": "VỀ CHÚNG TÔI",
-    "subtitle": "Eggu · Sandwich trứng Hàn Quốc",
+    "subtitle": "EGGU · Bánh Mì Trứng Chuẩn Vị Hàn Quốc",
     "philosophy": "Triết Lý Của Chúng Tôi",
-    "philosophyDesc": "Tại EGGU, chúng tôi tin rằng ẩm thực là một hành trình mang lại sự ấm áp. Mỗi chiếc bánh là một lời cam kết về chất lượng phục vụ.",
+    "philosophyDesc": "Tại EGGU, mỗi chiếc bánh là một lời hẹn ấm áp giữa lòng phố cổ: Vỏ bánh brioche nướng bơ tỏi vàng giòn, lớp trứng mềm mượt tan trên đầu lưỡi, mang trọn vẹn hương vị đường phố Seoul đến tay bạn.",
     "quality": "Chất Lượng Vượt Trội",
-    "qualityDesc": "Chúng tôi chỉ chọn trứng tươi sạch đã thanh trùng, bơ lạt Pháp hảo hạng và bánh mì brioche mềm xốp nướng bơ tỏi."
+    "qualityDesc": "Chúng tôi kiên định với 100% trứng tươi thanh trùng đạt chuẩn, bơ lạt Pháp hảo hạng thơm béo và bánh mì brioche thủ công nướng mới mỗi sáng."
   },
   "store": {
     "title": "HỆ THỐNG CỬA HÀNG",
