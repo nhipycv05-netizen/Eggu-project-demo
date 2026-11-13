@@ -60,14 +60,14 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
 
   // Static content according to exact user specification
   const staticContent = {
-    tagline: isVi ? 'Sandwich Trứng Chuẩn Vị Hàn Quốc' : 'Authentic Korean Gourmet Egg Toast',
+    tagline: isVi ? 'Sandwich Trứng Chuẩn Vị Seoul' : 'Authentic Korean Gourmet Egg Toast',
     title: isVi
-      ? 'SANDWICH NÓNG GIÒN – NGẬP TRÀN TOPPING'
-      : 'CRISPY WARM SANDWICH – LOADED WITH TOPPINGS',
+      ? 'BÁNH MÌ BRIOCHE NÓNG GIÒN – NGẬP TRÀN TRỨNG BƠ BÉO NGẬY'
+      : 'CRISPY BRIOCHE TOAST – LOADED WITH CREAMY EGGS',
     description: isVi
-      ? 'Sự kết hợp hoàn hảo giữa độ béo ngậy của trứng, vị đậm đà của sốt đặc chế và chiếc bánh mì vàng ươm thơm lừng.'
-      : 'A perfect combination of rich creamy eggs, signature flavorful sauce, and freshly toasted golden brioche.',
-    learnMore: isVi ? 'KHÁM PHÁ BÁNH' : 'DISCOVER SANDWICHES',
+      ? 'Vỏ bánh nướng bơ tỏi vàng rụm ôm trọn lớp trứng thanh trùng mềm xốp và nước sốt độc quyền chuẩn vị Hàn Quốc làm mới mỗi ngày.'
+      : 'Crispy garlic butter brioche filled with fluffy pasteurized eggs and signature Korean sauce freshly made daily.',
+    learnMore: isVi ? 'ĐẶT MÓN NGAY' : 'ORDER NOW',
   };
 
   // Move to next item with infinite loop
@@ -227,15 +227,9 @@ export default function HeroSandwichCarousel({ locale }: HeroSandwichCarouselPro
 
               {/* Fixed Description: Constrained width and clean 2-line break */}
               <div className="max-w-md xl:max-w-lg">
-                {isVi ? (
-                  <p className="text-sm sm:text-base md:text-[16px] leading-relaxed text-[#4B5563] font-medium">
-                    Sự kết hợp hoàn hảo giữa độ béo ngậy của trứng, vị đậm đà<br className="hidden sm:inline" /> của sốt đặc chế và chiếc bánh mì vàng ươm thơm lừng.
-                  </p>
-                ) : (
-                  <p className="text-sm sm:text-base md:text-[16px] leading-relaxed text-[#4B5563] font-medium">
-                    A perfect combination of rich creamy eggs, signature flavorful sauce<br className="hidden sm:inline" /> and freshly toasted golden brioche.
-                  </p>
-                )}
+                <p className="text-sm sm:text-base md:text-[16px] leading-relaxed text-[#4B5563] font-medium">
+                  {staticContent.description}
+                </p>
               </div>
 
               {/* Single CTA Button: KHÁM PHÁ BÁNH */}

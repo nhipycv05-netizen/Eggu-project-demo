@@ -208,11 +208,15 @@ export default function CartManager({ locale }: CartManagerProps) {
         <button
           type="button"
           onClick={() => setIsDeliveryModalOpen(true)}
-          className="w-full py-2.5 px-4 bg-[#e0352b] text-white text-center font-bold text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-md hover:shadow-lg hover:bg-red-700 active:scale-98 transition duration-150 flex items-center justify-center space-x-1.5 cursor-pointer mt-1"
+          className="w-full py-3 px-4 bg-[#e0352b] text-white text-center font-black text-xs sm:text-sm uppercase tracking-wider rounded-full shadow-md hover:shadow-lg hover:bg-red-700 active:scale-98 transition duration-150 flex items-center justify-center space-x-2 cursor-pointer mt-1"
         >
           <span>{t('checkout')}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
+
+        <p className="text-center text-[11px] text-gray-500 font-medium pt-1">
+          {isVi ? '🔒 Đặt món an toàn · Xác nhận nhanh chóng' : '🔒 Secure checkout · Fast confirmation'}
+        </p>
       </div>
 
       {/* Delivery Type Selection Modal */}

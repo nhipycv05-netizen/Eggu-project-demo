@@ -428,8 +428,10 @@ export default function CheckoutForm() {
             <input
               id="fullName"
               type="text"
+              autoComplete="name"
               disabled={isSubmitting}
               {...register('fullName')}
+              placeholder={isVi ? 'Ví dụ: Nguyễn Văn A' : 'e.g. John Doe'}
               className={`w-full h-10 px-3.5 py-2 border rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
                 errors.fullName ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
@@ -446,9 +448,12 @@ export default function CheckoutForm() {
             </label>
             <input
               id="phone"
-              type="text"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
               disabled={isSubmitting}
               {...register('phone')}
+              placeholder={isVi ? 'Ví dụ: 0912 345 678' : 'e.g. 0912 345 678'}
               className={`w-full h-10 px-3.5 py-2 border rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
                 errors.phone ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
@@ -465,9 +470,11 @@ export default function CheckoutForm() {
             </label>
             <input
               id="email"
-              type="text"
+              type="email"
+              autoComplete="email"
               disabled={isSubmitting}
               {...register('email')}
+              placeholder={isVi ? 'Không bắt buộc (để nhận hóa đơn qua email)' : 'Optional (to receive email receipt)'}
               className={`w-full h-10 px-3.5 py-2 border rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E53935]/20 focus:border-[#E53935] transition duration-150 text-[#111111] font-medium bg-[#F8F9FA] ${
                 errors.email ? 'border-red-500 focus:border-red-500' : 'border-[#E5E7EB]'
               }`}
@@ -486,6 +493,7 @@ export default function CheckoutForm() {
               <input
                 id="address"
                 type="text"
+                autoComplete="street-address"
                 disabled={isSubmitting}
                 {...register('address')}
                 placeholder={isVi ? 'Số nhà, tên đường, phường/xã, quận/huyện...' : 'Street address, ward, district...'}
@@ -645,20 +653,32 @@ export default function CheckoutForm() {
         </div>
 
         {/* Submit Action */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full py-3 bg-[#e0352b] hover:bg-red-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider rounded-full transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cursor-pointer"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>{t('processing')}</span>
-            </>
-          ) : (
-            <span>{t('placeOrder')}</span>
-          )}
-        </button>
+        <div className="space-y-2 pt-1">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-3.5 bg-[#e0352b] hover:bg-red-700 text-white font-black text-xs sm:text-sm uppercase tracking-wider rounded-full transition duration-150 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cursor-pointer active:scale-98"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>{t('processing')}</span>
+              </>
+            ) : (
+              <span>{t('placeOrder')}</span>
+            )}
+          </button>
+
+          {/* CRO Trust Signals underneath Submit */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[11px] text-gray-500 font-medium text-center pt-1">
+            <span className="inline-flex items-center gap-1">
+              <span className="text-emerald-600 font-bold">✓</span> {isVi ? 'Thanh toán linh hoạt COD / Chuyển khoản' : 'COD / Bank transfer on arrival'}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <span className="text-emerald-600 font-bold">✓</span> {isVi ? 'Bánh nướng nóng hổi sau khi chốt' : 'Freshly toasted upon confirmation'}
+            </span>
+          </div>
+        </div>
       </form>
 
       {/* Review Items List - Left 5 columns on desktop, Top on mobile */}

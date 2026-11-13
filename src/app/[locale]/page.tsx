@@ -261,20 +261,20 @@ export default async function HomePage({ params }: HomePageProps) {
             <div className="flex flex-col text-left">
               {/* Dòng 1: Tiêu đề nổi bật / Điểm nhấn */}
               <h3 className="font-bold italic text-base md:text-lg text-gray-900 mb-2.5 leading-snug">
-                {isVi ? 'Bí quyết tạo nên hương vị mềm béo tan chảy' : 'Fluffy, golden eggs cooked to perfection'}
+                {isVi ? 'Bí quyết bánh nướng bơ tỏi giòn xốp & trứng mềm mượt chuẩn Seoul' : 'Crispy garlic butter brioche & fluffy eggs cooked to perfection'}
               </h3>
 
               {/* Dòng 2: Đoạn mô tả (ngắt thành 2 đoạn riêng biệt) */}
               <div className="space-y-3 mb-5 text-sm md:text-base text-gray-600 leading-relaxed">
                 <p>
                   {isVi
-                    ? 'Tại Eggu, chúng tôi mang đến những chiếc sandwich trứng ngon, tiện lợi và phù hợp với gu riêng, được tạo nên từ sự chỉn chu, sáng tạo và thấu hiểu khách hàng.'
-                    : 'At Eggu, we deliver delicious, convenient, and tailored egg sandwiches crafted with precision, creativity, and a deep understanding of our customers.'}
+                    ? 'Tại EGGU, mỗi chiếc bánh là sự hòa quyện hoàn hảo: Bánh mì brioche nướng bơ tỏi vàng giòn rụm, lớp trứng thanh trùng mềm mượt tan trên đầu lưỡi cùng nước sốt độc quyền chuẩn phong vị Seoul.'
+                    : 'At EGGU, every sandwich is a warm ritual: Freshly toasted garlic butter brioche, creamy pasteurized scrambled eggs, and authentic Seoul signature sauce.'}
                 </p>
                 <p>
                   {isVi
-                    ? 'Eggu – nơi mỗi người đều có thể tìm thấy hương vị “đúng với mình”.'
-                    : 'Eggu – where everyone can find a flavor that truly feels “right for them”.'}
+                    ? 'EGGU – Bữa sáng & ăn xế chuẩn vị, tiện lợi và ấm áp giữa lòng phố cổ Hà Nội.'
+                    : 'EGGU – Delicious, convenient, and warm gourmet egg sandwiches in the heart of Hanoi.'}
                 </p>
               </div>
 

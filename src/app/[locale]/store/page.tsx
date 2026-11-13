@@ -2,33 +2,21 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { MapPin, Phone, Clock, ArrowUpRight } from 'lucide-react';
-import { getCanonicalUrl, getAlternateLanguages } from '@/lib/seo';
+import { getCanonicalUrl, getAlternateLanguages, getRestaurantSchema } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
-
 
 const MOCK_STORES = [
   {
     id: 'store-1',
-    name_vi: 'EGGU Nguyễn Huệ (Quận 1)',
-    name_en: 'EGGU Nguyen Hue (District 1)',
-    address_vi: '123 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh',
-    address_en: '123 Nguyen Hue, Ben Nghe Ward, District 1, Ho Chi Minh City',
-    phone: '028 1234 5678',
-    opening_hours_vi: '07:00 - 22:00',
-    opening_hours_en: '07:00 - 22:00',
-    google_maps_url: 'https://maps.google.com/?q=123+Nguyen+Hue+Ho+Chi+Minh',
-  },
-  {
-    id: 'store-2',
-    name_vi: 'EGGU Nguyễn Đình Chiểu (Quận 3)',
-    name_en: 'EGGU Nguyen Dinh Chieu (District 3)',
-    address_vi: '456 Nguyễn Đình Chiểu, Phường 3, Quận 3, TP. Hồ Chí Minh',
-    address_en: '456 Nguyen Dinh Chieu, Ward 3, District 3, Ho Chi Minh City',
-    phone: '028 8765 4321',
-    opening_hours_vi: '07:00 - 22:00',
-    opening_hours_en: '07:00 - 22:00',
-    google_maps_url: 'https://maps.google.com/?q=456+Nguyen+Dinh+Chieu+Ho+Chi+Minh',
+    name_vi: 'EGGU - 54 Nguyễn Hữu Huân (Hoàn Kiếm)',
+    name_en: 'EGGU - 54 Nguyen Huu Huan (Hoan Kiem)',
+    address_vi: '54 Nguyễn Hữu Huân, Phường Hàng Buồm, Quận Hoàn Kiếm, Hà Nội',
+    address_en: '54 Nguyen Huu Huan, Hang Buom Ward, Hoan Kiem District, Hanoi',
+    phone: '0356779899',
+    opening_hours_vi: '07:00 - 21:00',
+    opening_hours_en: '07:00 - 21:00',
+    google_maps_url: 'https://maps.google.com/?q=54+Nguyen+Huu+Huan,+Hoan+Kiem,+Hanoi',
   },
 ];
 
@@ -94,8 +82,15 @@ export default async function StorePage({ params }: StorePageProps) {
     console.error('Supabase query failed on store page, using mock fallbacks:', error);
   }
 
+  const restaurantSchema = getRestaurantSchema(locale);
+
   return (
     <div className="min-h-screen bg-transparent pt-24 md:pt-28 pb-12 md:pb-16">
+      {/* Schema Markup Restaurant / LocalBusiness for SEO Local */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(restaurantSchema) }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-10">
         {/* Title Header (Minimalist Left-Aligned) */}
         <div className="border-b border-[#e0352b]/20 pb-3 mb-6 text-left">
@@ -158,6 +153,34 @@ export default async function StorePage({ params }: StorePageProps) {
                     </div>
                   </div>
                 )}
+
+                {/* Local SEO Context Highlights */}
+                <div className="p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-2xl space-y-2 text-xs">
+                  <div className="flex items-start gap-2">
+                    <span className="text-amber-700 font-bold shrink-0">📍 Vị trí:</span>
+                    <span className="text-neutral-700 font-medium">
+                      {isVi
+                        ? 'Nằm trên phố cà phê trứng Nguyễn Hữu Huân, cách Hồ Gươm & Phố Đi Bộ 300m.'
+                        : 'Located on Nguyen Huu Huan street, only 300m from Hoan Kiem Lake & Walking Street.'}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-amber-700 font-bold shrink-0">🛵 Đỗ xe:</span>
+                    <span className="text-neutral-700 font-medium">
+                      {isVi
+                        ? 'Có chỗ dừng đỗ xe máy thuận tiện ngay trước tiệm để ghé mua mang đi (Takeaway).'
+                        : 'Convenient motorbike parking in front for quick takeaway orders.'}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-amber-700 font-bold shrink-0">🚀 Giao nhanh:</span>
+                    <span className="text-neutral-700 font-medium">
+                      {isVi
+                        ? 'Ship bánh nóng giòn từ 15-30 phút tới các cơ quan, văn phòng quận Hoàn Kiếm & Hai Bà Trưng.'
+                        : 'Fast warm sandwich delivery within 15-30 mins across Hoan Kiem & Hai Ba Trung offices.'}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Maps navigation */}
