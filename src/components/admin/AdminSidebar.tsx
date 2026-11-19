@@ -14,6 +14,7 @@ import {
   Percent,
   BellRing,
   LogOut,
+  Sparkles,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
@@ -23,6 +24,7 @@ interface AdminSidebarProps {
 
 const MENU_ITEMS = [
   { id: 'orders', label: 'Đơn hàng', icon: ClipboardList },
+  { id: 'marketing-posts', label: 'Bài viết Social (n8n)', icon: Sparkles },
   { id: 'products', label: 'Sản phẩm', icon: ShoppingBag },
   { id: 'categories', label: 'Danh mục', icon: Tags },
   { id: 'stores', label: 'Cửa hàng', icon: MapPin },
