@@ -1,0 +1,318 @@
+[
+  {
+    "id": "C9jxvxQ9K5oCClji",
+    "name": "EGGU - Tự Động Hóa Content (TikTok & Facebook)",
+    "active": false,
+    "nodes": [
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 20
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.4,
+        "position": [-512, 0],
+        "id": "3da58991-5170-4f5e-8468-3c8540e92743",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "url": "https://rsshub.rss.tips/tiktok/user/@eggu_sandwich",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.rssFeedRead",
+        "typeVersion": 1.2,
+        "position": [-288, 0],
+        "id": "c5f0341a-6a0b-490b-a8e4-864dacc1763b",
+        "name": "RSS Read"
+      },
+      {
+        "parameters": {
+          "operation": "removeItemsSeenInPreviousExecutions",
+          "dedupeValue": "link",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.removeDuplicates",
+        "typeVersion": 2,
+        "position": [-64, 0],
+        "id": "bdfc879d-b961-4f32-a140-3bb2a600402d",
+        "name": "Remove Duplicates"
+      },
+      {
+        "parameters": {
+          "resource": "text",
+          "operation": "message",
+          "modelId": {
+            "__rl": true,
+            "value": "models/gemini-2.5-flash",
+            "mode": "list",
+            "cachedResultName": "models/gemini-2.5-flash"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=Bạn là biên tập viên website cho Eggu Sandwich. Từ bài đăng TikTok sau:\n- Tiêu đề gốc: {{ $json.title }}\n- Link video: {{ $json.link }}\n\nHãy tạo 1 bài viết ngắn cho website theo đúng định dạng JSON chuẩn (không bọc code markdown):\n{\n  \"title\": \"Tiêu đề bài viết ngắn gọn dưới 70 ký tự\",\n  \"slug\": \"duong-dan-bai-viet-khong-dau\",\n  \"content\": \"Đoạn giới thiệu 100 từ về món ăn/sự kiện này kèm link video TikTok {{ $json.link }}\"\n}",
+                "role": "user"
+              }
+            ]
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.googleGemini",
+        "typeVersion": 1,
+        "position": [160, 0],
+        "id": "15cd8348-1925-4c6a-944d-5cc2dcbd1d4f",
+        "name": "Google Gemini",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "geminiCred123",
+            "name": "Google Gemini account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "tableId": "news",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "title_vi",
+                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).title }}"
+              },
+              {
+                "fieldId": "slug",
+                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).slug + '-' + $now.toMillis() }}"
+              },
+              {
+                "fieldId": "content_vi",
+                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).content }}"
+              },
+              {
+                "fieldId": "title_en",
+                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).title }}"
+              },
+              {
+                "fieldId": "content_en",
+                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).content }}"
+              },
+              {
+                "fieldId": "status",
+                "fieldValue": "PUBLISHED"
+              },
+              {
+                "fieldId": "thumbnail_url",
+                "fieldValue": "={{ $node[\"RSS Read\"].json.content.match(/src=\"([^\"]+)\"/)?.[1] || \"https://images.unsplash.com/photo-1525351484163-7529414344d8\" }}"
+              },
+              {
+                "fieldId": "published_at",
+                "fieldValue": "={{ $now.toISO() }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [528, 0],
+        "id": "8d8d4741-19ea-4c5e-a775-32e6ca175fe7",
+        "name": "Create a row"
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 8,
+                "triggerAtMinute": 30
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.4,
+        "position": [-512, 350],
+        "id": "b001-fb-schedule",
+        "name": "Schedule - 08:30 Sáng (FB)"
+      },
+      {
+        "parameters": {
+          "jsCode": "const menuItems = [\n  {\n    name: \"Bacon Double Cheese\",\n    category: \"Bán chạy\",\n    usps: \"Nhân đôi thịt xông khói áp chảo giòn thơm, đẫm phô mai Cheddar kép béo ngậy, trứng cuộn fluffy mềm mượt tan chảy\",\n    price: \"49.000đ\"\n  },\n  {\n    name: \"Mr. Egg\",\n    category: \"Món chữ ký\",\n    usps: \"Bánh mì brioche nướng bơ tỏi vàng rụm, trứng cuộn fluffy béo mịn, sốt sriracha ngọt béo cay nhẹ\",\n    price: \"39.000đ\"\n  },\n  {\n    name: \"Sandwich Bò Nướng Teriyaki\",\n    category: \"Đặc biệt\",\n    usps: \"Thịt bò mềm mọng sốt Teriyaki Nhật Bản mặn ngọt đậm đà, kết hợp trứng béo và phô mai thơm lừng\",\n    price: \"55.000đ\"\n  },\n  {\n    name: \"Sandwich Gà Giòn Sốt Cay\",\n    category: \"Mới\",\n    usps: \"Ức gà chiên xù giòn tan rụm, sốt cay Hàn Quốc đậm vị kết hợp phô mai béo ngậy cân bằng vị giác\",\n    price: \"49.000đ\"\n  },\n  {\n    name: \"Bánh Mì Nướng Bơ Tỏi Phô Mai\",\n    category: \"Ăn nhẹ\",\n    usps: \"Vỏ brioche nướng bơ tỏi Pháp giòn rụm bên ngoài, mềm xốp bên trong đẫm phô mai thơm nức mũi\",\n    price: \"35.000đ\"\n  }\n];\n\nconst today = new Date();\nconst dayOfWeek = today.getDay();\n\nlet angle = \"\";\nif (dayOfWeek === 1 || dayOfWeek === 3) {\n  angle = \"Đồng hành công sở (Bữa sáng vội vã, ăn sạch tay, no lâu, gom đơn cùng đồng nghiệp)\";\n} else if (dayOfWeek === 2 || dayOfWeek === 4) {\n  angle = \"Cứu đói xế chiều 14h - 16h (Thèm phô mai kéo sợi ngập tràn, tiếp năng lượng giờ uể oải)\";\n} else if (dayOfWeek === 5) {\n  angle = \"Nạp năng lượng cuối tuần (Tự thưởng cho bản thân một bữa ăn chất lượng chuẩn vị Seoul)\";\n} else {\n  angle = \"Dạo phố cổ Hồ Gươm (Bánh nướng nóng hổi cầm tay dạo quanh phố 54 Nguyễn Hữu Huân)\";\n}\n\nconst selectedDish = menuItems[Math.floor(Math.random() * menuItems.length)];\n\nreturn [\n  {\n    json: {\n      dishName: selectedDish.name,\n      dishCategory: selectedDish.category,\n      dishUsps: selectedDish.usps,\n      dishPrice: selectedDish.price,\n      targetAngle: angle,\n      date: today.toLocaleDateString(\"vi-VN\"),\n      storeAddress: \"54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội\",\n      website: \"eggu.vn\"\n    }\n  }\n];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [-288, 350],
+        "id": "b002-fb-context",
+        "name": "Code - Chọn Món & Góc Tiếp Cận"
+      },
+      {
+        "parameters": {
+          "resource": "text",
+          "operation": "message",
+          "modelId": {
+            "__rl": true,
+            "value": "models/gemini-2.5-flash",
+            "mode": "list",
+            "cachedResultName": "models/gemini-2.5-flash"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=Bạn là chuyên viên sáng tạo nội dung của thương hiệu EGGU - Bánh mì trứng Hàn Quốc.\nÁp dụng bộ kỹ năng 'social' và 'copywriting':\n\nTHÔNG TIN BÀI VIẾT:\n- Món ăn: {{ $json.dishName }} ({{ $json.dishCategory }} - Giá: {{ $json.dishPrice }})\n- Điểm nổi bật (USPs): {{ $json.dishUsps }}\n- Góc tiếp cận hôm nay: {{ $json.targetAngle }}\n- Địa chỉ tiệm: {{ $json.storeAddress }}\n- Website: {{ $json.website }}\n\nYÊU CẦU BÀI ĐĂNG FACEBOOK:\n1. Hook (Dòng đầu): Thu hút ngay sự chú ý, đánh vào cơn đói hoặc thời tiết.\n2. Thân bài (4-6 câu ngắn): Miêu tả giác quan (vỏ nướng bơ tỏi giòn rụm, trứng fluffy mềm mướt béo ngậy tan chảy, phô mai kéo sợi ngập tràn).\n3. Cam kết chất lượng: Bánh chỉ nướng nóng khi có đơn gọi, ăn sạch tay không dính dầu mỡ.\n4. Kêu gọi hành động (CTA): Rủ đồng nghiệp cùng đặt hoặc ghé 54 Nguyễn Hữu Huân.\n5. Chân bài kèm địa chỉ và hashtag: #EGGU #BanhMiTrungHanQuoc #54NguyenHuuHuan #AnSangHaNoi\n\nHãy viết nội dung bài đăng Facebook hoàn chỉnh.",
+                "role": "user"
+              }
+            ]
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.googleGemini",
+        "typeVersion": 1,
+        "position": [-64, 350],
+        "id": "b003-fb-ai-writer",
+        "name": "AI Writer (Gemini - Viết Nháp FB)",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "geminiCred123",
+            "name": "Google Gemini account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "text",
+          "operation": "message",
+          "modelId": {
+            "__rl": true,
+            "value": "models/gemini-2.5-flash",
+            "mode": "list",
+            "cachedResultName": "models/gemini-2.5-flash"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=Bạn là Tổng biên tập viên khó tính của thương hiệu EGGU.\nÁp dụng nghiêm ngặt bộ kỹ năng 'copy-editing' để kiểm duyệt bài viết nháp sau:\n\nBÀI NHÁP:\n{{ $json.content.parts[0].text }}\n\nTIÊU CHUẨN KIỂM DUYỆT:\n1. Tiêu diệt 'mùi AI': Xóa các câu mở đầu khuôn mẫu sáo rỗng (như 'Trong nhịp sống...', 'Bạn có biết...'), xóa các tính từ sáo rỗng vô nghĩa ('tuyệt phẩm', 'đỉnh cao').\n2. Cắt gọt: Rút ngắn các câu dài dòng, giữ bài viết cô đọng trong khoảng 150 - 220 từ để người đọc lướt điện thoại dễ chịu.\n3. Kiểm tra tính xác thực: Đúng tên món {{ $('Code - Chọn Món & Góc Tiếp Cận').item.json.dishName }}, đúng địa chỉ 54 Nguyễn Hữu Huân, đúng link website eggu.vn.\n4. Kích thích giác quan: Bắt buộc giữ chi tiết khơi gợi vị giác (giòn rụm, bơ tỏi thơm nức, trứng fluffy béo mịn).\n\nTRẢ VỀ DUY NHẤT ĐỊNH DẠNG JSON CHUẨN (KHÔNG BỌC TRONG CODE BLOCK MARKDOWN):\n{\n  \"title\": \"Tiêu đề ngắn bài viết\",\n  \"content\": \"Nội dung bài viết Facebook đã biên tập hoàn chỉnh\",\n  \"dish\": \"{{ $('Code - Chọn Món & Góc Tiếp Cận').item.json.dishName }}\",\n  \"status\": \"Chờ duyệt\",\n  \"created_at\": \"{{ $now.toFormat('dd/MM/yyyy HH:mm') }}\"\n}",
+                "role": "user"
+              }
+            ]
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.googleGemini",
+        "typeVersion": 1,
+        "position": [160, 350],
+        "id": "b004-fb-ai-editor",
+        "name": "AI Editor (Gemini - Duyệt & Gọt Dũa)",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "geminiCred123",
+            "name": "Google Gemini account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "let rawText = $json.content.parts[0].text.trim();\nif (rawText.startsWith('```json')) {\n  rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();\n} else if (rawText.startsWith('```')) {\n  rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(rawText);\n} catch (e) {\n  parsed = {\n    title: 'Bài viết Facebook EGGU',\n    content: rawText,\n    dish: $('Code - Chọn Món & Góc Tiếp Cận').item.json.dishName,\n    status: 'Chờ duyệt',\n    created_at: new Date().toISOString()\n  };\n}\n\nreturn [\n  {\n    json: {\n      'Mã bài viết': 'FB-' + Date.now(),\n      'Tiêu đề': parsed.title || 'Bài đăng EGGU',\n      'Món ăn': parsed.dish || $('Code - Chọn Món & Góc Tiếp Cận').item.json.dishName,\n      'Nội dung Facebook (Đã biên tập)': parsed.content || rawText,\n      'Trạng thái': 'Chờ duyệt',\n      'Thời gian tạo': parsed.created_at || new Date().toLocaleString('vi-VN'),\n      'Kênh phê duyệt': 'Sẵn sàng đẩy sang Google Sheets hoặc Zalo OA'\n    }\n  }\n];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [528, 350],
+        "id": "b005-fb-format-output",
+        "name": "Lưu Trữ Bài Chờ Duyệt (Google Sheets / OA)"
+      }
+    ],
+    "connections": {
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "RSS Read",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "RSS Read": {
+        "main": [
+          [
+            {
+              "node": "Remove Duplicates",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Remove Duplicates": {
+        "main": [
+          [
+            {
+              "node": "Google Gemini",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Gemini": {
+        "main": [
+          [
+            {
+              "node": "Create a row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule - 08:30 Sáng (FB)": {
+        "main": [
+          [
+            {
+              "node": "Code - Chọn Món & Góc Tiếp Cận",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code - Chọn Món & Góc Tiếp Cận": {
+        "main": [
+          [
+            {
+              "node": "AI Writer (Gemini - Viết Nháp FB)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Writer (Gemini - Viết Nháp FB)": {
+        "main": [
+          [
+            {
+              "node": "AI Editor (Gemini - Duyệt & Gọt Dũa)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Editor (Gemini - Duyệt & Gọt Dũa)": {
+        "main": [
+          [
+            {
+              "node": "Lưu Trữ Bài Chờ Duyệt (Google Sheets / OA)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "binaryMode": "separate"
+    }
+  }
+]
