@@ -49,9 +49,9 @@
           "operation": "message",
           "modelId": {
             "__rl": true,
-            "value": "models/gemini-2.5-flash",
+            "value": "models/gemini-flash-lite-latest",
             "mode": "list",
-            "cachedResultName": "models/gemini-2.5-flash"
+            "cachedResultName": "models/gemini-flash-lite-latest"
           },
           "messages": {
             "values": [
@@ -153,9 +153,9 @@
           "operation": "message",
           "modelId": {
             "__rl": true,
-            "value": "models/gemini-2.5-flash",
+            "value": "models/gemini-flash-lite-latest",
             "mode": "list",
-            "cachedResultName": "models/gemini-2.5-flash"
+            "cachedResultName": "models/gemini-flash-lite-latest"
           },
           "messages": {
             "values": [
@@ -184,9 +184,9 @@
           "operation": "message",
           "modelId": {
             "__rl": true,
-            "value": "models/gemini-2.5-flash",
+            "value": "models/gemini-flash-lite-latest",
             "mode": "list",
-            "cachedResultName": "models/gemini-2.5-flash"
+            "cachedResultName": "models/gemini-flash-lite-latest"
           },
           "messages": {
             "values": [
