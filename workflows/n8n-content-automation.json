@@ -211,13 +211,74 @@
       },
       {
         "parameters": {
-          "jsCode": "let rawText = $json.content.parts[0].text.trim();\nif (rawText.startsWith('```json')) {\n  rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();\n} else if (rawText.startsWith('```')) {\n  rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(rawText);\n} catch (e) {\n  parsed = {\n    title: 'Bài viết Facebook EGGU',\n    content: rawText,\n    dish: $('Code - Chọn Món & Ảnh Thật & Prompt AI').item.json.dishName,\n    status: 'Chờ duyệt',\n    created_at: new Date().toISOString()\n  };\n}\n\nconst dishInfo = $('Code - Chọn Món & Ảnh Thật & Prompt AI').item.json;\nconst aiImageUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(dishInfo.aiPrompt) + '?width=1080&height=1080&nologo=true&seed=' + Date.now();\n\nreturn [\n  {\n    json: {\n      'Mã bài viết': 'FB-' + Date.now(),\n      'Tiêu đề': parsed.title || 'Bài đăng EGGU',\n      'Món ăn': dishInfo.dishName + ' (' + dishInfo.dishCategory + ' - ' + dishInfo.dishPrice + ')',\n      'Nội dung Facebook (Đã biên tập)': parsed.content || rawText,\n      '📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)': dishInfo.realPhotoUrl,\n      '🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)': aiImageUrl,\n      'Gợi ý đăng bài': 'Bạn có thể chọn ảnh thật hoặc ảnh AI, hoặc đăng cả 2 ảnh dạng Carousel/Album trên Fanpage!',\n      'Trạng thái': 'Chờ duyệt',\n      'Thời gian tạo': parsed.created_at || new Date().toLocaleString('vi-VN')\n    }\n  }\n];"
+          "jsCode": "let rawText = $json.content.parts[0].text.trim();\nif (rawText.startsWith('```json')) {\n  rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();\n} else if (rawText.startsWith('```')) {\n  rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(rawText);\n} catch (e) {\n  parsed = {\n    title: 'Bài viết Facebook EGGU',\n    content: rawText,\n    dish: $('Code - Chọn Món & Ảnh Thật & Prompt AI').item.json.dishName,\n    status: 'Chờ duyệt',\n    created_at: new Date().toISOString()\n  };\n}\n\nconst dishInfo = $('Code - Chọn Món & Ảnh Thật & Prompt AI').item.json;\nconst aiImageUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(dishInfo.aiPrompt) + '?width=1080&height=1080&nologo=true&seed=' + Date.now();\n\nreturn [\n  {\n    json: {\n      title: parsed.title || ('EGGU - ' + dishInfo.dishName),\n      dishName: dishInfo.dishName,\n      dishCategory: dishInfo.dishCategory,\n      dishPrice: dishInfo.dishPrice,\n      targetAngle: dishInfo.targetAngle,\n      content: parsed.content || rawText,\n      realPhotoUrl: dishInfo.realPhotoUrl,\n      aiPhotoUrl: aiImageUrl,\n      status: 'PENDING',\n      // Dữ liệu hiển thị chi tiết và xuất Google Sheets\n      'Mã bài viết': 'FB-' + Date.now(),\n      'Tiêu đề': parsed.title || ('EGGU - ' + dishInfo.dishName),\n      'Món ăn': dishInfo.dishName + ' (' + dishInfo.dishCategory + ' - ' + dishInfo.dishPrice + ')',\n      'Nội dung Facebook (Đã biên tập)': parsed.content || rawText,\n      '📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)': dishInfo.realPhotoUrl,\n      '🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)': aiImageUrl,\n      'Gợi ý đăng bài': 'Đăng bài kèm 1 hoặc cả 2 ảnh trên Fanpage!',\n      'Trạng thái': 'Chờ nhân viên copy',\n      'Thời gian tạo': new Date().toLocaleString('vi-VN')\n    }\n  }\n];"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
         "position": [528, 350],
         "id": "b005-fb-format-output",
         "name": "Lưu Trữ Bài Chờ Duyệt (Kèm 2 Ảnh)"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://bnblofcypxfydnptazrs.supabase.co/rest/v1/marketing_posts",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "apikey",
+                "value": "sb_publishable_3htZtlySK0R61iVBgZfL9A_rjj0jeAz"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer sb_secret_b0IcObDVlfwIlKpClSJD_Q_bAAK8DxJ"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Prefer",
+                "value": "return=representation"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"title\": {{ JSON.stringify($json.title) }},\n  \"dish_name\": {{ JSON.stringify($json.dishName) }},\n  \"dish_category\": {{ JSON.stringify($json.dishCategory) }},\n  \"dish_price\": {{ JSON.stringify($json.dishPrice) }},\n  \"target_angle\": {{ JSON.stringify($json.targetAngle) }},\n  \"content\": {{ JSON.stringify($json.content) }},\n  \"real_photo_url\": {{ JSON.stringify($json.realPhotoUrl) }},\n  \"ai_photo_url\": {{ JSON.stringify($json.aiPhotoUrl) }},\n  \"status\": \"PENDING\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [780, 260],
+        "id": "b006-fb-push-admin",
+        "name": "Đẩy Về Admin Web (Supabase)"
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "",
+            "mode": "list"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "Sheet1",
+            "mode": "list"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {}
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [780, 440],
+        "id": "b007-fb-push-sheets",
+        "name": "Lưu Vào Google Sheets"
       }
     ],
     "connections": {
@@ -303,6 +364,22 @@
           [
             {
               "node": "Lưu Trữ Bài Chờ Duyệt (Kèm 2 Ảnh)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Lưu Trữ Bài Chờ Duyệt (Kèm 2 Ảnh)": {
+        "main": [
+          [
+            {
+              "node": "Đẩy Về Admin Web (Supabase)",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Lưu Vào Google Sheets",
               "type": "main",
               "index": 0
             }

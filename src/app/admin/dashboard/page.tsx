@@ -11,6 +11,7 @@ import FaqsTab from '@/components/admin/FaqsTab';
 import NewsTab from '@/components/admin/NewsTab';
 import PromotionsTab from '@/components/admin/PromotionsTab';
 import NotificationRecipientsTab from '@/components/admin/NotificationRecipientsTab';
+import MarketingPostsTab from '@/components/admin/MarketingPostsTab';
 import { Loader2 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -49,6 +50,8 @@ export default function AdminDashboardPage() {
     switch (activeTab) {
       case 'orders':
         return <OrdersTab />;
+      case 'marketing-posts':
+        return <MarketingPostsTab />;
       case 'products':
         return <ProductsTab />;
       case 'categories':
@@ -73,6 +76,7 @@ export default function AdminDashboardPage() {
   // Tab titles mapping in Vietnamese
   const TAB_NAMES: Record<string, string> = {
     orders: 'Quản lý đơn hàng',
+    'marketing-posts': 'Bài viết Social (n8n)',
     products: 'Quản lý sản phẩm',
     categories: 'Quản lý danh mục',
     about: 'Quản lý Giới thiệu',

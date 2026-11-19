@@ -200,7 +200,7 @@ const MOCK_PRODUCTS = [
   }
 ];
 
-export const SANDWICH_TOPPINGS = [
+const SANDWICH_TOPPINGS = [
   { id: 'bacon', name: 'Bacon / Thịt xông khói', name_vi: 'Bacon / Thịt xông khói', name_en: 'Bacon / Thịt xông khói', price: 12000 },
   { id: 'ham', name: 'Ham / Thịt dăm bông', name_vi: 'Ham / Thịt dăm bông', name_en: 'Ham / Thịt dăm bông', price: 12000 },
   { id: 'scrambled_egg', name: 'Scrambled egg / Trứng bác', name_vi: 'Scrambled egg / Trứng bác', name_en: 'Scrambled egg / Trứng bác', price: 10000 },
