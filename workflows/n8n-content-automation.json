@@ -303,7 +303,7 @@
           },
           "sendBody": true,
           "specifyBody": "json",
-          "jsonBody": "={\n  \"Mã bài viết\": {{ JSON.stringify($json['Mã bài viết']) }},\n  \"Tiêu đề\": {{ JSON.stringify($json['Tiêu đề']) }},\n  \"Món ăn\": {{ JSON.stringify($json['Món ăn']) }},\n  \"Nội dung Facebook (Đã biên tập)\": {{ JSON.stringify($json['Nội dung Facebook (Đã biên tập)']) }},\n  \"📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)\": {{ JSON.stringify($json['📸 ẢNH SẢN PHẨM GỐC CHÍNH HÃNG']) }},\n  \"🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)\": {{ JSON.stringify($json['🎨 POSTER MARKETING ĐỒ HỌA (1080x1080)']) }},\n  \"Gợi ý đăng bài\": {{ JSON.stringify($json['Gợi ý đăng bài']) }},\n  \"Trạng thái\": {{ JSON.stringify($json['Trạng thái']) }},\n  \"Thời gian tạo\": {{ JSON.stringify($json['Thời gian tạo']) }}\n}",
+          "jsonBody": "={{ JSON.stringify({\n  \"Mã bài viết\": $json['Mã bài viết'] || ('FB-' + Date.now()),\n  \"Tiêu đề\": $json['Tiêu đề'] || $json.title || '',\n  \"Món ăn\": $json['Món ăn'] || $json.dishName || '',\n  \"Nội dung Facebook (Đã biên tập)\": $json['Nội dung Facebook (Đã biên tập)'] || $json.content || '',\n  \"📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)\": $json.realPhotoUrl || $json['📸 ẢNH THẬT (Khách tự chụp)'] || '',\n  \"🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)\": $json.aiPhotoUrl || $json['🎨 POSTER ĐỒ HỌA 1080x1080 (AI & Code sinh từ ảnh thật)'] || '',\n  \"Gợi ý đăng bài\": $json['Gợi ý đăng bài'] || 'Đăng Poster đồ họa 1080x1080 kèm bài viết để tăng tương tác cao nhất!',\n  \"Trạng thái\": $json['Trạng thái'] || 'Chờ nhân viên copy',\n  \"Thời gian tạo\": $json['Thời gian tạo'] || new Date().toLocaleString('vi-VN')\n}) }}",
           "options": {
             "redirect": {
               "redirect": {
