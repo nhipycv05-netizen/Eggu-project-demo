@@ -211,7 +211,7 @@
       },
       {
         "parameters": {
-          "jsCode": "let rawText = $json.content.parts[0].text.trim();\nif (rawText.startsWith('```json')) {\n  rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();\n} else if (rawText.startsWith('```')) {\n  rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(rawText);\n} catch (e) {\n  parsed = {\n    title: 'Bài viết Facebook EGGU',\n    content: rawText,\n    dish: $('Code - Chọn Món & Ảnh Thật & Prompt AI').item.json.dishName,\n    status: 'Chờ duyệt',\n    created_at: new Date().toISOString()\n  };\n}\n\nconst dishInfo = $('Code - Chọn Món & Ảnh Thật & Prompt AI').item.json;\nconst aiImageUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(dishInfo.aiPrompt) + '?width=1080&height=1080&nologo=true&seed=' + Date.now();\n\nreturn [\n  {\n    json: {\n      title: parsed.title || ('EGGU - ' + dishInfo.dishName),\n      dishName: dishInfo.dishName,\n      dishCategory: dishInfo.dishCategory,\n      dishPrice: dishInfo.dishPrice,\n      targetAngle: dishInfo.targetAngle,\n      content: parsed.content || rawText,\n      realPhotoUrl: dishInfo.realPhotoUrl,\n      aiPhotoUrl: aiImageUrl,\n      status: 'PENDING',\n      // Dữ liệu hiển thị chi tiết và xuất Google Sheets\n      'Mã bài viết': 'FB-' + Date.now(),\n      'Tiêu đề': parsed.title || ('EGGU - ' + dishInfo.dishName),\n      'Món ăn': dishInfo.dishName + ' (' + dishInfo.dishCategory + ' - ' + dishInfo.dishPrice + ')',\n      'Nội dung Facebook (Đã biên tập)': parsed.content || rawText,\n      '📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)': dishInfo.realPhotoUrl,\n      '🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)': aiImageUrl,\n      'Gợi ý đăng bài': 'Đăng bài kèm 1 hoặc cả 2 ảnh trên Fanpage!',\n      'Trạng thái': 'Chờ nhân viên copy',\n      'Thời gian tạo': new Date().toLocaleString('vi-VN')\n    }\n  }\n];"
+          "jsCode": "let rawText = $json.content.parts[0].text.trim();\nif (rawText.startsWith('```json')) {\n  rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();\n} else if (rawText.startsWith('```')) {\n  rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(rawText);\n} catch (e) {\n  parsed = {\n    title: 'Bài viết Facebook EGGU',\n    content: rawText,\n    dish: $('Code - Chọn Món & Ảnh Thật & Prompt AI').item.json.dishName,\n    status: 'Chờ duyệt',\n    created_at: new Date().toISOString()\n  };\n}\n\nconst dishInfo = $('Code - Chọn Món & Ảnh Thật & Prompt AI').item.json;\nconst aiImageUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(dishInfo.aiPrompt) + '?width=1080&height=1080&nologo=true&seed=' + Date.now();\n\nreturn [\n  {\n    json: {\n      title: parsed.title || ('EGGU - ' + dishInfo.dishName),\n      dishName: dishInfo.dishName,\n      dishCategory: dishInfo.dishCategory,\n      dishPrice: dishInfo.dishPrice,\n      targetAngle: dishInfo.targetAngle,\n      content: parsed.content || rawText,\n      realPhotoUrl: dishInfo.realPhotoUrl,\n      aiPhotoUrl: aiImageUrl,\n      status: 'PENDING',\n      'Mã bài viết': 'FB-' + Date.now(),\n      'Tiêu đề': parsed.title || ('EGGU - ' + dishInfo.dishName),\n      'Món ăn': dishInfo.dishName + ' (' + dishInfo.dishCategory + ' - ' + dishInfo.dishPrice + ')',\n      'Nội dung Facebook (Đã biên tập)': parsed.content || rawText,\n      '📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)': dishInfo.realPhotoUrl,\n      '🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)': aiImageUrl,\n      'Gợi ý đăng bài': 'Đăng bài kèm 1 hoặc cả 2 ảnh trên Fanpage!',\n      'Trạng thái': 'Chờ nhân viên copy',\n      'Thời gian tạo': new Date().toLocaleString('vi-VN')\n    }\n  }\n];"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -257,25 +257,30 @@
       },
       {
         "parameters": {
-          "operation": "appendOrUpdate",
-          "documentId": {
-            "__rl": true,
-            "value": "",
-            "mode": "list"
+          "method": "POST",
+          "url": "https://script.google.com/macros/s/AKfycbwJnzBtnMANCChvgyefeZnZWT3cVPXzWptLVsK1KKFJoPvyDtpEqxyaz1-jugPo4JT6/exec",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
           },
-          "sheetName": {
-            "__rl": true,
-            "value": "Sheet1",
-            "mode": "list"
-          },
-          "columns": {
-            "mappingMode": "autoMapInputData",
-            "value": {}
-          },
-          "options": {}
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"Mã bài viết\": {{ JSON.stringify($json['Mã bài viết']) }},\n  \"Tiêu đề\": {{ JSON.stringify($json['Tiêu đề']) }},\n  \"Món ăn\": {{ JSON.stringify($json['Món ăn']) }},\n  \"Nội dung Facebook (Đã biên tập)\": {{ JSON.stringify($json['Nội dung Facebook (Đã biên tập)']) }},\n  \"📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)\": {{ JSON.stringify($json['📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)']) }},\n  \"🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)\": {{ JSON.stringify($json['🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)']) }},\n  \"Gợi ý đăng bài\": {{ JSON.stringify($json['Gợi ý đăng bài']) }},\n  \"Trạng thái\": {{ JSON.stringify($json['Trạng thái']) }},\n  \"Thời gian tạo\": {{ JSON.stringify($json['Thời gian tạo']) }}\n}",
+          "options": {
+            "redirect": {
+              "redirect": {
+                "followRedirects": true
+              }
+            }
+          }
         },
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.5,
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
         "position": [780, 440],
         "id": "b007-fb-push-sheets",
         "name": "Lưu Vào Google Sheets"
