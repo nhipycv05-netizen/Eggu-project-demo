@@ -385,6 +385,8 @@ export default function MarketingPostsTab() {
                           }
                         }
 
+                        // Lọc các URL hợp lệ bắt đầu bằng http
+                        photosList = photosList.filter((u) => typeof u === 'string' && u.startsWith('http'));
                         const mainPhoto = photosList[0] || null;
 
                         return (
@@ -397,7 +399,7 @@ export default function MarketingPostsTab() {
                                 </span>
                                 <span className="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold">
                                   {photosList.length > 1
-                                    ? `📸 Album ${photosList.length} ảnh`
+                                    ? `📸 Album ${photosList.length} ảnh thật`
                                     : (post.dish_category?.includes('Threads')
                                     ? '🧵 Threads'
                                     : post.dish_category?.includes('Instagram')
@@ -427,7 +429,7 @@ export default function MarketingPostsTab() {
 
                               {/* Thumbnail Strip for 4-5 photos */}
                               {photosList.length > 1 && (
-                                <div className="grid grid-cols-4 gap-1 pt-1">
+                                <div className="grid grid-cols-5 gap-1 pt-1">
                                   {photosList.map((url, idx) => (
                                     <a
                                       key={idx}
@@ -444,7 +446,7 @@ export default function MarketingPostsTab() {
                                         className="object-cover group-hover:scale-105 transition"
                                         sizes="45px"
                                       />
-                                      <div className="absolute bottom-0 right-0 bg-black/60 text-white text-[8px] font-bold px-1 rounded-tl">
+                                      <div className="absolute bottom-0 right-0 bg-black/70 text-white text-[8px] font-bold px-1 rounded-tl">
                                         #{idx + 1}
                                       </div>
                                     </a>
@@ -462,18 +464,18 @@ export default function MarketingPostsTab() {
                                   rel="noreferrer"
                                   className="flex-1 py-1 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-md text-[10px] font-bold flex items-center justify-center space-x-1"
                                 >
-                                  <span>Mở {photosList.length > 1 ? `album (${photosList.length})` : 'ảnh'}</span>
+                                  <span>Mở {photosList.length > 1 ? `album (${photosList.length} ảnh)` : 'ảnh'}</span>
                                   <ExternalLink className="w-2.5 h-2.5" />
                                 </a>
                                 <button
                                   onClick={() =>
                                     handleCopyLink(
                                       photosList.join('\n'),
-                                      photosList.length > 1 ? 'tất cả link ảnh thật' : 'ảnh thật'
+                                      photosList.length > 1 ? `tất cả ${photosList.length} link ảnh thật` : 'ảnh thật'
                                     )
                                   }
                                   className="p-1 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 rounded-md"
-                                  title={photosList.length > 1 ? 'Sao chép tất cả link ảnh thật' : 'Sao chép link ảnh thật'}
+                                  title={photosList.length > 1 ? `Sao chép tất cả ${photosList.length} link ảnh thật` : 'Sao chép link ảnh thật'}
                                 >
                                   <Copy className="w-3 h-3" />
                                 </button>
