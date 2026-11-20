@@ -255,6 +255,19 @@ export default function MarketingPostsTab() {
                     <span className="px-3 py-1 bg-[#EAAA08]/15 text-[#B58500] font-black text-xs rounded-lg">
                       {post.dish_name || 'Sandwich Trứng'}
                     </span>
+                    {post.dish_category && (
+                      <span className={`px-2 py-0.5 font-bold text-[10px] rounded-md flex items-center space-x-1 ${
+                        post.dish_category.includes('Threads')
+                          ? 'bg-neutral-900 text-white'
+                          : post.dish_category.includes('Instagram')
+                          ? 'bg-pink-600 text-white'
+                          : post.dish_category.includes('Facebook')
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-amber-100 text-amber-900'
+                      }`}>
+                        <span>{post.dish_category}</span>
+                      </span>
+                    )}
                     {post.target_angle && (
                       <span className="px-2.5 py-1 bg-neutral-200/70 text-neutral-700 font-bold text-[11px] rounded-lg">
                         {post.target_angle}
@@ -365,7 +378,13 @@ export default function MarketingPostsTab() {
                             <span>ẢNH THẬT</span>
                           </span>
                           <span className="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold">
-                            Chuẩn 100%
+                            {post.dish_category?.includes('Threads')
+                              ? '🧵 Threads'
+                              : post.dish_category?.includes('Instagram')
+                              ? '📸 IG'
+                              : post.dish_category?.includes('Facebook')
+                              ? '📘 FB'
+                              : '📸 Gốc 100%'}
                           </span>
                         </div>
 
