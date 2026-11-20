@@ -198,7 +198,7 @@ export async function GET(req: NextRequest) {
               }}
             >
               <span style={{ display: 'flex' }}>📍 54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội</span>
-              <span style={{ display: 'flex' }}>🌐 eggu.vn</span>
+              <span style={{ display: 'flex' }}>🌐 eggusandwich.id.vn</span>
             </div>
           </div>
         ),
@@ -350,7 +350,7 @@ export async function GET(req: NextRequest) {
                 }}
               >
                 <span style={{ display: 'flex' }}>📍 54 Nguyễn Hữu Huân, Hoàn Kiếm</span>
-                <span style={{ display: 'flex' }}>🛵 Đặt giao tận bàn làm việc tại eggu.vn</span>
+                <span style={{ display: 'flex' }}>🛵 Đặt giao tận bàn làm việc tại eggusandwich.id.vn</span>
               </div>
             </div>
           </div>
@@ -500,7 +500,7 @@ export async function GET(req: NextRequest) {
                 }}
               >
                 <span style={{ display: 'flex' }}>Dạo quanh phố cổ, cầm tay chiếc bánh nóng hổi</span>
-                <span style={{ display: 'flex' }}>🌐 eggu.vn</span>
+                <span style={{ display: 'flex' }}>🌐 eggusandwich.id.vn</span>
               </div>
             </div>
           </div>
@@ -649,7 +649,7 @@ export async function GET(req: NextRequest) {
               }}
             >
               <span style={{ display: 'flex' }}>📍 54 Nguyễn Hữu Huân, Hoàn Kiếm</span>
-              <span style={{ display: 'flex' }}>🛵 Đặt giao nhanh: eggu.vn</span>
+              <span style={{ display: 'flex' }}>🛵 Đặt giao nhanh: eggusandwich.id.vn</span>
             </div>
           </div>
         ),
