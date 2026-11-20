@@ -409,15 +409,15 @@ export default function MarketingPostsTab() {
                         )}
                       </div>
 
-                      {/* AI Generated Photo Card */}
+                      {/* Poster / Creative Graphic Card */}
                       <div className="border border-neutral-200 rounded-xl p-2.5 space-y-2 bg-neutral-50/50">
                         <div className="flex items-center justify-between text-[11px] font-black text-neutral-700">
                           <span className="flex items-center space-x-1">
-                            <Bot className="w-3.5 h-3.5 text-purple-600" />
-                            <span>ẢNH AI TẠO</span>
+                            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                            <span>POSTER ĐỒ HỌA</span>
                           </span>
-                          <span className="text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-bold">
-                            Concept 8K
+                          <span className="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">
+                            1080x1080
                           </span>
                         </div>
 
@@ -425,14 +425,14 @@ export default function MarketingPostsTab() {
                           {post.ai_photo_url ? (
                             <SafeImage
                               src={post.ai_photo_url}
-                              alt="Ảnh AI EGGU"
+                              alt="Poster Marketing EGGU"
                               fill
                               className="object-cover"
                               sizes="180px"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-neutral-400 text-[10px]">
-                              Chưa có ảnh
+                              Chưa có poster
                             </div>
                           )}
                         </div>
@@ -445,15 +445,15 @@ export default function MarketingPostsTab() {
                               rel="noreferrer"
                               className="flex-1 py-1 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-md text-[10px] font-bold flex items-center justify-center space-x-1"
                             >
-                              <span>Mở ảnh</span>
+                              <span>Mở poster</span>
                               <ExternalLink className="w-2.5 h-2.5" />
                             </a>
                             <button
                               onClick={() =>
-                                handleCopyLink(post.ai_photo_url!, 'ảnh AI')
+                                handleCopyLink(post.ai_photo_url!, 'poster đồ họa')
                               }
                               className="p-1 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 rounded-md"
-                              title="Sao chép link ảnh AI"
+                              title="Sao chép link poster"
                             >
                               <Copy className="w-3 h-3" />
                             </button>
