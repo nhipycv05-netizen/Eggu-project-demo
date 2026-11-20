@@ -195,6 +195,9 @@
         ],
         "id": "b003-fb-ai-writer",
         "name": "AI Writer (Gemini - Viết Nháp FB & Đạo Diễn Poster)",
+        "retryOnFail": true,
+        "maxTries": 3,
+        "waitBetweenTries": 3000,
         "credentials": {
           "googlePalmApi": {
             "id": "geminiCred123",
@@ -229,6 +232,9 @@
         ],
         "id": "b004-fb-ai-editor",
         "name": "AI Editor (Gemini - Duyệt Caption & Chuẩn Hóa Poster)",
+        "retryOnFail": true,
+        "maxTries": 3,
+        "waitBetweenTries": 3000,
         "credentials": {
           "googlePalmApi": {
             "id": "geminiCred123",
