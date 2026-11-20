@@ -363,116 +363,177 @@ export default function MarketingPostsTab() {
                     </div>
                   </div>
 
-                  {/* Right Column: 2 Images (Real vs AI) */}
+                  {/* Right Column: 2 Sections (4-5 Real Photos vs 1 AI Generated Concept Photo) */}
                   <div className="lg:col-span-5 space-y-4">
                     <span className="text-xs font-bold text-neutral-500 block uppercase tracking-wider">
-                      Hình ảnh đính kèm (Chọn 1 hoặc cả 2)
+                      Hình ảnh đính kèm (Album ảnh thật & Ảnh AI thiết kế riêng)
                     </span>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      {/* Real Photo Card */}
-                      <div className="border border-neutral-200 rounded-xl p-2.5 space-y-2 bg-neutral-50/50">
-                        <div className="flex items-center justify-between text-[11px] font-black text-neutral-700">
-                          <span className="flex items-center space-x-1">
-                            <Camera className="w-3.5 h-3.5 text-blue-600" />
-                            <span>ẢNH THẬT</span>
-                          </span>
-                          <span className="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold">
-                            {post.dish_category?.includes('Threads')
-                              ? '🧵 Threads'
-                              : post.dish_category?.includes('Instagram')
-                              ? '📸 IG'
-                              : post.dish_category?.includes('Facebook')
-                              ? '📘 FB'
-                              : '📸 Gốc 100%'}
-                          </span>
-                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Real Photos Album Card (4-5 Photos) */}
+                      {(() => {
+                        let photosList: string[] = [];
+                        if (post.real_photo_url) {
+                          if (post.real_photo_url.startsWith('[')) {
+                            try {
+                              photosList = JSON.parse(post.real_photo_url);
+                            } catch {
+                              photosList = [post.real_photo_url];
+                            }
+                          } else {
+                            photosList = [post.real_photo_url];
+                          }
+                        }
 
-                        <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-neutral-200 border border-neutral-200">
-                          {post.real_photo_url ? (
-                            <SafeImage
-                              src={post.real_photo_url}
-                              alt="Ảnh thật EGGU"
-                              fill
-                              className="object-cover"
-                              sizes="180px"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-neutral-400 text-[10px]">
-                              Chưa có ảnh
+                        const mainPhoto = photosList[0] || null;
+
+                        return (
+                          <div className="border border-neutral-200 rounded-xl p-2.5 space-y-2 bg-neutral-50/50 flex flex-col justify-between">
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between text-[11px] font-black text-neutral-700">
+                                <span className="flex items-center space-x-1">
+                                  <Camera className="w-3.5 h-3.5 text-blue-600" />
+                                  <span>ẢNH THẬT</span>
+                                </span>
+                                <span className="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold">
+                                  {photosList.length > 1
+                                    ? `📸 Album ${photosList.length} ảnh`
+                                    : (post.dish_category?.includes('Threads')
+                                    ? '🧵 Threads'
+                                    : post.dish_category?.includes('Instagram')
+                                    ? '📸 IG'
+                                    : post.dish_category?.includes('Facebook')
+                                    ? '📘 FB'
+                                    : '📸 Gốc 100%')}
+                                </span>
+                              </div>
+
+                              {/* Main Featured Photo */}
+                              <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-neutral-200 border border-neutral-200">
+                                {mainPhoto ? (
+                                  <SafeImage
+                                    src={mainPhoto}
+                                    alt="Ảnh thật EGGU"
+                                    fill
+                                    className="object-cover"
+                                    sizes="180px"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-neutral-400 text-[10px]">
+                                    Chưa có ảnh
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Thumbnail Strip for 4-5 photos */}
+                              {photosList.length > 1 && (
+                                <div className="grid grid-cols-4 gap-1 pt-1">
+                                  {photosList.map((url, idx) => (
+                                    <a
+                                      key={idx}
+                                      href={url}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="relative aspect-square rounded-md overflow-hidden border border-neutral-200 hover:border-blue-500 transition group"
+                                      title={`Xem ảnh thật số ${idx + 1}`}
+                                    >
+                                      <SafeImage
+                                        src={url}
+                                        alt={`Ảnh thật ${idx + 1}`}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition"
+                                        sizes="45px"
+                                      />
+                                      <div className="absolute bottom-0 right-0 bg-black/60 text-white text-[8px] font-bold px-1 rounded-tl">
+                                        #{idx + 1}
+                                      </div>
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
 
-                        {post.real_photo_url && (
-                          <div className="flex items-center space-x-1 pt-0.5">
-                            <a
-                              href={post.real_photo_url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex-1 py-1 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-md text-[10px] font-bold flex items-center justify-center space-x-1"
-                            >
-                              <span>Mở ảnh</span>
-                              <ExternalLink className="w-2.5 h-2.5" />
-                            </a>
-                            <button
-                              onClick={() =>
-                                handleCopyLink(post.real_photo_url!, 'ảnh thật')
-                              }
-                              className="p-1 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 rounded-md"
-                              title="Sao chép link ảnh thật"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </button>
+                            {/* Action Buttons for Real Photos */}
+                            {photosList.length > 0 && (
+                              <div className="flex items-center space-x-1 pt-2">
+                                <a
+                                  href={mainPhoto!}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="flex-1 py-1 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-md text-[10px] font-bold flex items-center justify-center space-x-1"
+                                >
+                                  <span>Mở {photosList.length > 1 ? `album (${photosList.length})` : 'ảnh'}</span>
+                                  <ExternalLink className="w-2.5 h-2.5" />
+                                </a>
+                                <button
+                                  onClick={() =>
+                                    handleCopyLink(
+                                      photosList.join('\n'),
+                                      photosList.length > 1 ? 'tất cả link ảnh thật' : 'ảnh thật'
+                                    )
+                                  }
+                                  className="p-1 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 rounded-md"
+                                  title={photosList.length > 1 ? 'Sao chép tất cả link ảnh thật' : 'Sao chép link ảnh thật'}
+                                >
+                                  <Copy className="w-3 h-3" />
+                                </button>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
+                        );
+                      })()}
 
-                      {/* Poster / Creative Graphic Card */}
-                      <div className="border border-neutral-200 rounded-xl p-2.5 space-y-2 bg-neutral-50/50">
-                        <div className="flex items-center justify-between text-[11px] font-black text-neutral-700">
-                          <span className="flex items-center space-x-1">
-                            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                            <span>POSTER ĐỒ HỌA</span>
-                          </span>
-                          <span className="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">
-                            1080x1080
-                          </span>
-                        </div>
+                      {/* AI Dedicated Graphic / Concept Card (Based on Caption) */}
+                      <div className="border border-neutral-200 rounded-xl p-2.5 space-y-2 bg-neutral-50/50 flex flex-col justify-between">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-[11px] font-black text-neutral-700">
+                            <span className="flex items-center space-x-1">
+                              <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                              <span>ẢNH AI THIẾT KẾ</span>
+                            </span>
+                            <span className="text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-bold">
+                              Theo Caption
+                            </span>
+                          </div>
 
-                        <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-neutral-200 border border-neutral-200">
-                          {post.ai_photo_url ? (
-                            <SafeImage
-                              src={post.ai_photo_url}
-                              alt="Poster Marketing EGGU"
-                              fill
-                              className="object-cover"
-                              sizes="180px"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-neutral-400 text-[10px]">
-                              Chưa có poster
-                            </div>
-                          )}
+                          <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-neutral-200 border border-neutral-200">
+                            {post.ai_photo_url ? (
+                              <SafeImage
+                                src={post.ai_photo_url}
+                                alt="Ảnh AI thiết kế riêng theo Caption"
+                                fill
+                                className="object-cover"
+                                sizes="180px"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-neutral-400 text-[10px]">
+                                Chưa có ảnh AI
+                              </div>
+                            )}
+                          </div>
+
+                          <p className="text-[10px] text-neutral-500 italic line-clamp-2 px-0.5">
+                            🎨 Thiết kế độc quyền riêng 1 tấm dựa trên câu chuyện & cảm xúc của caption.
+                          </p>
                         </div>
 
                         {post.ai_photo_url && (
-                          <div className="flex items-center space-x-1 pt-0.5">
+                          <div className="flex items-center space-x-1 pt-2">
                             <a
                               href={post.ai_photo_url}
                               target="_blank"
                               rel="noreferrer"
                               className="flex-1 py-1 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-md text-[10px] font-bold flex items-center justify-center space-x-1"
                             >
-                              <span>Mở poster</span>
+                              <span>Mở ảnh AI</span>
                               <ExternalLink className="w-2.5 h-2.5" />
                             </a>
                             <button
                               onClick={() =>
-                                handleCopyLink(post.ai_photo_url!, 'poster đồ họa')
+                                handleCopyLink(post.ai_photo_url!, 'ảnh AI thiết kế riêng')
                               }
                               className="p-1 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 rounded-md"
-                              title="Sao chép link poster"
+                              title="Sao chép link ảnh AI"
                             >
                               <Copy className="w-3 h-3" />
                             </button>
