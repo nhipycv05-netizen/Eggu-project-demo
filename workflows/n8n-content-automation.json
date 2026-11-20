@@ -139,13 +139,13 @@
       },
       {
         "parameters": {
-          "jsCode": "const menuItems = [\n  {\n    name: \"Bacon Double Cheese\",\n    category: \"Bán chạy\",\n    usps: \"Nhân đôi thịt xông khói áp chảo giòn thơm, đẫm phô mai Cheddar kép béo ngậy, trứng cuộn fluffy mềm mượt tan chảy\",\n    price: \"49.000đ\",\n    realPhotoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/news/tiktok-7701629125517135112.jpg\"\n  },\n  {\n    name: \"Mr. Egg\",\n    category: \"Món chữ ký\",\n    usps: \"Bánh mì brioche nướng bơ tỏi vàng rụm, trứng cuộn fluffy béo mịn, sốt sriracha ngọt béo cay nhẹ\",\n    price: \"39.000đ\",\n    realPhotoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/news/tiktok-7695023597147933959.jpg\"\n  },\n  {\n    name: \"Sandwich Bò Nướng Teriyaki\",\n    category: \"Đặc biệt\",\n    usps: \"Thịt bò mềm mọng sốt Teriyaki Nhật Bản mặn ngọt đậm đà, kết hợp trứng béo và phô mai thơm lừng\",\n    price: \"55.000đ\",\n    realPhotoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/news/tiktok-7702745741395053842.jpg\"\n  },\n  {\n    name: \"Sandwich Gà Giòn Sốt Cay\",\n    category: \"Mới\",\n    usps: \"Ức gà chiên xù giòn tan rụm, sốt cay Hàn Quốc đậm vị kết hợp phô mai béo ngậy cân bằng vị giác\",\n    price: \"49.000đ\",\n    realPhotoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/news/tiktok-7691901190380064018.jpg\"\n  },\n  {\n    name: \"Bánh Mì Nướng Bơ Tỏi Phô Mai\",\n    category: \"Ăn nhẹ\",\n    usps: \"Vỏ brioche nướng bơ tỏi Pháp giòn rụm bên ngoài, mềm xốp bên trong đẫm phô mai thơm nức mũi\",\n    price: \"35.000đ\",\n    realPhotoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/news/tiktok-7698288809108065537.jpg\"\n  }\n];\n\nconst today = new Date();\nconst dayOfWeek = today.getDay();\n\nlet angle = \"\";\nlet visualSetting = \"\";\nif (dayOfWeek === 1 || dayOfWeek === 3) {\n  angle = \"Đồng hành công sở (Bữa sáng vội vã, ăn sạch tay, no lâu, gom đơn cùng đồng nghiệp)\";\n  visualSetting = \"on a clean modern office desk next to an iced coffee and notebook, morning bright sunlight from window\";\n} else if (dayOfWeek === 2 || dayOfWeek === 4) {\n  angle = \"Cứu đói xế chiều 14h - 16h (Thèm phô mai kéo sợi ngập tràn, tiếp năng lượng giờ uể oải)\";\n  visualSetting = \"handheld shot showing stretchy melted cheese pull, afternoon tea break vibe, warm cozy golden lighting\";\n} else if (dayOfWeek === 5) {\n  angle = \"Nạp năng lượng cuối tuần (Tự thưởng cho bản thân một bữa ăn chất lượng chuẩn vị Seoul)\";\n  visualSetting = \"on a wooden rustic table in an aesthetic minimalist Korean cafe, lush green plant in blurred background, soft natural daylight\";\n} else {\n  angle = \"Dạo phố cổ Hồ Gươm (Bánh nướng nóng hổi cầm tay dạo quanh phố 54 Nguyễn Hữu Huân)\";\n  visualSetting = \"handheld sandwich in open-top paper takeout box, blurred cozy Hanoi autumn street and trees in background, soft daylight\";\n}\n\nconst selectedDish = menuItems[Math.floor(Math.random() * menuItems.length)];\n\nreturn [\n  {\n    json: {\n      dishName: selectedDish.name,\n      dishCategory: selectedDish.category,\n      dishUsps: selectedDish.usps,\n      dishPrice: selectedDish.price,\n      realPhotoUrl: selectedDish.realPhotoUrl,\n      targetAngle: angle,\n      visualSetting: visualSetting,\n      date: today.toLocaleDateString(\"vi-VN\"),\n      storeAddress: \"54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội\",\n      website: \"eggu.vn\"\n    }\n  }\n];"
+          "jsCode": "const menuItems = [\n  {\n    name: \"Sandwich Thịt Xông Khói Bơ Tỏi Phô Mai\",\n    category: \"Bán chạy nhất\",\n    price: \"55.000đ\",\n    usps: \"Vỏ brioche nướng bơ tỏi thơm nức mũi, nhân đôi thịt xông khói áp chảo giòn rụm, đẫm phô mai Cheddar béo ngậy tan chảy\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790252169872-e67ur3a.png\"\n  },\n  {\n    name: \"Sandwich Thịt Bò Nướng Teriyaki\",\n    category: \"Món đặc biệt\",\n    price: \"70.000đ\",\n    usps: \"Thịt bò mềm mọng sốt Teriyaki Nhật Bản đậm đà mặn ngọt, trứng fluffy mềm mượt và phô mai thơm ngậy\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790257589853-gaob8nq.png\"\n  },\n  {\n    name: \"Sandwich Trứng Phô Mai (Mr. Egg)\",\n    category: \"Món chữ ký\",\n    price: \"40.000đ\",\n    usps: \"Bánh mì brioche giòn rụm, trứng cuộn fluffy béo mịn tan ngay trong miệng, sốt sriracha ngọt béo cay nhẹ đặc trưng\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790252774417-m33tz1o.png\"\n  },\n  {\n    name: \"Sandwich Dăm Bông Phô Mai Mỹ\",\n    category: \"Món yêu thích\",\n    price: \"50.000đ\",\n    usps: \"Thịt dăm bông cao cấp kết hợp phô mai Mỹ kéo sợi và trứng bác bông mềm thơm ngậy\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790317233417-b2u9a28.png\"\n  },\n  {\n    name: \"Sandwich Gà Nướng Pesto\",\n    category: \"Đặc sắc\",\n    price: \"60.000đ\",\n    usps: \"Ức gà nướng mềm thơm quyện sốt Pesto húng tây thơm thanh mát chuẩn vị Âu, phô mai kéo sợi ngập tràn\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790252411821-18oppot.png\"\n  },\n  {\n    name: \"Sandwich Thịt Hộp, Phô Mai & Nori\",\n    category: \"Hương vị Seoul\",\n    price: \"60.000đ\",\n    usps: \"Thịt hộp Spam áp chảo xém cạnh đậm vị, rong biển Nori giòn thơm và phô mai Cheddar béo bùi\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790252648517-nbn1oi2.png\"\n  },\n  {\n    name: \"Sandwich Thịt Xông Khói Ngô Phô Mai\",\n    category: \"Mới lạ\",\n    price: \"50.000đ\",\n    usps: \"Hạt bắp ngọt giòn sần sật, bacon xông khói giòn tan và phô mai nướng thơm ngất ngây\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790252476216-pmpd82w.png\"\n  },\n  {\n    name: \"Sandwich Cá Ngừ Phô Mai\",\n    category: \"Thanh nhẹ\",\n    price: \"60.000đ\",\n    usps: \"Cá ngừ đại dương tươi ngon trộn sốt mayo béo dịu, phô mai chảy đẫm thơm lừng\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790252360765-ftrb245.png\"\n  },\n  {\n    name: \"Sandwich Nướng Kiểu Pháp\",\n    category: \"Cổ điển\",\n    price: \"55.000đ\",\n    usps: \"Vỏ bánh brioche nhúng trứng sữa nướng vàng ươm giòn rụm bên ngoài mềm xốp bên trong\",\n    photoUrl: \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/products/1790317861516-nu32o17.png\"\n  }\n];\n\nconst today = new Date();\nconst dayOfWeek = today.getDay();\n\nlet angle = \"\";\nif (dayOfWeek === 1 || dayOfWeek === 3) {\n  angle = \"Đồng hành công sở (Bữa sáng vội vã, cầm tay ăn sạch không dính mỡ, no lâu, gom đơn cùng đồng nghiệp)\";\n} else if (dayOfWeek === 2 || dayOfWeek === 4) {\n  angle = \"Cứu đói xế chiều 14h - 16h (Thèm phô mai kéo sợi ngập tràn, tiếp năng lượng giờ làm việc uể oải)\";\n} else if (dayOfWeek === 5) {\n  angle = \"Nạp năng lượng cuối tuần (Tự thưởng cho bản thân bữa ăn nóng hổi chất lượng chuẩn vị Seoul)\";\n} else {\n  angle = \"Dạo phố cổ Hồ Gươm (Bánh nướng nóng hổi cầm tay dạo quanh phố 54 Nguyễn Hữu Huân)\";\n}\n\nconst selectedDish = menuItems[Math.floor(Math.random() * menuItems.length)];\n\nreturn [\n  {\n    json: {\n      dishName: selectedDish.name,\n      dishCategory: selectedDish.category,\n      dishUsps: selectedDish.usps,\n      dishPrice: selectedDish.price,\n      photoUrl: selectedDish.photoUrl,\n      targetAngle: angle,\n      date: today.toLocaleDateString(\"vi-VN\"),\n      storeAddress: \"54 Nguyễn Hữu Huân, Hoàn Kiếm, Hà Nội\",\n      website: \"eggu.vn\"\n    }\n  }\n];"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
         "position": [-288, 350],
         "id": "b002-fb-context",
-        "name": "Code - Chọn Món & Ảnh Thật & Ngữ Cảnh"
+        "name": "Code - Kho Ảnh Thật Website & Góc Bài Viết"
       },
       {
         "parameters": {
@@ -160,7 +160,7 @@
           "messages": {
             "values": [
               {
-                "content": "=Bạn là chuyên gia sáng tạo nội dung & đạo diễn hình ảnh của thương hiệu EGGU.\nÁp dụng đồng thời 3 bộ kỹ năng: 'social', 'copywriting' và 'image' (Visual Marketing Producer):\n\nTHÔNG TIN BÀI VIẾT:\n- Món ăn: {{ $json.dishName }} ({{ $json.dishCategory }} - Giá: {{ $json.dishPrice }})\n- Điểm nổi bật: {{ $json.dishUsps }}\n- Góc tiếp cận: {{ $json.targetAngle }}\n- Bối cảnh thị giác gợi ý: {{ $json.visualSetting }}\n- Địa chỉ tiệm: {{ $json.storeAddress }}\n- Website: {{ $json.website }}\n\nNHIỆM VỤ 1 (NỘI DUNG FACEBOOK):\n1. Hook: Thu hút ngay, đánh vào cơn đói hoặc thời tiết.\n2. Thân bài (4-6 câu): Khơi gợi giác quan (vỏ brioche giòn rụm bơ tỏi, trứng fluffy mềm mượt, phô mai kéo sợi béo ngậy).\n3. Kêu gọi hành động (CTA) ghé 54 Nguyễn Hữu Huân hoặc đặt trên website eggu.vn.\n4. Kèm hashtag: #EGGU #BanhMiTrungHanQuoc #54NguyenHuuHuan #AnSangHaNoi\n\nNHIỆM VỤ 2 (PROMPT TẠO ẢNH THEO SKILL 'IMAGE'):\nViết một câu prompt tiếng Anh chuyên nghiệp theo đúng công thức:\n[Subject: {{ $json.dishName }} with fluffy scrambled eggs, melted cheese, golden brioche] + [Setting: {{ $json.visualSetting }}, in a clean white rectangular paper takeout carton box with cute yellow poached egg logo] + [Visual style: commercial food photography, Korean cafe aesthetic] + [Lighting: soft natural lighting] + [Composition: macro close-up, shallow depth of field] + [Technical: 8k, photorealistic, sharp focus].\n\nHãy viết đầy đủ bài nháp và câu prompt tiếng Anh.",
+                "content": "=Bạn là chuyên gia sáng tạo nội dung của thương hiệu EGGU - Bánh mì sandwich trứng Hàn Quốc.\nÁp dụng kỹ năng 'social' và 'copywriting' để viết bài đăng Facebook:\n\nTHÔNG TIN MÓN ĂN:\n- Món: {{ $json.dishName }} ({{ $json.dishCategory }} - Giá: {{ $json.dishPrice }})\n- Điểm nổi bật: {{ $json.dishUsps }}\n- Góc tiếp cận hôm nay: {{ $json.targetAngle }}\n- Địa chỉ tiệm: {{ $json.storeAddress }}\n- Website: {{ $json.website }}\n\nYÊU CẦU BÀI ĐĂNG FACEBOOK:\n1. Hook (Dòng đầu): Thu hút ngay sự chú ý, đánh trúng tâm lý thèm ăn hoặc thời tiết.\n2. Thân bài (4-6 câu ngắn): Miêu tả giác quan chân thực (vỏ brioche nướng bơ tỏi giòn rụm, trứng fluffy mềm mướt béo ngậy tan chảy, phô mai kéo sợi).\n3. Cam kết chất lượng: Bánh chỉ nướng nóng khi có đơn, bao bì hộp giấy cầm tay sạch sẽ không dính mỡ.\n4. Kêu gọi hành động (CTA): Rủ đồng nghiệp gom đơn hoặc ghé 54 Nguyễn Hữu Huân.\n5. Chân bài kèm địa chỉ và hashtag: #EGGU #BanhMiTrungHanQuoc #54NguyenHuuHuan #AnSangHaNoi\n\nHãy viết nội dung bài đăng hoàn chỉnh.",
                 "role": "user"
               }
             ]
@@ -170,7 +170,7 @@
         "typeVersion": 1,
         "position": [-64, 350],
         "id": "b003-fb-ai-writer",
-        "name": "AI Writer (Gemini - Viết Nháp & Đạo Diễn Ảnh)",
+        "name": "AI Writer (Gemini - Viết Nháp FB)",
         "credentials": {
           "googlePalmApi": {
             "id": "geminiCred123",
@@ -191,7 +191,7 @@
           "messages": {
             "values": [
               {
-                "content": "=Bạn là Tổng biên tập viên & Giám đốc mỹ thuật của EGGU.\nÁp dụng kỹ năng 'copy-editing' và 'image' để duyệt và gọt giũa bài nháp sau:\n\nBÀI NHÁP:\n{{ $json.content.parts[0].text }}\n\nTIÊU CHUẨN DUYỆT:\n1. Bài viết: Tiêu diệt 'mùi AI', cắt gọt câu từ cô đọng 150 - 220 từ, giữ chi tiết kích thích vị giác (giòn rụm, bơ tỏi, trứng fluffy), đúng địa chỉ 54 Nguyễn Hữu Huân.\n2. Prompt tạo ảnh: Chuẩn tiếng Anh, đúng công thức Subject + Setting + Style + Lighting + Composition + Technical. Bắt buộc có chi tiết bao bì: 'served in a clean minimalist white rectangular paper takeout carton box with cute yellow poached egg logo'.\n\nTRẢ VỀ DUY NHẤT ĐỊNH DẠNG JSON CHUẨN (KHÔNG BỌC TRONG CODE BLOCK MARKDOWN):\n{\n  \"title\": \"Tiêu đề ngắn bài viết\",\n  \"content\": \"Nội dung bài viết Facebook hoàn chỉnh\",\n  \"image_prompt\": \"Câu prompt tiếng Anh hoàn chỉnh tạo ảnh bằng model Flux\",\n  \"dish\": \"{{ $('Code - Chọn Món & Ảnh Thật & Ngữ Cảnh').item.json.dishName }}\",\n  \"status\": \"Chờ duyệt\",\n  \"created_at\": \"{{ $now.toFormat('dd/MM/yyyy HH:mm') }}\"\n}",
+                "content": "=Bạn là Tổng biên tập viên của EGGU.\nÁp dụng bộ kỹ năng 'copy-editing' để kiểm duyệt bài viết sau:\n\nBÀI NHÁP:\n{{ $json.content.parts[0].text }}\n\nTIÊU CHUẨN KIỂM DUYỆT:\n1. Tiêu diệt 'mùi AI': Xóa các câu mở đầu khuôn mẫu sáo rỗng ('Trong nhịp sống...', 'Bạn có biết...'), xóa tính từ sáo rỗng vô nghĩa ('tuyệt phẩm', 'đỉnh cao').\n2. Cắt gọt: Rút ngắn câu dài dòng, giữ bài viết cô đọng trong khoảng 150 - 220 từ để lướt điện thoại dễ đọc.\n3. Tính xác thực: Đúng tên món {{ $('Code - Kho Ảnh Thật Website & Góc Bài Viết').item.json.dishName }}, đúng giá {{ $('Code - Kho Ảnh Thật Website & Góc Bài Viết').item.json.dishPrice }}, đúng địa chỉ 54 Nguyễn Hữu Huân, đúng website eggu.vn.\n4. Kích thích vị giác: Bắt buộc giữ chi tiết khơi gợi giác quan (giòn rụm, bơ tỏi thơm nức, trứng fluffy béo mịn).\n\nTRẢ VỀ DUY NHẤT ĐỊNH DẠNG JSON CHUẨN (KHÔNG BỌC TRONG CODE BLOCK MARKDOWN):\n{\n  \"title\": \"Tiêu đề ngắn bài viết\",\n  \"content\": \"Nội dung bài viết Facebook đã biên tập hoàn chỉnh\",\n  \"dish\": \"{{ $('Code - Kho Ảnh Thật Website & Góc Bài Viết').item.json.dishName }}\",\n  \"status\": \"Chờ duyệt\",\n  \"created_at\": \"{{ $now.toFormat('dd/MM/yyyy HH:mm') }}\"\n}",
                 "role": "user"
               }
             ]
@@ -201,7 +201,7 @@
         "typeVersion": 1,
         "position": [160, 350],
         "id": "b004-fb-ai-editor",
-        "name": "AI Editor (Gemini - Duyệt Văn Bản & Chuẩn Hóa Prompt)",
+        "name": "AI Editor (Gemini - Duyệt & Gọt Dũa)",
         "credentials": {
           "googlePalmApi": {
             "id": "geminiCred123",
@@ -211,13 +211,13 @@
       },
       {
         "parameters": {
-          "jsCode": "let rawText = $json.content.parts[0].text.trim();\nif (rawText.startsWith('```json')) {\n  rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();\n} else if (rawText.startsWith('```')) {\n  rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(rawText);\n} catch (e) {\n  parsed = {\n    title: 'Bài viết Facebook EGGU',\n    content: rawText,\n    image_prompt: 'Gourmet Korean egg sandwich, fluffy scrambled eggs, melted cheese, golden brioche bread in white rectangular paper takeout box with yellow egg logo, macro food photography, 8k',\n    dish: $('Code - Chọn Món & Ảnh Thật & Ngữ Cảnh').item.json.dishName,\n    status: 'Chờ duyệt',\n    created_at: new Date().toISOString()\n  };\n}\n\nconst dishInfo = $('Code - Chọn Món & Ảnh Thật & Ngữ Cảnh').item.json;\nconst finalPrompt = parsed.image_prompt || 'Korean egg sandwich with fluffy scrambled eggs, melted cheese, golden toasted brioche in white rectangular takeout carton box with yellow egg logo, macro food photography, soft lighting, 8k';\n\nconst randomSeed = Math.floor(Math.random() * 1000000);\nconst aiImageUrl = 'https://image.pollinations.ai/prompt/' + encodeURIComponent(finalPrompt) + '?width=1080&height=1080&nologo=true&seed=' + randomSeed;\n\nreturn [\n  {\n    json: {\n      title: parsed.title || ('EGGU - ' + dishInfo.dishName),\n      dishName: dishInfo.dishName,\n      dishCategory: dishInfo.dishCategory,\n      dishPrice: dishInfo.dishPrice,\n      targetAngle: dishInfo.targetAngle,\n      content: parsed.content || rawText,\n      realPhotoUrl: dishInfo.realPhotoUrl,\n      aiPhotoUrl: aiImageUrl,\n      aiPromptUsed: finalPrompt,\n      status: 'PENDING',\n      'Mã bài viết': 'FB-' + Date.now(),\n      'Tiêu đề': parsed.title || ('EGGU - ' + dishInfo.dishName),\n      'Món ăn': dishInfo.dishName + ' (' + dishInfo.dishCategory + ' - ' + dishInfo.dishPrice + ')',\n      'Nội dung Facebook (Đã biên tập)': parsed.content || rawText,\n      '📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)': dishInfo.realPhotoUrl,\n      '🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)': aiImageUrl,\n      'Gợi ý đăng bài': 'Đăng bài kèm 1 hoặc cả 2 ảnh trên Fanpage!',\n      'Trạng thái': 'Chờ nhân viên copy',\n      'Thời gian tạo': new Date().toLocaleString('vi-VN')\n    }\n  }\n];"
+          "jsCode": "let rawText = $json.content.parts[0].text.trim();\nif (rawText.startsWith('```json')) {\n  rawText = rawText.replace(/^```json/, '').replace(/```$/, '').trim();\n} else if (rawText.startsWith('```')) {\n  rawText = rawText.replace(/^```/, '').replace(/```$/, '').trim();\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(rawText);\n} catch (e) {\n  parsed = {\n    title: 'Bài viết Facebook EGGU',\n    content: rawText,\n    dish: $('Code - Kho Ảnh Thật Website & Góc Bài Viết').item.json.dishName,\n    status: 'Chờ duyệt',\n    created_at: new Date().toISOString()\n  };\n}\n\nconst dishInfo = $('Code - Kho Ảnh Thật Website & Góc Bài Viết').item.json;\n\nreturn [\n  {\n    json: {\n      title: parsed.title || ('EGGU - ' + dishInfo.dishName),\n      dishName: dishInfo.dishName,\n      dishCategory: dishInfo.dishCategory,\n      dishPrice: dishInfo.dishPrice,\n      targetAngle: dishInfo.targetAngle,\n      content: parsed.content || rawText,\n      realPhotoUrl: dishInfo.photoUrl,\n      aiPhotoUrl: dishInfo.photoUrl,\n      status: 'PENDING',\n      'Mã bài viết': 'FB-' + Date.now(),\n      'Tiêu đề': parsed.title || ('EGGU - ' + dishInfo.dishName),\n      'Món ăn': dishInfo.dishName + ' (' + dishInfo.dishCategory + ' - ' + dishInfo.dishPrice + ')',\n      'Nội dung Facebook (Đã biên tập)': parsed.content || rawText,\n      '📸 ẢNH SẢN PHẨM CHÍNH HÃNG (Bao bì chuẩn EGGU 100%)': dishInfo.photoUrl,\n      'Gợi ý đăng bài': 'Đăng bài kèm ảnh sản phẩm chính hãng sắc nét của quán!',\n      'Trạng thái': 'Chờ nhân viên copy',\n      'Thời gian tạo': new Date().toLocaleString('vi-VN')\n    }\n  }\n];"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
         "position": [528, 350],
         "id": "b005-fb-format-output",
-        "name": "Lưu Trữ Bài Chờ Duyệt (Kèm 2 Ảnh)"
+        "name": "Đóng Gói Bài Viết & Ảnh Thật Quán"
       },
       {
         "parameters": {
@@ -270,7 +270,7 @@
           },
           "sendBody": true,
           "specifyBody": "json",
-          "jsonBody": "={\n  \"Mã bài viết\": {{ JSON.stringify($json['Mã bài viết']) }},\n  \"Tiêu đề\": {{ JSON.stringify($json['Tiêu đề']) }},\n  \"Món ăn\": {{ JSON.stringify($json['Món ăn']) }},\n  \"Nội dung Facebook (Đã biên tập)\": {{ JSON.stringify($json['Nội dung Facebook (Đã biên tập)']) }},\n  \"📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)\": {{ JSON.stringify($json['📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)']) }},\n  \"🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)\": {{ JSON.stringify($json['🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)']) }},\n  \"Gợi ý đăng bài\": {{ JSON.stringify($json['Gợi ý đăng bài']) }},\n  \"Trạng thái\": {{ JSON.stringify($json['Trạng thái']) }},\n  \"Thời gian tạo\": {{ JSON.stringify($json['Thời gian tạo']) }}\n}",
+          "jsonBody": "={\n  \"Mã bài viết\": {{ JSON.stringify($json['Mã bài viết']) }},\n  \"Tiêu đề\": {{ JSON.stringify($json['Tiêu đề']) }},\n  \"Món ăn\": {{ JSON.stringify($json['Món ăn']) }},\n  \"Nội dung Facebook (Đã biên tập)\": {{ JSON.stringify($json['Nội dung Facebook (Đã biên tập)']) }},\n  \"📸 ẢNH THẬT CỦA QUÁN (Bao bì chuẩn 100%)\": {{ JSON.stringify($json['📸 ẢNH SẢN PHẨM CHÍNH HÃNG (Bao bì chuẩn EGGU 100%)']) }},\n  \"🎨 ẢNH AI TẠO (Phong cách Hàn Quốc)\": {{ JSON.stringify($json.realPhotoUrl) }},\n  \"Gợi ý đăng bài\": {{ JSON.stringify($json['Gợi ý đăng bài']) }},\n  \"Trạng thái\": {{ JSON.stringify($json['Trạng thái']) }},\n  \"Thời gian tạo\": {{ JSON.stringify($json['Thời gian tạo']) }}\n}",
           "options": {
             "redirect": {
               "redirect": {
@@ -335,47 +335,47 @@
         "main": [
           [
             {
-              "node": "Code - Chọn Món & Ảnh Thật & Ngữ Cảnh",
+              "node": "Code - Kho Ảnh Thật Website & Góc Bài Viết",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Code - Chọn Món & Ảnh Thật & Ngữ Cảnh": {
+      "Code - Kho Ảnh Thật Website & Góc Bài Viết": {
         "main": [
           [
             {
-              "node": "AI Writer (Gemini - Viết Nháp & Đạo Diễn Ảnh)",
+              "node": "AI Writer (Gemini - Viết Nháp FB)",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "AI Writer (Gemini - Viết Nháp & Đạo Diễn Ảnh)": {
+      "AI Writer (Gemini - Viết Nháp FB)": {
         "main": [
           [
             {
-              "node": "AI Editor (Gemini - Duyệt Văn Bản & Chuẩn Hóa Prompt)",
+              "node": "AI Editor (Gemini - Duyệt & Gọt Dũa)",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "AI Editor (Gemini - Duyệt Văn Bản & Chuẩn Hóa Prompt)": {
+      "AI Editor (Gemini - Duyệt & Gọt Dũa)": {
         "main": [
           [
             {
-              "node": "Lưu Trữ Bài Chờ Duyệt (Kèm 2 Ảnh)",
+              "node": "Đóng Gói Bài Viết & Ảnh Thật Quán",
               "type": "main",
               "index": 0
             }
           ]
         ]
       },
-      "Lưu Trữ Bài Chờ Duyệt (Kèm 2 Ảnh)": {
+      "Đóng Gói Bài Viết & Ảnh Thật Quán": {
         "main": [
           [
             {
