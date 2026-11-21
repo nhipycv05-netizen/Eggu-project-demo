@@ -14,6 +14,8 @@ import {
   Bot,
   AlertCircle,
   FileSpreadsheet,
+  Download,
+  FolderArchive,
 } from 'lucide-react';
 import SafeImage from '@/components/ui/SafeImage';
 import {
@@ -58,11 +60,46 @@ export default function MarketingPostsTab() {
     fetchPosts();
   }, [fetchPosts]);
 
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<{ [postId: string]: number }>({});
+  const [downloadingZipId, setDownloadingZipId] = useState<string | null>(null);
+
   const showToast = (msg: string) => {
     setNotification(msg);
     setTimeout(() => {
       setNotification(null);
     }, 3000);
+  };
+
+  const handleDownloadAllPng = async (post: MarketingPost, urls: string[]) => {
+    if (!urls || urls.length === 0) return;
+    setDownloadingZipId(post.id);
+    try {
+      const slug = (post.dish_name || 'eggu-mon')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9_-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+
+      const downloadUrl = `/api/marketing/download-png?urls=${encodeURIComponent(
+        JSON.stringify(urls)
+      )}&title=${encodeURIComponent(slug)}&zip=true`;
+
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `${slug}-${urls.length}-anh-png.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast(`Đang tải trọn bộ ${urls.length} ảnh PNG (dạng file zip)...`);
+    } catch (err) {
+      console.error('Download error:', err);
+      showToast('Có lỗi khi tải file zip');
+    } finally {
+      setTimeout(() => setDownloadingZipId(null), 1500);
+    }
   };
 
   const handleCopyContent = async (post: MarketingPost) => {
@@ -385,39 +422,68 @@ export default function MarketingPostsTab() {
 
                       // Lọc các URL hợp lệ bắt đầu bằng http
                       photosList = photosList.filter((u) => typeof u === 'string' && u.startsWith('http'));
-                      const mainPhoto = photosList[0] || null;
+                      const activeIndex = selectedPhotoIndex[post.id] ?? 0;
+                      const currentPhoto = photosList[activeIndex] || photosList[0] || null;
+                      const dishSlug = (post.dish_name || 'eggu-mon')
+                        .toLowerCase()
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '')
+                        .replace(/[^a-z0-9_-]/g, '-')
+                        .replace(/-+/g, '-')
+                        .replace(/^-|-$/g, '');
 
                       return (
-                        <div className="border border-neutral-200 rounded-xl p-3 space-y-3 bg-neutral-50/50 flex flex-col justify-between">
+                        <div className="border border-neutral-200 rounded-2xl p-3.5 space-y-3 bg-neutral-50/70 flex flex-col justify-between">
                           <div className="space-y-2.5">
+                            {/* Card Header */}
                             <div className="flex items-center justify-between text-xs font-black text-neutral-800">
                               <span className="flex items-center space-x-1.5">
                                 <Camera className="w-4 h-4 text-blue-600" />
                                 <span>ẢNH THẬT CHÍNH HÃNG</span>
                               </span>
-                              <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">
-                                {photosList.length > 1
-                                  ? `📸 Album ${photosList.length} ảnh thật`
-                                  : (post.dish_category?.includes('Threads')
-                                  ? '🧵 Threads'
-                                  : post.dish_category?.includes('Instagram')
-                                  ? '📸 IG'
-                                  : post.dish_category?.includes('Facebook')
-                                  ? '📘 FB'
-                                  : '📸 Gốc 100%')}
-                              </span>
+                              <div className="flex items-center space-x-1.5">
+                                <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">
+                                  Hỗ trợ tải PNG
+                                </span>
+                                <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">
+                                  {photosList.length > 1
+                                    ? `📸 ${photosList.length} ảnh`
+                                    : (post.dish_category?.includes('Threads')
+                                    ? '🧵 Threads'
+                                    : post.dish_category?.includes('Instagram')
+                                    ? '📸 IG'
+                                    : post.dish_category?.includes('Facebook')
+                                    ? '📘 FB'
+                                    : '📸 Gốc 100%')}
+                                </span>
+                              </div>
                             </div>
 
-                            {/* Main Featured Photo */}
-                            <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-neutral-200 border border-neutral-200">
-                              {mainPhoto ? (
-                                <SafeImage
-                                  src={mainPhoto}
-                                  alt="Ảnh thật EGGU"
-                                  fill
-                                  className="object-cover hover:scale-105 transition duration-300"
-                                  sizes="(max-width: 768px) 100vw, 400px"
-                                />
+                            {/* Main Featured Photo Preview */}
+                            <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-neutral-200 border border-neutral-200 group">
+                              {currentPhoto ? (
+                                <>
+                                  <SafeImage
+                                    src={currentPhoto}
+                                    alt={`Ảnh thật EGGU #${activeIndex + 1}`}
+                                    fill
+                                    className="object-cover transition duration-300 group-hover:scale-105"
+                                    sizes="(max-width: 768px) 100vw, 400px"
+                                  />
+                                  {/* Overlay Badges */}
+                                  <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center space-x-1">
+                                    <span>Ảnh #{activeIndex + 1} / {photosList.length}</span>
+                                  </div>
+                                  <a
+                                    href={`/api/marketing/download-png?url=${encodeURIComponent(currentPhoto)}&name=${encodeURIComponent(`${dishSlug}-anh-${activeIndex + 1}`)}`}
+                                    download={`${dishSlug}-anh-${activeIndex + 1}.png`}
+                                    className="absolute bottom-2 right-2 bg-white/95 hover:bg-white text-neutral-800 text-[11px] font-black px-2.5 py-1 rounded-lg shadow-md flex items-center space-x-1 transition hover:scale-105"
+                                    title="Tải ảnh này về máy (PNG)"
+                                  >
+                                    <Download className="w-3.5 h-3.5 text-blue-600" />
+                                    <span>Tải ảnh PNG</span>
+                                  </a>
+                                </>
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center text-neutral-400 text-xs">
                                   Chưa có ảnh thật
@@ -425,59 +491,129 @@ export default function MarketingPostsTab() {
                               )}
                             </div>
 
-                            {/* Thumbnail Strip for 4-5 photos */}
+                            {/* Thumbnail Strip with Click to Switch and Indicator */}
                             {photosList.length > 1 && (
-                              <div className="grid grid-cols-5 gap-1.5 pt-1">
-                                {photosList.map((url, idx) => (
-                                  <a
-                                    key={idx}
-                                    href={url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="relative aspect-square rounded-md overflow-hidden border border-neutral-200 hover:border-blue-500 transition group"
-                                    title={`Xem ảnh thật số ${idx + 1}`}
-                                  >
-                                    <SafeImage
-                                      src={url}
-                                      alt={`Ảnh thật ${idx + 1}`}
-                                      fill
-                                      className="object-cover group-hover:scale-110 transition"
-                                      sizes="80px"
-                                    />
-                                    <div className="absolute bottom-0 right-0 bg-black/70 text-white text-[9px] font-bold px-1 rounded-tl">
-                                      #{idx + 1}
-                                    </div>
-                                  </a>
-                                ))}
+                              <div className="space-y-1">
+                                <div className="flex items-center justify-between text-[10px] text-neutral-500 font-bold px-0.5">
+                                  <span>Chọn ảnh để xem & tải:</span>
+                                  <span className="text-blue-600">Bấm thumbnail để đổi ảnh</span>
+                                </div>
+                                <div className="grid grid-cols-5 gap-1.5 pt-0.5">
+                                  {photosList.map((url, idx) => {
+                                    const isSelected = idx === activeIndex;
+                                    return (
+                                      <button
+                                        type="button"
+                                        key={idx}
+                                        onClick={() =>
+                                          setSelectedPhotoIndex((prev) => ({
+                                            ...prev,
+                                            [post.id]: idx,
+                                          }))
+                                        }
+                                        className={`relative aspect-square rounded-lg overflow-hidden transition group border-2 text-left ${
+                                          isSelected
+                                            ? 'border-[#EAAA08] ring-2 ring-[#EAAA08]/40 shadow-sm scale-105'
+                                            : 'border-neutral-200 hover:border-neutral-400 opacity-70 hover:opacity-100'
+                                        }`}
+                                        title={`Xem & tải ảnh PNG số ${idx + 1}`}
+                                      >
+                                        <SafeImage
+                                          src={url}
+                                          alt={`Ảnh thật ${idx + 1}`}
+                                          fill
+                                          className="object-cover"
+                                          sizes="80px"
+                                        />
+                                        <div
+                                          className={`absolute bottom-0 right-0 text-[9px] font-black px-1 rounded-tl ${
+                                            isSelected
+                                              ? 'bg-[#EAAA08] text-[#1E1B18]'
+                                              : 'bg-black/70 text-white'
+                                          }`}
+                                        >
+                                          #{idx + 1}
+                                        </div>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
                               </div>
                             )}
                           </div>
 
-                          {/* Action Buttons for Real Photos */}
+                          {/* Action Buttons for PNG Download and Links */}
                           {photosList.length > 0 && (
-                            <div className="flex items-center space-x-2 pt-1">
-                              <a
-                                href={mainPhoto!}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="flex-1 py-1.5 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 shadow-xs transition"
-                              >
-                                <span>Mở {photosList.length > 1 ? `album (${photosList.length} ảnh)` : 'ảnh'}</span>
-                                <ExternalLink className="w-3.5 h-3.5" />
-                              </a>
-                              <button
-                                onClick={() =>
-                                  handleCopyLink(
-                                    photosList.join('\n'),
-                                    photosList.length > 1 ? `tất cả ${photosList.length} link ảnh thật` : 'ảnh thật'
-                                  )
-                                }
-                                className="py-1.5 px-3 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-xs transition"
-                                title={photosList.length > 1 ? `Sao chép tất cả ${photosList.length} link ảnh thật` : 'Sao chép link ảnh thật'}
-                              >
-                                <Copy className="w-3.5 h-3.5" />
-                                <span>Sao chép link</span>
-                              </button>
+                            <div className="space-y-2 pt-2 border-t border-neutral-200/70">
+                              {/* Row 1: Primary PNG Download Buttons */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                {/* Download All 5 as PNG in ZIP */}
+                                <button
+                                  type="button"
+                                  onClick={() => handleDownloadAllPng(post, photosList)}
+                                  disabled={downloadingZipId === post.id}
+                                  className="py-2 px-3 bg-[#1E1B18] hover:bg-black text-[#EAAA08] rounded-xl text-xs font-black flex items-center justify-center space-x-1.5 shadow-xs transition hover:shadow-md disabled:opacity-50"
+                                  title={`Tải trọn bộ ${photosList.length} ảnh chuyển đổi sang định dạng PNG`}
+                                >
+                                  {downloadingZipId === post.id ? (
+                                    <>
+                                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                                      <span>Đang nén {photosList.length} ảnh PNG...</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <FolderArchive className="w-3.5 h-3.5 text-[#EAAA08]" />
+                                      <span>Tải trọn bộ {photosList.length} ảnh (PNG.zip)</span>
+                                    </>
+                                  )}
+                                </button>
+
+                                {/* Download Current Active Photo as PNG */}
+                                <a
+                                  href={`/api/marketing/download-png?url=${encodeURIComponent(
+                                    currentPhoto!
+                                  )}&name=${encodeURIComponent(`${dishSlug}-anh-${activeIndex + 1}`)}`}
+                                  download={`${dishSlug}-anh-${activeIndex + 1}.png`}
+                                  className="py-2 px-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-black flex items-center justify-center space-x-1.5 shadow-xs transition hover:shadow-md"
+                                  title={`Tải ảnh số #${activeIndex + 1} về máy định dạng PNG`}
+                                >
+                                  <Download className="w-3.5 h-3.5" />
+                                  <span>Tải ảnh #{activeIndex + 1} (PNG)</span>
+                                </a>
+                              </div>
+
+                              {/* Row 2: Secondary Utilities (Open in New Tab & Copy Link) */}
+                              <div className="flex items-center space-x-2">
+                                <a
+                                  href={currentPhoto!}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="flex-1 py-1.5 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 shadow-xs transition"
+                                >
+                                  <span>Mở ảnh lớn</span>
+                                  <ExternalLink className="w-3 h-3 text-neutral-500" />
+                                </a>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleCopyLink(
+                                      photosList.join('\n'),
+                                      photosList.length > 1
+                                        ? `tất cả ${photosList.length} link ảnh thật`
+                                        : 'ảnh thật'
+                                    )
+                                  }
+                                  className="py-1.5 px-3 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-xs transition"
+                                  title={
+                                    photosList.length > 1
+                                      ? `Sao chép tất cả ${photosList.length} link ảnh thật`
+                                      : 'Sao chép link ảnh thật'
+                                  }
+                                >
+                                  <Copy className="w-3 h-3 text-neutral-500" />
+                                  <span>Sao chép {photosList.length} link</span>
+                                </button>
+                              </div>
                             </div>
                           )}
                         </div>
