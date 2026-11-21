@@ -2,7 +2,7 @@
 name: eggu-packaging
 description: "Quy chuẩn thiết kế và kỹ thuật chỉnh sửa bao bì sản phẩm EGGU (Sandwich Trứng Hàn Quốc) cho ảnh AI thiết kế. Hướng dẫn chi tiết về cấu trúc hộp, artwork logo, linh vật Bite the Boom, dải màu vàng chân hộp, họa tiết doodle và quy tắc cấm tuyệt đối logo thương hiệu cạnh tranh (Egg Drop)."
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # Quy Chuẩn Bao Bì Sản Phẩm EGGU Cho Ảnh AI Thiết Kế
@@ -20,9 +20,8 @@ Thương hiệu **EGGU - Sandwich Trứng Hàn Quốc** có 2 loại bao bì chu
 * **Chất liệu nền**: Giấy bìa cứng màu trắng sáng / trắng kem mịn (`#FFFFFF` – `#F8F9FA`).
 * **Dải chân hộp**: Dải viền vàng tươi (`#F59E0B` đến `#FBBF24`), chiếm khoảng 20% - 25% chiều cao đáy hộp, có đường viền chỉ mảnh phía trên.
 * **Mặt trước hộp**:
-  * **Linh vật chính**: Nhân vật Bánh mì nướng ôm Trứng ốp la cười tươi, phía trên uốn cong dòng chữ *"Bite the Boom"*.
-  * **Logo chữ**: Chữ **Eggu** (hoặc in hoa **EGGU**) màu đỏ tươi thương hiệu (`#E11D48` / `#DC2626`).
-  * **Thông tin cơ sở**: Dòng chữ nhỏ màu cam đậm phía dưới: `54 Nguyễn Hữu Huân - 035.677.9899`.
+  * **Linh vật chính**: Nhân vật Bánh mì nướng ôm Trứng ốp la cười tươi, phía trên uốn cong dòng chữ *"Bite the Boom"* (hoặc *"Bite into goodness"*).
+  * **Logo chữ**: Chữ **Eggu** (hoặc in hoa **EGGU**) màu đỏ tươi thương hiệu (`#E11D48` / `#DC2626`) đặt phía dưới linh vật.
   * **Họa tiết nền (Doodles)**: Họa tiết vẽ nét mảnh (line-art) mờ màu vàng cam/xám nhạt các món ăn (trứng ốp la, cốc cà phê, bánh sừng bò, burger) rải đều trên nền trắng.
 
 ### Loại 2: Hộp Mang Về Có Nắp Gập (Takeaway Delivery Box)
@@ -34,7 +33,19 @@ Thương hiệu **EGGU - Sandwich Trứng Hàn Quốc** có 2 loại bao bì chu
 
 ---
 
-## 2. Quy Tắc Cấm Tuyệt Đối (Strict Negative Constraints)
+## 2. Mẫu Bánh Chuẩn Của Tiệm (Master Reference Standard)
+
+Mẫu ảnh bánh chuẩn đã được phê duyệt và áp dụng làm chuẩn mực duy nhất cho toàn bộ hệ thống "ẢNH AI THIẾT KẾ":
+* **File lưu trữ**: `public/images/eggu-master-ai-concept.jpg`
+* **URL Supabase Storage**: `https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/promotions/ai-concept-eggu-official.jpg`
+* **Đặc điểm**:
+  * Bánh sandwich cầm tay bơ tỏi vàng rụm, trứng cuộn fluffy mềm mượt, phô mai tan chảy, thịt xông khói áp chảo.
+  * Hộp giấy trắng in đầy đủ mascot EGGU, logo đỏ, dải viền vàng đáy hộp và họa tiết doodle.
+  * Bối cảnh phố cổ Hà Nội (Phố Lý Quốc Sư) chụp tự nhiên dưới ánh nắng ban ngày.
+
+---
+
+## 3. Quy Tắc Cấm Tuyệt Đối (Strict Negative Constraints)
 
 1. **Tuyệt đối KHÔNG có thương hiệu "EGG DROP"**:
    * Khi tạo prompt sinh ảnh bằng AI (Midjourney, Flux, Ideogram, Gemini), **không bao giờ** dùng cụm từ *"Korean egg drop sandwich"* vì các mô hình AI sẽ tự động sinh chữ "EGG DROP" của chuỗi nhà hàng Hàn Quốc lên hộp giấy và biển hiệu xung quanh.
@@ -47,7 +58,7 @@ Thương hiệu **EGGU - Sandwich Trứng Hàn Quốc** có 2 loại bao bì chu
 
 ---
 
-## 3. Quy Trình Chỉnh Sửa & Xử Lý Kỹ Thuật (Pipeline)
+## 4. Quy Trình Chỉnh Sửa & Xử Lý Kỹ Thuật (Pipeline)
 
 Khi xử lý một bức ảnh AI để gắn bao bì chuẩn của tiệm:
 1. **Xác định 4 đỉnh mặt phẳng hộp (Quad coordinates)**:
