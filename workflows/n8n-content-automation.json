@@ -65,7 +65,7 @@
           "messages": {
             "values": [
               {
-                "content": "=Bạn là biên tập viên website cho Eggu Sandwich. Từ bài đăng TikTok sau:\n- Tiêu đề gốc: {{ $json.title }}\n- Link video: {{ $json.link }}\n\nHãy tạo 1 bài viết ngắn cho website theo đúng định dạng JSON chuẩn (không bọc code markdown):\n{\n  \"title\": \"Tiêu đề bài viết ngắn gọn dưới 70 ký tự\",\n  \"slug\": \"duong-dan-bai-viet-khong-dau\",\n  \"content\": \"Đoạn giới thiệu 100 từ về món ăn/sự kiện này kèm link video TikTok {{ $json.link }}\"\n}",
+                "content": "=Bạn là biên tập viên website cho thương hiệu EGGU - Bánh mì sandwich trứng Hàn Quốc. Từ bài đăng TikTok sau:\n- Tiêu đề gốc: {{ $json.title }}\n- Link video: {{ $json.link }}\n\nHãy viết 1 bài viết tin tức hấp dẫn cho website. Trả về DUY NHẤT một chuỗi JSON hợp lệ (không giải thích thêm):\n{\n  \"title\": \"Tiêu đề tiếng Việt cuốn hút dưới 70 ký tự\",\n  \"title_en\": \"English title under 70 characters\",\n  \"slug\": \"duong-dan-bai-viet-khong-dau\",\n  \"summary\": \"Tóm tắt 1-2 câu tiếng Việt (khoảng 30-40 từ) cho thẻ bài viết\",\n  \"summary_en\": \"1-2 sentence English summary (about 30-40 words)\",\n  \"content\": \"Nội dung bài viết tiếng Việt khoảng 100-150 từ giới thiệu món ăn, trải nghiệm ẩm thực\",\n  \"content_en\": \"English article content about 100-150 words\"\n}",
                 "role": "user"
               }
             ]
@@ -93,31 +93,39 @@
             "fieldValues": [
               {
                 "fieldId": "title_vi",
-                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).title }}"
-              },
-              {
-                "fieldId": "slug",
-                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).slug + '-' + $now.toMillis() }}"
-              },
-              {
-                "fieldId": "content_vi",
-                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).content }}"
+                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); return JSON.parse(raw).title || $node[\"RSS Read\"].json.title || \"Tin tức TikTok EGGU\"; } catch(e) { return $node[\"RSS Read\"].json.title || \"Tin tức TikTok EGGU\"; } })() }}"
               },
               {
                 "fieldId": "title_en",
-                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).title }}"
+                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); return JSON.parse(raw).title_en || JSON.parse(raw).title || \"EGGU TikTok Update\"; } catch(e) { return \"EGGU TikTok Update\"; } })() }}"
+              },
+              {
+                "fieldId": "slug",
+                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const s = JSON.parse(raw).slug; return (s ? s : 'tiktok-video') + '-' + $now.toMillis(); } catch(e) { return 'tiktok-video-' + $now.toMillis(); } })() }}"
+              },
+              {
+                "fieldId": "summary_vi",
+                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const p = JSON.parse(raw); return p.summary || p.content?.substring(0, 150) || $node[\"RSS Read\"].json.title; } catch(e) { return $node[\"RSS Read\"].json.title || \"Khám phá video mới từ EGGU!\"; } })() }}"
+              },
+              {
+                "fieldId": "summary_en",
+                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const p = JSON.parse(raw); return p.summary_en || p.summary || \"Check out the latest video from EGGU TikTok!\"; } catch(e) { return \"Check out the latest video from EGGU TikTok!\"; } })() }}"
+              },
+              {
+                "fieldId": "content_vi",
+                "fieldValue": "={{ (() => { const link = $node[\"RSS Read\"].json.link || \"https://www.tiktok.com/@eggu_sandwich\"; try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const p = JSON.parse(raw); return (p.content || p.title) + `\\n\\n👉 Xem video gốc trên TikTok: ${link}`; } catch(e) { return ($node[\"RSS Read\"].json.title || \"\") + `\\n\\n👉 Xem video gốc trên TikTok: ${link}`; } })() }}"
               },
               {
                 "fieldId": "content_en",
-                "fieldValue": "={{ JSON.parse($json.content.parts[0].text).content }}"
+                "fieldValue": "={{ (() => { const link = $node[\"RSS Read\"].json.link || \"https://www.tiktok.com/@eggu_sandwich\"; try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const p = JSON.parse(raw); return (p.content_en || p.content || p.title) + `\\n\\n👉 Watch original video on TikTok: ${link}`; } catch(e) { return ($node[\"RSS Read\"].json.title || \"\") + `\\n\\n👉 Watch original video on TikTok: ${link}`; } })() }}"
+              },
+              {
+                "fieldId": "thumbnail_url",
+                "fieldValue": "={{ (() => { const desc = $node[\"RSS Read\"].json.description || $node[\"RSS Read\"].json.content || \"\"; const m = desc.match(/poster=(?:&quot;|\")([^\"&]+)(?:&quot;|\")/i) || desc.match(/src=(?:&quot;|\")([^\"&]+)(?:&quot;|\")/i); return m ? m[1].replace(/&amp;/g, '&') : \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/promotions/real-photos/eggu-real-drive-1.jpg\"; })() }}"
               },
               {
                 "fieldId": "status",
                 "fieldValue": "PUBLISHED"
-              },
-              {
-                "fieldId": "thumbnail_url",
-                "fieldValue": "={{ $node[\"RSS Read\"].json.content.match(/src=\"([^\"]+)\"/)?.[1] || \"https://images.unsplash.com/photo-1525351484163-7529414344d8\" }}"
               },
               {
                 "fieldId": "published_at",
@@ -133,7 +141,13 @@
           0
         ],
         "id": "8d8d4741-19ea-4c5e-a775-32e6ca175fe7",
-        "name": "Create a row"
+        "name": "Create a row",
+        "credentials": {
+          "supabaseApi": {
+            "id": "supabaseAccount",
+            "name": "Supabase EGGU Database"
+          }
+        }
       },
       {
         "parameters": {
