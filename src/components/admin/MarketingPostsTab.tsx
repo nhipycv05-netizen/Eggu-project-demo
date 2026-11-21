@@ -235,7 +235,7 @@ export default function MarketingPostsTab() {
           </div>
           <h3 className="font-bold text-neutral-800 text-sm">Chưa có bài viết nào trong danh mục này</h3>
           <p className="text-xs text-neutral-500 max-w-md mx-auto">
-            Khi n8n chạy lịch 08:30 sáng hàng ngày (hoặc bấm chạy thử), các bài viết mới kèm ảnh thật và ảnh AI sẽ tự động xuất hiện tại đây để nhân viên vào copy.
+            Khi n8n chạy lịch 08:30 sáng hàng ngày (hoặc bấm chạy thử), các bài viết mới kèm album ảnh thật sẽ tự động xuất hiện tại đây để nhân viên vào copy.
           </p>
         </div>
       ) : (
@@ -363,186 +363,126 @@ export default function MarketingPostsTab() {
                     </div>
                   </div>
 
-                  {/* Right Column: 2 Sections (4-5 Real Photos vs 1 AI Generated Concept Photo) */}
-                  <div className="lg:col-span-5 space-y-4">
+                  {/* Right Column: Real Photos Album Only */}
+                  <div className="lg:col-span-5 space-y-3">
                     <span className="text-xs font-bold text-neutral-500 block uppercase tracking-wider">
-                      Hình ảnh đính kèm (Album ảnh thật & Ảnh AI thiết kế riêng)
+                      Hình ảnh đính kèm (Album ảnh thật 100%)
                     </span>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {/* Real Photos Album Card (4-5 Photos) */}
-                      {(() => {
-                        let photosList: string[] = [];
-                        if (post.real_photo_url) {
-                          if (post.real_photo_url.startsWith('[')) {
-                            try {
-                              photosList = JSON.parse(post.real_photo_url);
-                            } catch {
-                              photosList = [post.real_photo_url];
-                            }
-                          } else {
+                    {(() => {
+                      let photosList: string[] = [];
+                      if (post.real_photo_url) {
+                        if (post.real_photo_url.startsWith('[')) {
+                          try {
+                            photosList = JSON.parse(post.real_photo_url);
+                          } catch {
                             photosList = [post.real_photo_url];
                           }
+                        } else {
+                          photosList = [post.real_photo_url];
                         }
+                      }
 
-                        // Lọc các URL hợp lệ bắt đầu bằng http
-                        photosList = photosList.filter((u) => typeof u === 'string' && u.startsWith('http'));
-                        const mainPhoto = photosList[0] || null;
+                      // Lọc các URL hợp lệ bắt đầu bằng http
+                      photosList = photosList.filter((u) => typeof u === 'string' && u.startsWith('http'));
+                      const mainPhoto = photosList[0] || null;
 
-                        return (
-                          <div className="border border-neutral-200 rounded-xl p-2.5 space-y-2 bg-neutral-50/50 flex flex-col justify-between">
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between text-[11px] font-black text-neutral-700">
-                                <span className="flex items-center space-x-1">
-                                  <Camera className="w-3.5 h-3.5 text-blue-600" />
-                                  <span>ẢNH THẬT</span>
-                                </span>
-                                <span className="text-[9px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded font-bold">
-                                  {photosList.length > 1
-                                    ? `📸 Album ${photosList.length} ảnh thật`
-                                    : (post.dish_category?.includes('Threads')
-                                    ? '🧵 Threads'
-                                    : post.dish_category?.includes('Instagram')
-                                    ? '📸 IG'
-                                    : post.dish_category?.includes('Facebook')
-                                    ? '📘 FB'
-                                    : '📸 Gốc 100%')}
-                                </span>
-                              </div>
+                      return (
+                        <div className="border border-neutral-200 rounded-xl p-3 space-y-3 bg-neutral-50/50 flex flex-col justify-between">
+                          <div className="space-y-2.5">
+                            <div className="flex items-center justify-between text-xs font-black text-neutral-800">
+                              <span className="flex items-center space-x-1.5">
+                                <Camera className="w-4 h-4 text-blue-600" />
+                                <span>ẢNH THẬT CHÍNH HÃNG</span>
+                              </span>
+                              <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold">
+                                {photosList.length > 1
+                                  ? `📸 Album ${photosList.length} ảnh thật`
+                                  : (post.dish_category?.includes('Threads')
+                                  ? '🧵 Threads'
+                                  : post.dish_category?.includes('Instagram')
+                                  ? '📸 IG'
+                                  : post.dish_category?.includes('Facebook')
+                                  ? '📘 FB'
+                                  : '📸 Gốc 100%')}
+                              </span>
+                            </div>
 
-                              {/* Main Featured Photo */}
-                              <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-neutral-200 border border-neutral-200">
-                                {mainPhoto ? (
-                                  <SafeImage
-                                    src={mainPhoto}
-                                    alt="Ảnh thật EGGU"
-                                    fill
-                                    className="object-cover"
-                                    sizes="180px"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-neutral-400 text-[10px]">
-                                    Chưa có ảnh
-                                  </div>
-                                )}
-                              </div>
-
-                              {/* Thumbnail Strip for 4-5 photos */}
-                              {photosList.length > 1 && (
-                                <div className="grid grid-cols-5 gap-1 pt-1">
-                                  {photosList.map((url, idx) => (
-                                    <a
-                                      key={idx}
-                                      href={url}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="relative aspect-square rounded-md overflow-hidden border border-neutral-200 hover:border-blue-500 transition group"
-                                      title={`Xem ảnh thật số ${idx + 1}`}
-                                    >
-                                      <SafeImage
-                                        src={url}
-                                        alt={`Ảnh thật ${idx + 1}`}
-                                        fill
-                                        className="object-cover group-hover:scale-105 transition"
-                                        sizes="45px"
-                                      />
-                                      <div className="absolute bottom-0 right-0 bg-black/70 text-white text-[8px] font-bold px-1 rounded-tl">
-                                        #{idx + 1}
-                                      </div>
-                                    </a>
-                                  ))}
+                            {/* Main Featured Photo */}
+                            <div className="relative aspect-[4/3] w-full rounded-lg overflow-hidden bg-neutral-200 border border-neutral-200">
+                              {mainPhoto ? (
+                                <SafeImage
+                                  src={mainPhoto}
+                                  alt="Ảnh thật EGGU"
+                                  fill
+                                  className="object-cover hover:scale-105 transition duration-300"
+                                  sizes="(max-width: 768px) 100vw, 400px"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-neutral-400 text-xs">
+                                  Chưa có ảnh thật
                                 </div>
                               )}
                             </div>
 
-                            {/* Action Buttons for Real Photos */}
-                            {photosList.length > 0 && (
-                              <div className="flex items-center space-x-1 pt-2">
-                                <a
-                                  href={mainPhoto!}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="flex-1 py-1 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-md text-[10px] font-bold flex items-center justify-center space-x-1"
-                                >
-                                  <span>Mở {photosList.length > 1 ? `album (${photosList.length} ảnh)` : 'ảnh'}</span>
-                                  <ExternalLink className="w-2.5 h-2.5" />
-                                </a>
-                                <button
-                                  onClick={() =>
-                                    handleCopyLink(
-                                      photosList.join('\n'),
-                                      photosList.length > 1 ? `tất cả ${photosList.length} link ảnh thật` : 'ảnh thật'
-                                    )
-                                  }
-                                  className="p-1 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 rounded-md"
-                                  title={photosList.length > 1 ? `Sao chép tất cả ${photosList.length} link ảnh thật` : 'Sao chép link ảnh thật'}
-                                >
-                                  <Copy className="w-3 h-3" />
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })()}
-
-                      {/* AI Dedicated Graphic / Concept Card (Based on Caption) */}
-                      <div className="border border-neutral-200 rounded-xl p-2.5 space-y-2 bg-neutral-50/50 flex flex-col justify-between">
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-[11px] font-black text-neutral-700">
-                            <span className="flex items-center space-x-1">
-                              <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                              <span>ẢNH AI THIẾT KẾ</span>
-                            </span>
-                            <span className="text-[9px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-bold">
-                              Theo Caption
-                            </span>
-                          </div>
-
-                          <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-neutral-200 border border-neutral-200">
-                            {post.ai_photo_url ? (
-                              <SafeImage
-                                src={post.ai_photo_url}
-                                alt="Ảnh AI thiết kế riêng theo Caption"
-                                fill
-                                className="object-cover"
-                                sizes="180px"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-neutral-400 text-[10px]">
-                                Chưa có ảnh AI
+                            {/* Thumbnail Strip for 4-5 photos */}
+                            {photosList.length > 1 && (
+                              <div className="grid grid-cols-5 gap-1.5 pt-1">
+                                {photosList.map((url, idx) => (
+                                  <a
+                                    key={idx}
+                                    href={url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="relative aspect-square rounded-md overflow-hidden border border-neutral-200 hover:border-blue-500 transition group"
+                                    title={`Xem ảnh thật số ${idx + 1}`}
+                                  >
+                                    <SafeImage
+                                      src={url}
+                                      alt={`Ảnh thật ${idx + 1}`}
+                                      fill
+                                      className="object-cover group-hover:scale-110 transition"
+                                      sizes="80px"
+                                    />
+                                    <div className="absolute bottom-0 right-0 bg-black/70 text-white text-[9px] font-bold px-1 rounded-tl">
+                                      #{idx + 1}
+                                    </div>
+                                  </a>
+                                ))}
                               </div>
                             )}
                           </div>
 
-                          <p className="text-[10px] text-neutral-500 italic line-clamp-2 px-0.5">
-                            🎨 Thiết kế độc quyền riêng 1 tấm dựa trên câu chuyện & cảm xúc của caption.
-                          </p>
+                          {/* Action Buttons for Real Photos */}
+                          {photosList.length > 0 && (
+                            <div className="flex items-center space-x-2 pt-1">
+                              <a
+                                href={mainPhoto!}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex-1 py-1.5 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 shadow-xs transition"
+                              >
+                                <span>Mở {photosList.length > 1 ? `album (${photosList.length} ảnh)` : 'ảnh'}</span>
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                              <button
+                                onClick={() =>
+                                  handleCopyLink(
+                                    photosList.join('\n'),
+                                    photosList.length > 1 ? `tất cả ${photosList.length} link ảnh thật` : 'ảnh thật'
+                                  )
+                                }
+                                className="py-1.5 px-3 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-xs transition"
+                                title={photosList.length > 1 ? `Sao chép tất cả ${photosList.length} link ảnh thật` : 'Sao chép link ảnh thật'}
+                              >
+                                <Copy className="w-3.5 h-3.5" />
+                                <span>Sao chép link</span>
+                              </button>
+                            </div>
+                          )}
                         </div>
-
-                        {post.ai_photo_url && (
-                          <div className="flex items-center space-x-1 pt-2">
-                            <a
-                              href={post.ai_photo_url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex-1 py-1 text-center bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-700 rounded-md text-[10px] font-bold flex items-center justify-center space-x-1"
-                            >
-                              <span>Mở ảnh AI</span>
-                              <ExternalLink className="w-2.5 h-2.5" />
-                            </a>
-                            <button
-                              onClick={() =>
-                                handleCopyLink(post.ai_photo_url!, 'ảnh AI thiết kế riêng')
-                              }
-                              className="p-1 bg-white border border-neutral-200 hover:border-neutral-300 text-neutral-600 rounded-md"
-                              title="Sao chép link ảnh AI"
-                            >
-                              <Copy className="w-3 h-3" />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>
