@@ -110,3 +110,36 @@ Khi xử lý một bức ảnh AI để gắn bao bì chuẩn của tiệm:
    * Toàn bộ phần vẽ bao bì và logo phải được bao bọc trong `<clipPath>` theo 4 đỉnh của hộp để không bị lem sang viền bánh mì hoặc mặt bàn.
 5. **Dọn sạch chi tiết ngoại cảnh**:
    * Tẩy xóa logo đối thủ trên khăn giấy hoặc biển hiệu hậu cảnh.
+
+---
+
+## 6. Pipeline Tự Động Biến Đổi Bối Cảnh & Đồng Bộ Ánh Sáng Theo Caption (Automated Contextual Relighting Engine)
+
+Hệ thống tự động hóa hoàn toàn quy trình sáng tạo "ẢNH AI THIẾT KẾ" cho n8n và Admin Dashboard theo 4 bước khép kín:
+
+### Bước 1: Giữ nguyên chủ thể (Product Consistency)
+* Sử dụng file tách nền chuẩn (alpha mask): `public/images/eggu-sandwich-subject-cutout.png` trích xuất từ mẫu bánh chuẩn đã được phê duyệt.
+* **Bảo toàn 100%**:
+  * Vỏ bánh mì brioche nướng bơ tỏi vàng rụm.
+  * Tầng trứng cuộn fluffy mềm mượt tan chảy, sốt cheddar béo ngậy và thịt xông khói áp chảo.
+  * Hộp giấy cầm tay màu trắng in đầy đủ dải viền vàng đáy hộp, mascot ôm trứng *Bite into goodness* và logo đỏ **EGGU**.
+* Loại bỏ triệt để nguy cơ AI bị ảo giác sinh ra logo đối thủ nước ngoài (*Egg Drop, Isaac Toast*).
+
+### Bước 2: Tự động biến đổi bối cảnh theo Caption (Caption-to-Background Intelligence)
+* Node LLM (Gemini) trong n8n phân tích tự động ngữ cảnh, thời gian, cảm xúc và địa điểm từ Caption:
+  * **Công sở / Đi làm vội vã**: Nền bàn làm việc văn phòng tối giản, laptop mờ ảo, ly cold brew cà phê, ánh nắng sáng sớm qua khung kính.
+  * **Trời mưa Hà Nội**: Khung cửa sổ quán cafe ngắm mưa phố cổ, giọt mưa đọng trên kính, ánh đèn vàng amber ấm cúng, bokeh đèn đường.
+  * **Sunday Brunch**: Bàn đá cẩm thạch trắng, tách latte art hoa văn, ánh sáng tự nhiên dịu nhẹ ngày nghỉ.
+  * **Dạo phố cuối tuần**: Không gian phố đi bộ Hồ Gươm rực rỡ nắng chiều, nhộn nhịp, trẻ trung.
+* Tự động sinh `ai_image_prompt` bằng tiếng Anh chuẩn nhiếp ảnh thương mại (Commercial food photography backdrop, bokeh f/2.0).
+
+### Bước 3: Ghép và đồng bộ ánh sáng (Relighting & Harmonization)
+* **Depth of field (Xóa phông)**: Tái tạo chiều sâu trường ảnh với khẩu độ lớn (f/1.8 – f/2.8), bối cảnh phía sau được làm mờ mềm mại (creamy bokeh) để làm nổi bật chiếc bánh.
+* **Đồng bộ ánh sáng (Ambient Relighting)**: Điều chỉnh cân bằng trắng, nhiệt độ màu và độ bão hòa của chiếc bánh khớp hoàn hảo với nguồn sáng môi trường (ví dụ: vàng hổ phách ấm áp cho ngày mưa, trong trẻo hiện đại cho văn phòng).
+* **Bóng đổ tiếp xúc (Contact Shadow)**: Tạo bóng đổ đa tầng (deep contact shadow + soft ambient shadow) dưới đáy hộp giấy và bàn tay cầm, đảm bảo chiếc bánh đặt vững chắc tự nhiên trong không gian.
+
+### Bước 4: Đầu ra (Output Dispatching)
+* API Engine: `POST /api/marketing/compose-ai-concept` (`src/lib/marketing/aiPhotoEngine.ts`).
+* Xuất file ảnh vuông độ phân giải cao 1000x1000px, chất lượng 92%.
+* Tự động upload lên Supabase Storage bucket `promotions/` với `cacheControl: 0` và version tag.
+* Trả về URL ảnh công khai để n8n lưu vào bảng `marketing_posts` và đẩy lên Google Sheets / mạng xã hội.
