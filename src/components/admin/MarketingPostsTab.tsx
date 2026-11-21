@@ -62,12 +62,30 @@ export default function MarketingPostsTab() {
 
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<{ [postId: string]: number }>({});
   const [downloadingZipId, setDownloadingZipId] = useState<string | null>(null);
+  const [syncingTikTok, setSyncingTikTok] = useState(false);
 
   const showToast = (msg: string) => {
     setNotification(msg);
     setTimeout(() => {
       setNotification(null);
     }, 3000);
+  };
+
+  const handleSyncTikTok = async () => {
+    setSyncingTikTok(true);
+    try {
+      const res = await fetch('/api/marketing/sync-tiktok', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || 'Đã đồng bộ TikTok thành công!');
+      } else {
+        showToast(data.error || 'Lỗi khi đồng bộ TikTok');
+      }
+    } catch {
+      showToast('Lỗi kết nối khi đồng bộ TikTok');
+    } finally {
+      setSyncingTikTok(false);
+    }
   };
 
   const handleDownloadAllPng = async (post: MarketingPost, urls: string[]) => {
@@ -195,6 +213,16 @@ export default function MarketingPostsTab() {
         </div>
 
         <div className="flex items-center space-x-3">
+          <button
+            onClick={handleSyncTikTok}
+            disabled={syncingTikTok}
+            className="flex items-center space-x-2 px-4 py-2.5 bg-[#1E1B18] hover:bg-black text-[#EAAA08] rounded-xl text-xs font-black transition disabled:opacity-50 shadow-xs"
+            title="Quét và đồng bộ các video mới nhất từ TikTok lên Tin tức Website"
+          >
+            <RefreshCw className={`w-4 h-4 ${syncingTikTok ? 'animate-spin' : ''}`} />
+            <span>{syncingTikTok ? 'Đang đồng bộ...' : '⚡ Đồng bộ TikTok về Web'}</span>
+          </button>
+
           <button
             onClick={fetchPosts}
             disabled={loading}
