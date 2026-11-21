@@ -45,7 +45,46 @@ Mẫu ảnh bánh chuẩn đã được phê duyệt và áp dụng làm chuẩn
 
 ---
 
-## 3. Quy Tắc Cấm Tuyệt Đối (Strict Negative Constraints)
+## 3. Bộ 8 Bố Cục Thiết Kế Độc Quyền Theo Từng Bài Viết (Layout Compositions)
+
+Để tránh việc tất cả bài viết dùng chung 1 khung hình lặp lại, mỗi bài viết marketing được thiết kế một **bố cục (layout) & góc chụp (angle)** riêng biệt phù hợp theo từng loại bánh và câu chuyện của caption:
+
+1. **Bố cục 1: Hanoi Street Walk Signature (Phố Lý Quốc Sư)**
+   * *Món*: Mr. Egg (39.000đ)
+   * *File*: `ai-concept-mr-egg-street.jpg`
+   * *Bố cục*: Góc chụp cầm tay kinh điển trước kiến trúc phố cổ Hà Nội, badge nhận diện thương hiệu sang trọng, tông vàng nắng mai chuẩn vị Seoul.
+2. **Bố cục 2: Walking Street Dual Sandwich Tray (Khay gỗ phố đi bộ)**
+   * *Món*: Sandwich Thịt Hộp, Phô Mai & Nori (60.000đ)
+   * *File*: `ai-concept-spam-nori-tray.jpg`
+   * *Bố cục*: Khay gỗ đôi 2 chiếc bánh phủ sốt rong biển xanh & phô mai kéo sợi giữa phố đi bộ Hoàn Kiếm, badge nhóm bạn gom đơn ca cứng.
+3. **Bố cục 3: Macro Gourmet Close-Up (Cận cảnh bắp ngô & phô mai)**
+   * *Món*: Sandwich Thịt Xông Khói Ngô Phô Mai (50.000đ)
+   * *File*: `ai-concept-corn-bacon-macro.jpg`
+   * *Bố cục*: Zoom cận cảnh 1:1 làm nổi bật từng hạt ngô vàng ươm, lớp phô mai cheddar tan chảy óng ả và thịt xông khói áp chảo.
+4. **Bố cục 4: Sweet Warm French Toast Morning Glow (Caramel bơ sữa)**
+   * *Món*: Sandwich Nướng Kiểu Pháp (55.000đ)
+   * *File*: `ai-concept-french-toast-warm.jpg`
+   * *Bố cục*: Ánh sáng ấm áp tone mật ong hổ phách, tôn vinh độ ngọt dịu béo ngậy của bánh mì bơ tỏi nướng sốt caramel.
+5. **Bố cục 5: Best Seller Dynamic 3D Sizzle (Góc chéo bơ tỏi bùng nổ)**
+   * *Món*: Sandwich Thịt Xông Khói Bơ Tỏi Phô Mai (55.000đ)
+   * *File*: `ai-concept-bacon-garlic-bestseller.jpg`
+   * *Bố cục*: Góc chéo tương phản cao làm nổi bật vỏ brioche vàng ruộm và các dải thịt xông khói giòn rụm với huy hiệu Best Seller.
+6. **Bố cục 6: Modern Office Commute Card (Bữa sáng công sở)**
+   * *Món*: Sandwich Thịt Xông Khói Bơ Tỏi Phô Mai (55.000đ)
+   * *File*: `ai-concept-office-morning-rush.jpg`
+   * *Bố cục*: Khung card xanh slate hiện đại nhấn mạnh tính tiện lợi: cầm tay sạch sẽ, không dính mỡ, ăn gọn nạp đầy pin ngày làm việc.
+7. **Bố cục 7: Oceanic Teal & Savory Melt (Thanh mát đậm đà)**
+   * *Món*: Sandwich Cá Ngừ Phô Mai (60.000đ)
+   * *File*: `ai-concept-tuna-melt-crunch.jpg`
+   * *Bố cục*: Tông màu xanh biển thanh thoát, làm nổi bật phần xốt cá ngừ béo ngậy quyện hành tây giòn ngọt và mozzarella xém mặt.
+8. **Bố cục 8: Sunday Slow Brunch Editorial (Tạp chí ẩm thực)**
+   * *Món*: Sandwich Nướng Kiểu Pháp (55.000đ)
+   * *File*: `ai-concept-sunday-brunch-editorial.jpg`
+   * *Bố cục*: Viền khung thanh lịch phong cách tạp chí món ăn cuối tuần, thư thái thưởng thức chậm rãi cùng đồ uống.
+
+---
+
+## 4. Quy Tắc Cấm Tuyệt Đối (Strict Negative Constraints)
 
 1. **Tuyệt đối KHÔNG có thương hiệu "EGG DROP"**:
    * Khi tạo prompt sinh ảnh bằng AI (Midjourney, Flux, Ideogram, Gemini), **không bao giờ** dùng cụm từ *"Korean egg drop sandwich"* vì các mô hình AI sẽ tự động sinh chữ "EGG DROP" của chuỗi nhà hàng Hàn Quốc lên hộp giấy và biển hiệu xung quanh.
@@ -58,7 +97,7 @@ Mẫu ảnh bánh chuẩn đã được phê duyệt và áp dụng làm chuẩn
 
 ---
 
-## 4. Quy Trình Chỉnh Sửa & Xử Lý Kỹ Thuật (Pipeline)
+## 5. Quy Trình Chỉnh Sửa & Xử Lý Kỹ Thuật (Pipeline)
 
 Khi xử lý một bức ảnh AI để gắn bao bì chuẩn của tiệm:
 1. **Xác định 4 đỉnh mặt phẳng hộp (Quad coordinates)**:
