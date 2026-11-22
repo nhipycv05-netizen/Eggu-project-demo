@@ -33,11 +33,15 @@ export async function POST() {
       const rawDesc = descMatch ? descMatch[1] : '';
       const pubDate = pubDateMatch ? new Date(pubDateMatch[1]).toISOString() : new Date().toISOString();
 
-      // Check duplicate
+      const videoIdMatch = rawLink.match(/video\/(\d+)/);
+      const videoId = videoIdMatch ? videoIdMatch[1] : String(Math.abs(rawLink.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)));
+      const cleanSlug = `tiktok-video-${videoId}`;
+
+      // Check duplicate by standard slug
       const { data: existing } = await supabase
         .from('news')
         .select('id')
-        .ilike('content_vi', `%${rawLink}%`)
+        .eq('slug', cleanSlug)
         .limit(1);
 
       if (existing && existing.length > 0) continue;
@@ -49,21 +53,29 @@ export async function POST() {
         .replace(/&gt;/g, '>');
 
       const posterMatch = decodedDesc.match(/poster="([^"]+)"/) || decodedDesc.match(/src="([^"]+)"/);
-      const thumbnailUrl = posterMatch
-        ? posterMatch[1]
-        : 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/promotions/real-photos/eggu-real-drive-1.jpg';
+      let thumbnailUrl = `https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/news/tiktok-${videoId}.jpg`;
 
-      const cleanSlug =
-        'tiktok-' +
-        rawTitle
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^a-z0-9]+/g, '-')
-          .substring(0, 45)
-          .replace(/^-|-$/g, '') +
-        '-' +
-        Date.now();
+      // Tải ảnh bìa gốc từ TikTok và lưu vào Supabase Storage bucket 'news'
+      if (posterMatch && posterMatch[1]) {
+        try {
+          const imgRes = await fetch(posterMatch[1], {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Referer': 'https://www.tiktok.com/'
+            }
+          });
+          if (imgRes.ok) {
+            const arrayBuffer = await imgRes.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            await supabase.storage.from('news').upload(`tiktok-${videoId}.jpg`, buffer, {
+              contentType: imgRes.headers.get('content-type') || 'image/jpeg',
+              upsert: true
+            });
+          }
+        } catch (storageErr) {
+          console.error(`Không thể lưu ảnh Storage cho video ${videoId}:`, storageErr);
+        }
+      }
 
       const titleVi = rawTitle.length > 90 ? rawTitle.substring(0, 87) + '...' : rawTitle;
       const titleEn = 'EGGU TikTok: ' + (rawTitle.length > 70 ? rawTitle.substring(0, 67) + '...' : rawTitle);

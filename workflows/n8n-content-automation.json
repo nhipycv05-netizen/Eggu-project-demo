@@ -59,7 +59,7 @@
         "type": "@n8n/n8n-nodes-langchain.googleGemini",
         "typeVersion": 1,
         "position": [
-          160,
+          420,
           0
         ],
         "id": "15cd8348-1925-4c6a-944d-5cc2dcbd1d4f",
@@ -296,15 +296,41 @@
           },
           "sendBody": true,
           "specifyBody": "json",
-          "jsonBody": "={{ (() => {\n  const raw = ($json.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();\n  let p = {};\n  try { p = JSON.parse(raw); } catch(e) { p = { title: $node[\"RSS Read\"].json.title, content: $node[\"RSS Read\"].json.title }; }\n  const link = $node[\"RSS Read\"].json.link || 'https://www.tiktok.com/@eggu_sandwich';\n  const videoId = link.match(/video\\/(\\d+)/)?.[1] || $node[\"RSS Read\"].json.guid || Math.abs(link.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0));\n  const desc = $node[\"RSS Read\"].json.description || $node[\"RSS Read\"].json.content || '';\n  const m = desc.match(/poster=(?:&quot;|\")([^\"&]+)(?:&quot;|\")/i) || desc.match(/src=(?:&quot;|\")([^\"&]+)(?:&quot;|\")/i);\n  const thumb = m ? m[1].replace(/&amp;/g, '&') : 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/promotions/real-photos/eggu-real-drive-1.jpg';\n  return JSON.stringify({\n    title_vi: p.title || $node[\"RSS Read\"].json.title,\n    title_en: p.title_en || 'EGGU TikTok: ' + (p.title || 'New video'),\n    slug: 'tiktok-video-' + videoId,\n    summary_vi: p.summary || (p.content ? p.content.substring(0, 140) : $node[\"RSS Read\"].json.title),\n    summary_en: p.summary_en || 'Discover the latest TikTok video from EGGU!',\n    content_vi: `<p>${p.content || p.title}</p>\\n<p>👉 <strong>Xem video gốc trên TikTok:</strong> <a href=\"${link}\" target=\"_blank\">${link}</a></p>`,\n    content_en: `<p>${p.content_en || p.content || p.title}</p>\\n<p>👉 <strong>Watch original on TikTok:</strong> <a href=\"${link}\" target=\"_blank\">${link}</a></p>`,\n    thumbnail_url: thumb,\n    status: 'PUBLISHED',\n    published_at: $now.toISO()\n  });\n})() }}"
+          "jsonBody": "={{ (() => {\n  const raw = ($json.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();\n  let p = {};\n  try { p = JSON.parse(raw); } catch(e) { p = { title: $node[\"Lưu Ảnh Bìa Vào Supabase Storage\"].json.title, content: $node[\"Lưu Ảnh Bìa Vào Supabase Storage\"].json.title }; }\n  const link = $node[\"Lưu Ảnh Bìa Vào Supabase Storage\"].json.link || 'https://www.tiktok.com/@eggu_sandwich';\n  const videoId = $node[\"Lưu Ảnh Bìa Vào Supabase Storage\"].json.videoId || link.match(/video\\/(\\d+)/)?.[1] || Math.abs(link.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0));\n  const thumb = $node[\"Lưu Ảnh Bìa Vào Supabase Storage\"].json.storageThumbnailUrl || ('https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/news/tiktok-' + videoId + '.jpg');\n  return JSON.stringify({\n    title_vi: p.title || $node[\"Lưu Ảnh Bìa Vào Supabase Storage\"].json.title,\n    title_en: p.title_en || 'EGGU TikTok: ' + (p.title || 'New video'),\n    slug: 'tiktok-video-' + videoId,\n    summary_vi: p.summary || (p.content ? p.content.substring(0, 140) : $node[\"Lưu Ảnh Bìa Vào Supabase Storage\"].json.title),\n    summary_en: p.summary_en || 'Discover the latest TikTok video from EGGU!',\n    content_vi: `<p>${p.content || p.title}</p>\\n<p>👉 <strong>Xem video gốc trên TikTok:</strong> <a href=\"${link}\" target=\"_blank\">${link}</a></p>`,\n    content_en: `<p>${p.content_en || p.content || p.title}</p>\\n<p>👉 <strong>Watch original on TikTok:</strong> <a href=\"${link}\" target=\"_blank\">${link}</a></p>`,\n    thumbnail_url: thumb,\n    status: 'PUBLISHED',\n    published_at: $now.toISO()\n  });\n})() }}"
         },
         "name": "Lưu Tin Tức (Supabase)",
         "type": "n8n-nodes-base.httpRequest",
         "typeVersion": 4.2,
         "position": [
-          528,
+          680,
           0
         ]
+      },
+      {
+        "parameters": {
+          "jsCode": "// 1. TRÍCH XUẤT VÀ TẢI ẢNH BÌA GỐC TỪ TIKTOK\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const json = item.json;\n  const link = json.link || '';\n  const videoId = link.match(/video\\/(\\d+)/)?.[1] || json.guid || String(Date.now());\n  const desc = json.description || json.content || '';\n\n  // Giải mã HTML entities để lấy đúng link poster ảnh gốc\n  const unescapedDesc = desc\n    .replace(/&quot;/g, '\"')\n    .replace(/&apos;/g, \"'\")\n    .replace(/&amp;/g, '&')\n    .replace(/&lt;/g, '<')\n    .replace(/&gt;/g, '>');\n\n  const m = unescapedDesc.match(/poster=\"([^\"]+)\"/i) || unescapedDesc.match(/src=\"([^\"]+)\"/i);\n  const posterUrl = m ? m[1] : '';\n\n  let imageBase64 = null;\n  let contentType = 'image/jpeg';\n\n  if (posterUrl) {\n    try {\n      // Tải trực tiếp ảnh gốc chất lượng cao từ TikTok CDN\n      const res = await fetch(posterUrl, {\n        headers: {\n          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',\n          'Referer': 'https://www.tiktok.com/'\n        }\n      });\n      if (res.ok) {\n        const ab = await res.arrayBuffer();\n        imageBase64 = Buffer.from(ab).toString('base64');\n        contentType = res.headers.get('content-type') || 'image/jpeg';\n      }\n    } catch (e) {}\n  }\n\n  results.push({\n    json: {\n      ...json,\n      videoId,\n      posterUrl,\n      imageBase64,\n      contentType\n    }\n  });\n}\n\nreturn results;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -60,
+          0
+        ],
+        "id": "t001-download-cover",
+        "name": "Tải Ảnh Bìa (TikTok)"
+      },
+      {
+        "parameters": {
+          "jsCode": "// 2. LƯU ẢNH BÌA VÀO SUPABASE STORAGE (BUCKET 'news')\nconst serviceKey = 'sb_secret_b0IcObDVlfwIlKpClSJD_Q_bAAK8DxJ';\nconst supabaseUrl = 'https://bnblofcypxfydnptazrs.supabase.co';\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const json = item.json;\n  const videoId = json.videoId;\n  const imageBase64 = json.imageBase64;\n  const contentType = json.contentType || 'image/jpeg';\n\n  // Đường link công khai vĩnh viễn trên Supabase\n  const publicStorageUrl = `${supabaseUrl}/storage/v1/object/public/news/tiktok-${videoId}.jpg`;\n\n  if (imageBase64) {\n    try {\n      const buffer = Buffer.from(imageBase64, 'base64');\n      await fetch(`${supabaseUrl}/storage/v1/object/news/tiktok-${videoId}.jpg`, {\n        method: 'POST',\n        headers: {\n          apikey: serviceKey,\n          Authorization: 'Bearer ' + serviceKey,\n          'Content-Type': contentType,\n          'x-upsert': 'true'\n        },\n        body: buffer\n      });\n    } catch (e) {}\n  }\n\n  // Dọn dẹp base64 để payload truyền đi nhẹ nhàng\n  const { imageBase64: _, ...cleanJson } = json;\n  results.push({\n    json: {\n      ...cleanJson,\n      storageThumbnailUrl: publicStorageUrl\n    }\n  });\n}\n\nreturn results;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          180,
+          0
+        ],
+        "id": "t002-save-cover-supabase",
+        "name": "Lưu Ảnh Bìa Vào Supabase Storage"
       }
     ],
     "connections": {
@@ -323,7 +349,7 @@
         "main": [
           [
             {
-              "node": "Google Gemini",
+              "node": "Tải Ảnh Bìa (TikTok)",
               "type": "main",
               "index": 0
             }
@@ -395,6 +421,28 @@
           [
             {
               "node": "AI Writer (Gemini - Viết Nháp FB & Đạo Diễn Poster)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Tải Ảnh Bìa (TikTok)": {
+        "main": [
+          [
+            {
+              "node": "Lưu Ảnh Bìa Vào Supabase Storage",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Lưu Ảnh Bìa Vào Supabase Storage": {
+        "main": [
+          [
+            {
+              "node": "Google Gemini",
               "type": "main",
               "index": 0
             }
