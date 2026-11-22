@@ -69,7 +69,11 @@
             "id": "geminiCred123",
             "name": "Google Gemini account"
           }
-        }
+        },
+        "retryOnFail": true,
+        "maxTries": 5,
+        "waitBetweenTries": 5000,
+        "onError": "continueRegularOutput"
       },
       {
         "parameters": {
