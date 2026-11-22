@@ -39,21 +39,6 @@
       },
       {
         "parameters": {
-          "operation": "removeItemsSeenInPreviousExecutions",
-          "dedupeValue": "link",
-          "options": {}
-        },
-        "type": "n8n-nodes-base.removeDuplicates",
-        "typeVersion": 2,
-        "position": [
-          -64,
-          0
-        ],
-        "id": "bdfc879d-b961-4f32-a140-3bb2a600402d",
-        "name": "Remove Duplicates"
-      },
-      {
-        "parameters": {
           "resource": "text",
           "operation": "message",
           "modelId": {
@@ -83,69 +68,6 @@
           "googlePalmApi": {
             "id": "geminiCred123",
             "name": "Google Gemini account"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "tableId": "news",
-          "fieldsUi": {
-            "fieldValues": [
-              {
-                "fieldId": "title_vi",
-                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); return JSON.parse(raw).title || $node[\"RSS Read\"].json.title || \"Tin tức TikTok EGGU\"; } catch(e) { return $node[\"RSS Read\"].json.title || \"Tin tức TikTok EGGU\"; } })() }}"
-              },
-              {
-                "fieldId": "title_en",
-                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); return JSON.parse(raw).title_en || JSON.parse(raw).title || \"EGGU TikTok Update\"; } catch(e) { return \"EGGU TikTok Update\"; } })() }}"
-              },
-              {
-                "fieldId": "slug",
-                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const s = JSON.parse(raw).slug; return (s ? s : 'tiktok-video') + '-' + $now.toMillis(); } catch(e) { return 'tiktok-video-' + $now.toMillis(); } })() }}"
-              },
-              {
-                "fieldId": "summary_vi",
-                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const p = JSON.parse(raw); return p.summary || p.content?.substring(0, 150) || $node[\"RSS Read\"].json.title; } catch(e) { return $node[\"RSS Read\"].json.title || \"Khám phá video mới từ EGGU!\"; } })() }}"
-              },
-              {
-                "fieldId": "summary_en",
-                "fieldValue": "={{ (() => { try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const p = JSON.parse(raw); return p.summary_en || p.summary || \"Check out the latest video from EGGU TikTok!\"; } catch(e) { return \"Check out the latest video from EGGU TikTok!\"; } })() }}"
-              },
-              {
-                "fieldId": "content_vi",
-                "fieldValue": "={{ (() => { const link = $node[\"RSS Read\"].json.link || \"https://www.tiktok.com/@eggu_sandwich\"; try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const p = JSON.parse(raw); return (p.content || p.title) + `\\n\\n👉 Xem video gốc trên TikTok: ${link}`; } catch(e) { return ($node[\"RSS Read\"].json.title || \"\") + `\\n\\n👉 Xem video gốc trên TikTok: ${link}`; } })() }}"
-              },
-              {
-                "fieldId": "content_en",
-                "fieldValue": "={{ (() => { const link = $node[\"RSS Read\"].json.link || \"https://www.tiktok.com/@eggu_sandwich\"; try { const raw = ($json.text || $json.response?.text || $json.content?.parts?.[0]?.text || $json.content || '').replace(/```json/gi, '').replace(/```/g, '').trim(); const p = JSON.parse(raw); return (p.content_en || p.content || p.title) + `\\n\\n👉 Watch original video on TikTok: ${link}`; } catch(e) { return ($node[\"RSS Read\"].json.title || \"\") + `\\n\\n👉 Watch original video on TikTok: ${link}`; } })() }}"
-              },
-              {
-                "fieldId": "thumbnail_url",
-                "fieldValue": "={{ (() => { const desc = $node[\"RSS Read\"].json.description || $node[\"RSS Read\"].json.content || \"\"; const m = desc.match(/poster=(?:&quot;|\")([^\"&]+)(?:&quot;|\")/i) || desc.match(/src=(?:&quot;|\")([^\"&]+)(?:&quot;|\")/i); return m ? m[1].replace(/&amp;/g, '&') : \"https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/promotions/real-photos/eggu-real-drive-1.jpg\"; })() }}"
-              },
-              {
-                "fieldId": "status",
-                "fieldValue": "PUBLISHED"
-              },
-              {
-                "fieldId": "published_at",
-                "fieldValue": "={{ $now.toISO() }}"
-              }
-            ]
-          }
-        },
-        "type": "n8n-nodes-base.supabase",
-        "typeVersion": 1,
-        "position": [
-          528,
-          0
-        ],
-        "id": "8d8d4741-19ea-4c5e-a775-32e6ca175fe7",
-        "name": "Create a row",
-        "credentials": {
-          "supabaseApi": {
-            "id": "supabaseAccount",
-            "name": "Supabase EGGU Database"
           }
         }
       },
@@ -346,6 +268,43 @@
         "retryOnFail": true,
         "maxTries": 3,
         "waitBetweenTries": 2000
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://bnblofcypxfydnptazrs.supabase.co/rest/v1/news?on_conflict=slug",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "apikey",
+                "value": "sb_secret_b0IcObDVlfwIlKpClSJD_Q_bAAK8DxJ"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer sb_secret_b0IcObDVlfwIlKpClSJD_Q_bAAK8DxJ"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Prefer",
+                "value": "resolution=ignore-duplicates,return=representation"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ (() => {\n  const raw = ($json.text || '').replace(/```json/gi, '').replace(/```/g, '').trim();\n  let p = {};\n  try { p = JSON.parse(raw); } catch(e) { p = { title: $node[\"RSS Read\"].json.title, content: $node[\"RSS Read\"].json.title }; }\n  const link = $node[\"RSS Read\"].json.link || 'https://www.tiktok.com/@eggu_sandwich';\n  const videoId = link.match(/video\\/(\\d+)/)?.[1] || $node[\"RSS Read\"].json.guid || Math.abs(link.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0));\n  const desc = $node[\"RSS Read\"].json.description || $node[\"RSS Read\"].json.content || '';\n  const m = desc.match(/poster=(?:&quot;|\")([^\"&]+)(?:&quot;|\")/i) || desc.match(/src=(?:&quot;|\")([^\"&]+)(?:&quot;|\")/i);\n  const thumb = m ? m[1].replace(/&amp;/g, '&') : 'https://bnblofcypxfydnptazrs.supabase.co/storage/v1/object/public/promotions/real-photos/eggu-real-drive-1.jpg';\n  return JSON.stringify({\n    title_vi: p.title || $node[\"RSS Read\"].json.title,\n    title_en: p.title_en || 'EGGU TikTok: ' + (p.title || 'New video'),\n    slug: 'tiktok-video-' + videoId,\n    summary_vi: p.summary || (p.content ? p.content.substring(0, 140) : $node[\"RSS Read\"].json.title),\n    summary_en: p.summary_en || 'Discover the latest TikTok video from EGGU!',\n    content_vi: `<p>${p.content || p.title}</p>\\n<p>👉 <strong>Xem video gốc trên TikTok:</strong> <a href=\"${link}\" target=\"_blank\">${link}</a></p>`,\n    content_en: `<p>${p.content_en || p.content || p.title}</p>\\n<p>👉 <strong>Watch original on TikTok:</strong> <a href=\"${link}\" target=\"_blank\">${link}</a></p>`,\n    thumbnail_url: thumb,\n    status: 'PUBLISHED',\n    published_at: $now.toISO()\n  });\n})() }}"
+        },
+        "name": "Lưu Tin Tức (Supabase)",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          528,
+          0
+        ]
       }
     ],
     "connections": {
@@ -364,17 +323,6 @@
         "main": [
           [
             {
-              "node": "Remove Duplicates",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Remove Duplicates": {
-        "main": [
-          [
-            {
               "node": "Google Gemini",
               "type": "main",
               "index": 0
@@ -386,7 +334,7 @@
         "main": [
           [
             {
-              "node": "Create a row",
+              "node": "Lưu Tin Tức (Supabase)",
               "type": "main",
               "index": 0
             }
