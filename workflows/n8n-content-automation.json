@@ -2,7 +2,7 @@
   {
     "id": "C9jxvxQ9K5oCClji",
     "name": "EGGU - Tự Động Hóa Content (TikTok & Facebook)",
-    "active": false,
+    "active": true,
     "nodes": [
       {
         "parameters": {
