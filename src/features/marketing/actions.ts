@@ -43,11 +43,28 @@ export async function getMarketingPostsAction(): Promise<{
   error?: string;
 }> {
   try {
-    const supabase = createServiceRoleClient();
-    const { data, error } = await supabase
+    let supabase = createServiceRoleClient();
+    let { data, error } = await supabase
       .from('marketing_posts')
       .select('*')
       .order('created_at', { ascending: false });
+
+    // Fallback directly to anon client if server has invalid service role key
+    if (error && (error.message?.includes('API key') || error.code === 'PGRST301')) {
+      const { createClient } = await import('@supabase/supabase-js');
+      const anonClient = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const fallback = await anonClient
+        .from('marketing_posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!fallback.error) {
+        data = fallback.data;
+        error = null;
+      }
+    }
 
     if (error) {
       // Table might not exist yet if migration hasn't run

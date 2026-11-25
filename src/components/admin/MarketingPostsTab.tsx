@@ -25,6 +25,7 @@ import {
   deleteMarketingPostAction,
   MarketingPost,
 } from '@/features/marketing/actions';
+import { createClient } from '@/lib/supabase/client';
 
 export default function MarketingPostsTab() {
   const [posts, setPosts] = useState<MarketingPost[]>([]);
@@ -38,7 +39,21 @@ export default function MarketingPostsTab() {
   const fetchPosts = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getMarketingPostsAction();
+      let res = await getMarketingPostsAction();
+      if (!res.ok) {
+        // Fallback: Query directly from client-side Supabase
+        try {
+          const supabase = createClient();
+          const { data, error } = await supabase
+            .from('marketing_posts')
+            .select('*')
+            .order('created_at', { ascending: false });
+          if (!error && data) {
+            res = { ok: true, data: data as MarketingPost[] };
+          }
+        } catch {}
+      }
+
       if (res.ok) {
         setPosts(res.data);
         if (res.error) {

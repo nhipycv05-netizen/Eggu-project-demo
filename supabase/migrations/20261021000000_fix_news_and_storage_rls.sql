@@ -27,6 +27,12 @@ create policy "Allow admin full access to news" on public.news
   using (true)
   with check (true);
 
+-- Cho phép n8n và các dịch vụ tự động thêm bài viết tin tức từ TikTok
+drop policy if exists "Allow insert news" on public.news;
+create policy "Allow insert news" on public.news
+  for insert
+  with check (true);
+
 -- ------------------------------------------------------------------------------
 -- 2. CẤU HÌNH BUCKET TRONG storage.buckets (PUBLIC, FILE SIZE, MIME TYPES)
 -- ------------------------------------------------------------------------------
